@@ -1,0 +1,538 @@
+import { IExpressRequest, IExpressResponse, app } from '@server/express-app';
+import { API_URL } from '@server/constants/api-url.constant';
+import { IImdbResponse, getImdbAllAsync } from '../imdb/get-imdb-list.controller';
+import { postImdbAsync } from '../imdb/post-imdb.controller';
+import { dbService } from '../db.service';
+import Joi from 'joi';
+import { validateSchema } from '@server/utils/validate-schema.util';
+import { createLogs } from '@server/utils/create-logs.utils';
+import { oneByOneAsync } from '@server/utils/one-by-one-async.util';
+import { IQueryReturn } from '@server/utils/to-query.util';
+import { ECartoonSubCategory, EFilmSubCategory, ERezkaVideoType, RezkaMovieDto } from '@server/dto/rezka-movie.dto';
+import { EResolution } from '@server/enum/resolution.enum';
+import { ETranslation } from '@server/enum/translation.enum';
+import { ImdbDto } from '@server/dto/imdb.dto';
+import { IResolutionItem } from '../parser/cypress-rezka-streams.controller';
+import { CONST } from '@server/constants/const.contant';
+import { data } from 'cypress/types/jquery';
+import { ITranslationDto } from '@server/dto/translation.dto';
+import { IImdbResultResponse } from '../imdb/search-imdb.controller';
+import { ENV } from '@server/env';
+import { prop } from 'cheerio/lib/api/attributes';
+import { IRezkaInfoResponse } from '../parser/rezka-all.controller';
+
+export interface ISetupBody {
+    searchImdb?: boolean;
+    updateImdbUaName?: boolean;
+    updateRezkaNewCartoon?: boolean;
+    updateRezkaNewFilms?: boolean;
+    updateRezkaCartoon?: boolean;
+    updateRezkaFilm?: boolean;
+
+    addActorsFromMovieDb?: boolean;
+    uploadActorPhotoToCdn?: boolean;
+
+    updateRezkaImdbIdProps?: {
+        rezkaId: string;
+    };
+    updateRezkaTranslationByIdProps?: {
+        rezkaId: string;
+    };
+}
+
+interface IRequest extends IExpressRequest {
+    body: ISetupBody;
+}
+
+interface IResponse extends IExpressResponse<string[], void> {}
+
+const schema = Joi.object<ISetupBody>({
+    searchImdb: Joi.boolean().required(),
+    updateRezkaCartoon: Joi.boolean().required(),
+    updateRezkaFilm: Joi.boolean().required(),
+
+    updateImdbUaName: Joi.boolean().required(),
+    addActorsFromMovieDb: Joi.boolean().required(),
+    uploadActorPhotoToCdn: Joi.boolean().required(),
+    updateRezkaNewCartoon: Joi.boolean().required(),
+    updateRezkaNewFilms: Joi.boolean().required(),
+
+    updateRezkaImdbIdProps: Joi.object(),
+    updateRezkaTranslationByIdProps: Joi.object(),
+});
+
+app.post(API_URL.api.tools.setup.toString(), async (req: IRequest, res: IResponse) => {
+    (req as any).setTimeout(30 * 24 * 60 * 60 * 1000);
+    (req as any).connection.on('close', function () {
+        console.log('cancel request');
+    });
+
+    const [, validateError] = validateSchema(schema, req.body);
+    if (validateError) {
+        return res.status(400).send(validateError);
+    }
+
+    const [logs, setupError] = await setupAsync(req.body);
+    if (setupError) {
+        return res.status(400).send(setupError);
+    }
+    return res.send(logs);
+});
+
+export const setupAsync = async (props: ISetupBody): Promise<IQueryReturn<string[]>> => {
+    const logs = createLogs();
+
+    const [dbMovies = []] = await dbService.rezkaMovie.getRezkaMoviesAllAsync({});
+
+    if (props.uploadActorPhotoToCdn) {
+        const [dbActors = []] = await dbService.actor.getActorListAllAsync({});
+        await oneByOneAsync(dbActors, async (dbActor) => {
+            const lastFileName = `${dbActor.id}_3.jpg`;
+            const [hasFile] = await dbService.cdn.hasFileCDNAsync({ fileName: lastFileName });
+            if (hasFile) {
+                return;
+            }
+
+            const [searchSuccess, searchError] = await dbService.tools.imageSearchAsync(`${dbActor.name} portrait, actor`);
+            if (searchError) {
+                return logs.push(`can not find image for actor`, searchError);
+            } else if (searchSuccess?.length) {
+                logs.push('search success ' + searchSuccess[0]);
+            }
+
+            if (searchSuccess?.length) {
+                await oneByOneAsync(searchSuccess, async (src, idx) => {
+                    const fileName = `${dbActor.id}_${idx + 1}.jpg`;
+                    const [successUpload, errorUpload] = await dbService.cdn.uploadFileToCDNAsync({
+                        fileName: fileName,
+                        fileUrl: src,
+                    });
+                    if (errorUpload) {
+                        return logs.push(`error upload to cdn`, errorUpload);
+                    }
+                    logs.push(`success upload to cdn`, successUpload);
+                });
+            }
+        });
+    }
+
+    if (props.updateRezkaNewCartoon) {
+        const [parseItems = [], parserError] = await dbService.parser.parseRezkaAllPagesAsync({
+            url: ' https://rezka.ag/cartoons/best/2023',
+        });
+        if (parserError) {
+            logs.push(`rezka items has some error`, parserError);
+        }
+        logs.push(`rezka items return success count=${parseItems?.length}`);
+
+        await oneByOneAsync(
+            shuffleArray(parseItems),
+            async (parseItem) => {
+                const dbMovie = dbMovies?.find((movie) => movie.href === parseItem.href);
+                if (!dbMovie) {
+                    const [, postError] = await dbService.rezkaMovie.postRezkaMovieAsync({
+                        href: parseItem.href,
+                        en_name: '',
+                        year: parseItem.year,
+                        video_type: ERezkaVideoType.cartoon,
+                        rezka_imdb_id: null as unknown as string,
+                    });
+                    if (postError) {
+                        return logs.push(`post rezka movie error ${parseItem.url_id} error=${postError}`);
+                    }
+                    logs.push(`post rezka movie success ${parseItem.url_id} `);
+                } else {
+                    logs.push(`already exist ${dbMovie.href} `);
+                }
+            },
+            { timeout: 0 },
+        );
+    }
+    if (props.updateRezkaCartoon) {
+        await oneByOneAsync(shuffleArray(Object.values(ECartoonSubCategory)), async (subCategory) => {
+            const url = `https://rezka.ag/${ERezkaVideoType.cartoon}s/${subCategory}`;
+            const [parseItems = [], parserError] = await dbService.parser.parseRezkaAllPagesAsync({ url });
+            if (parserError) {
+                logs.push(`rezka items has some error`, parserError);
+            }
+            logs.push(`rezka items return success count=${parseItems?.length}`);
+
+            await oneByOneAsync(
+                shuffleArray(parseItems),
+                async (parseItem) => {
+                    const dbMovie = dbMovies?.find((movie) => movie.href === parseItem.href);
+                    if (!dbMovie) {
+                        const [, postError] = await dbService.rezkaMovie.postRezkaMovieAsync({
+                            href: parseItem.href,
+                            en_name: '',
+                            year: parseItem.year,
+                            video_type: ERezkaVideoType.cartoon,
+                            rezka_imdb_id: null as unknown as string,
+                        });
+                        if (postError) {
+                            return logs.push(`post rezka movie error ${parseItem.url_id} error=${postError}`);
+                        }
+                        logs.push(`post rezka movie success ${parseItem.url_id} `);
+                    } else {
+                        logs.push(`already exist ${dbMovie.href} `);
+                    }
+                },
+                { timeout: 0 },
+            );
+        });
+    }
+    if (props.updateRezkaNewFilms) {
+        const [parseItems = [], parserError] = await dbService.parser.parseRezkaAllPagesAsync({
+            url: ' https://rezka.ag/films/best/2023',
+        });
+        if (parserError) {
+            logs.push(`rezka items has some error`, parserError);
+        }
+        logs.push(`rezka items return success count=${parseItems?.length}`);
+
+        await oneByOneAsync(
+            shuffleArray(parseItems),
+            async (parseItem) => {
+                const dbMovie = dbMovies?.find((movie) => movie.href === parseItem.href);
+                if (!dbMovie) {
+                    const [, postError] = await dbService.rezkaMovie.postRezkaMovieAsync({
+                        href: parseItem.href,
+                        en_name: '',
+                        year: parseItem.year,
+                        video_type: ERezkaVideoType.film,
+                        rezka_imdb_id: null as unknown as string,
+                    });
+                    if (postError) {
+                        return logs.push(`post rezka movie error ${parseItem.url_id} error=${postError}`);
+                    }
+                    logs.push(`post rezka movie success ${parseItem.url_id} `);
+                } else {
+                    logs.push(`already exist ${dbMovie.href} `);
+                }
+            },
+            { timeout: 0 },
+        );
+    }
+    if (props.updateRezkaFilm) {
+        await oneByOneAsync(shuffleArray(Object.values(EFilmSubCategory)), async (subCategory) => {
+            const url = `https://rezka.ag/${ERezkaVideoType.film}s/${subCategory}`;
+            const [parseItems = [], parserError] = await dbService.parser.parseRezkaAllPagesAsync({ url });
+            if (parserError) {
+                logs.push(`rezka items has some error`, parserError);
+            }
+            logs.push(`rezka items return success count=${parseItems?.length}`);
+
+            await oneByOneAsync(
+                shuffleArray(parseItems),
+                async (parseItem) => {
+                    const dbMovie = dbMovies?.find((movie) => movie.href === parseItem.href);
+                    if (!dbMovie) {
+                        const [, postError] = await dbService.rezkaMovie.postRezkaMovieAsync({
+                            href: parseItem.href,
+                            en_name: '',
+                            year: parseItem.year,
+                            video_type: ERezkaVideoType.film,
+                            rezka_imdb_id: null as unknown as string,
+                        });
+                        if (postError) {
+                            return logs.push(`post rezka movie error ${parseItem.url_id} error=${postError}`);
+                        }
+                        logs.push(`post rezka movie success ${parseItem.url_id} `);
+                    } else {
+                        logs.push(`already exist ${dbMovie.href} `);
+                    }
+                },
+                { timeout: 0 },
+            );
+        });
+    }
+
+    if (props.updateRezkaImdbIdProps) {
+        const rezkaId = props.updateRezkaImdbIdProps?.rezkaId;
+        logs.push('updateRezkaTranslationById rezkaId = ' + rezkaId);
+        if (!rezkaId) {
+            return [, 'rezkaId is empty'];
+        }
+        const [dbMovie] = await dbService.rezkaMovie.getRezkaMovieByIdAsync(rezkaId);
+        if (!dbMovie) {
+            return [, 'db movie not found ' + rezkaId];
+        }
+        logs.push('db movie = ' + dbMovie.href);
+        const [parseItem, parserError] = await dbService.parser.getCypressImdbAsync(dbMovie.href);
+        if (parserError) {
+            logs.push(`parse cypress rezka by href error`);
+            await dbService.rezkaMovie.putRezkaMovieAsync(dbMovie.id, {
+                rezka_imdb_id: CONST.EMPTY_IMDB_ID,
+            });
+        } else if (parseItem) {
+            const [, postError] = await dbService.rezkaMovie.putRezkaMovieAsync(dbMovie.id, {
+                rezka_imdb_id: parseItem.id,
+            });
+            if (postError) {
+                logs.push(`post rezka movie error ${dbMovie.id} error=${postError}`);
+            } else {
+                logs.push(`post rezka movie imdbId success ${dbMovie.id} `);
+            }
+        }
+    }
+
+    if (props.searchImdb) {
+        const [imdbInfoItems = []] = await dbService.imdb.getImdbAllAsync();
+        const filtered = dbMovies
+            .filter((movie) => movie.rezka_imdb_id && !movie.rezka_imdb_id.includes(CONST.EMPTY_IMDB_ID))
+            .filter((movieItem) => {
+                const imdbInfo = imdbInfoItems.find(
+                    (imdbItem) => imdbItem.en_name === movieItem.en_name || imdbItem.id === movieItem.rezka_imdb_id,
+                );
+                if (imdbInfo) {
+                    return false;
+                }
+                return true;
+            });
+        logs.push('searchImdb without imdbs - ', filtered.length);
+        await oneByOneAsync(filtered, async (movieItem) => {
+            const [newImdbInfo, newImdbInfoError] = await dbService.imdb.searchImdbMovieInfoAsync(
+                movieItem.en_name,
+                movieItem.year + '',
+                movieItem.rezka_imdb_id,
+            );
+            if (newImdbInfoError) {
+                return logs.push(`imdb info not found ${movieItem.en_name} error=${newImdbInfoError}`);
+            }
+
+            if (newImdbInfo) {
+                const [, postImdbError] = await postImdbAsync({
+                    en_name: newImdbInfo.Title,
+                    imdb_rating: +newImdbInfo.imdbRating,
+                    json: JSON.stringify(newImdbInfo),
+                    poster: newImdbInfo.Poster,
+                    year: +newImdbInfo.Year,
+                    id: newImdbInfo.imdbID,
+                });
+                if (postImdbError) {
+                    return logs.push(`imdb post error ${movieItem.en_name} imdbId = ${newImdbInfo.imdbID}`);
+                }
+                logs.push(`imdb post success ${movieItem.en_name} imdbId = ${newImdbInfo.imdbID}`);
+            }
+        });
+    }
+
+    if (props.updateImdbUaName) {
+        const [imdbInfoItems = []] = await dbService.imdb.getImdbAllAsync();
+        const filtered = imdbInfoItems.filter((imdb) => !imdb.ua_name);
+
+        logs.push('searchImdb without ua name - ', filtered.length);
+        await oneByOneAsync(
+            filtered,
+            async (imdbItem) => {
+                const [uaInfo, uaInfoError] = await dbService.imdb.searchUANameMovieInfoAsync(imdbItem.id);
+                if (uaInfoError) {
+                    return logs.push(`imdb ua info not found ${imdbItem.en_name} error=${uaInfoError}`);
+                }
+
+                if (uaInfo) {
+                    const [, postImdbError] = await dbService.imdb.putImdbAsync(imdbItem.id, {
+                        ua_name: uaInfo.uaName,
+                    });
+                    if (postImdbError) {
+                        return logs.push(`imdb add ua info error ${imdbItem.en_name} imdbId = ${imdbItem.id}`);
+                    }
+                    logs.push(`imdb add ua name success ${imdbItem.en_name} imdbId = ${imdbItem.id}`);
+                }
+            },
+            { timeout: 500 },
+        );
+    }
+
+    if (props.addActorsFromMovieDb) {
+        const items = dbMovies.filter((f) => f.rezka_imdb_id);
+        logs.push('addActorsFromMovieDb ' + items.length);
+        await oneByOneAsync(
+            shuffleArray(items),
+            async (dbMovie, idx) => {
+                console.log('idx', idx);
+                const [imdbItem, imdbError] = await dbService.imdb.getImdbByIdAsync(dbMovie.rezka_imdb_id);
+                if (imdbError) {
+                    return logs.push(`imdb not found`);
+                } else if (imdbItem) {
+                    const json: IImdbResultResponse = JSON.parse(imdbItem.json);
+                    const actors = json.Actors.split(',');
+                    await oneByOneAsync(actors, async (actor) => {
+                        const [, postError] = await dbService.actor.postActorAsync({
+                            name: actor.trim(),
+                            photo_url: null as unknown as string,
+                        });
+                        if (postError) {
+                            logs.push(`post actor error ${dbMovie.id} error=${postError}`);
+                        } else {
+                            logs.push('post actor success', actor);
+                        }
+
+                        const [actors] = await dbService.actor.getActorListAllAsync({ actor_name: actor.trim() });
+                        if (actors?.length) {
+                            //todo fix
+                            const [, relationError] = await dbService.rezkaMovieActor.postRezkaMovieActorAsync({
+                                actor_id: actors[0].id,
+                                rezka_movie_id: dbMovie.id,
+                                is_actor: true,
+                                is_director: false,
+                                is_writer: false,
+                            });
+                            if (relationError) {
+                                logs.push('add actor relation error ' + relationError);
+                            }
+                        }
+                    });
+
+                    const writers = json.Writer.split(',');
+                    await oneByOneAsync(writers, async (writer) => {
+                        const [, postError] = await dbService.actor.postActorAsync({
+                            name: writer.trim(),
+                            photo_url: null as unknown as string,
+                        });
+                        if (postError) {
+                            logs.push(`post writer error ${dbMovie.id} error=${postError}`);
+                        } else {
+                            logs.push('post writer success', writer);
+                        }
+
+                        const [actors] = await dbService.actor.getActorListAllAsync({ actor_name: writer.trim() });
+                        if (actors?.length) {
+                            //todo fix
+                            const [, relationError] = await dbService.rezkaMovieActor.postRezkaMovieActorAsync({
+                                actor_id: actors[0].id,
+                                rezka_movie_id: dbMovie.id,
+                                is_actor: false,
+                                is_director: false,
+                                is_writer: true,
+                            });
+                            if (relationError) {
+                                logs.push('add writer relation error ' + relationError);
+                            }
+                        }
+                    });
+
+                    const directors = json.Director.split(',');
+                    await oneByOneAsync(directors, async (director) => {
+                        const [, postError] = await dbService.actor.postActorAsync({
+                            name: director.trim(),
+                            photo_url: null as unknown as string,
+                        });
+                        if (postError) {
+                            logs.push(`post director error ${dbMovie.id} error=${postError}`);
+                        } else {
+                            logs.push('post director success', director);
+                        }
+
+                        const [actors] = await dbService.actor.getActorListAllAsync({ actor_name: director.trim() });
+                        if (actors?.length) {
+                            //todo fix
+                            const [, relationError] = await dbService.rezkaMovieActor.postRezkaMovieActorAsync({
+                                actor_id: actors[0].id,
+                                rezka_movie_id: dbMovie.id,
+                                is_actor: false,
+                                is_director: true,
+                                is_writer: false,
+                            });
+                            if (relationError) {
+                                logs.push('add director relation error ' + relationError);
+                            }
+                        }
+                    });
+                }
+            },
+            { timeout: 0 },
+        );
+    }
+
+    if (props.updateRezkaTranslationByIdProps) {
+        const rezkaId = props.updateRezkaTranslationByIdProps?.rezkaId;
+        logs.push('updateRezkaTranslationById rezkaId = ' + rezkaId);
+        if (!rezkaId) {
+            return [, 'rezkaId is empty'];
+        }
+        const [dbMovie] = await dbService.rezkaMovie.getRezkaMovieByIdAsync(rezkaId);
+        if (!dbMovie) {
+            return [, 'db movie not found ' + rezkaId];
+        }
+        logs.push('db movie = ' + dbMovie.href);
+        const [trs] = await dbService.rezkaMovieTranslation.getRezkaMovieTranslationAllAsync({
+            rezka_movie_id: dbMovie?.id,
+        });
+        if (trs?.length && trs?.length > 0 && trs[0].translation_id) {
+            logs.push('translation already exist');
+            return [, logs.get().join('\n')];
+        }
+
+        logs.push('imdbId', dbMovie.rezka_imdb_id);
+        const [parseItem, parserError] = await dbService.parser.getCypressRezkaStreamsAsync(dbMovie.href);
+        if (parserError) {
+            logs.push(`parse cypress rezka stream error`);
+            return [logs.get(), undefined];
+        } else if (parseItem) {
+            const allTranslations = parseItem.translations;
+
+            logs.push(`parse cypress success translations = `, allTranslations.length);
+            if (allTranslations.length === 0) {
+                //add empty translation relation
+            }
+            await oneByOneAsync(
+                allTranslations,
+                async (translation) => {
+                    const [dbTranslation, dbTranslationError] = await dbService.translation.getTranslationByIdAsync(
+                        translation.data_translator_id.toString(),
+                    );
+                    logs.push('dbTranslation', dbTranslation);
+
+                    let currentTranslation: ITranslationDto | undefined = dbTranslation;
+                    if (dbTranslationError) {
+                        logs.push('dbTranslationError ' + translation.data_translator_id, dbTranslationError);
+                        const [postTranslation, postTranslationError] = await dbService.translation.postTranslationAsync({
+                            id: translation.data_translator_id,
+                            label: translation.translation,
+                        });
+                        if (postTranslationError) {
+                            logs.push('post translation error', postTranslationError);
+                        } else if (postTranslation) {
+                            logs.push('post translation success');
+                            currentTranslation = postTranslation;
+                        }
+                    }
+
+                    // add relation
+                    if (currentTranslation) {
+                        //TODO find relation if need
+                        const [, postRelationError] = await dbService.rezkaMovieTranslation.postRezkaMovieTranslationAsync({
+                            rezka_movie_id: dbMovie.id,
+                            translation_id: currentTranslation?.id || '',
+                            data_ads: +translation.data_ads,
+                            data_camrip: +translation.data_camrip,
+                            data_director: +translation.data_director,
+                        });
+
+                        if (postRelationError) {
+                            logs.push('post relation error', postRelationError);
+                        } else {
+                            logs.push('post relation success');
+                        }
+                    } else {
+                        logs.push('error, problem with post relation');
+                    }
+                },
+                { timeout: 0 },
+            );
+        }
+    }
+
+    return [logs.get(), undefined];
+};
+
+function shuffleArray<T>(array: T[]): T[] {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    return array;
+}
