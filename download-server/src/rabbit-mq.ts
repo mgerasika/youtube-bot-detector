@@ -1,23 +1,40 @@
 import amqp, { Channel, Connection, ConsumeMessage } from 'amqplib';
 import { IQueryReturn } from './utils/to-query.util';
-import { ENV } from './env';
+import { ENV } from './constants/env';
 import { IRabbitMqMessage } from './interfaces/rabbit-mq-message.interface';
+import { CONST } from './constants/const.contant';
 
-let _connection: Connection;
+let _connection: Connection | undefined;
 let _channel: Channel;
-const CHANNEL_NAME = 'ua-video-online-queue';
-export async function rabbitMQ_connectQueueAsync(callback: (data: IRabbitMqMessage) => Promise<any>) {
+
+export async function rabbitMQ_createConnectionAsync() {
+    if (!_connection || !_channel ) {
+        try {
+            _connection = await amqp.connect(ENV.rabbit_mq || '');
+            if (_connection) {
+                console.log('Connected to Rabbit MQ');
+                _channel = await _connection.createChannel();
+
+                await _channel.assertQueue(CONST.RABBIT_MQ_CHANNEL_NAME, {});
+
+                _channel.prefetch(1);
+            }
+        } catch (error) {
+            console.log('createConnection rabbitMQ error', error);
+            _connection = undefined;
+            setTimeout(rabbitMQ_createConnectionAsync, 30 * 1000);
+        }
+    }
+    return _connection;
+}
+
+export async function rabbitMQ_subscribeAsync(callback: (data: IRabbitMqMessage) => Promise<any>) {
     try {
-        _connection = await amqp.connect(ENV.rabbit_mq || '');
-        if (_connection) {
-            console.log('Connected to Rabbit MQ');
-            _channel = await _connection.createChannel();
-
-            await _channel.assertQueue(CHANNEL_NAME, {});
-
-            _channel.prefetch(1);
+        const connection = await rabbitMQ_createConnectionAsync();
+        if (connection) {
+        
             _channel.consume(
-                CHANNEL_NAME,
+                CONST.RABBIT_MQ_CHANNEL_NAME,
                 (data: ConsumeMessage | null) => {
                     if (data) {
                         const body = Buffer.from(data.content);
@@ -48,14 +65,16 @@ export async function rabbitMQ_connectQueueAsync(callback: (data: IRabbitMqMessa
     } catch (error) {
         console.log('known error', error);
 
-        setTimeout(rabbitMQ_connectQueueAsync, 30 * 1000);
+        setTimeout(rabbitMQ_subscribeAsync, 30 * 1000);
     }
 }
 
 
-export const rabbitMQ_sendData = async (data: IRabbitMqMessage): Promise<IQueryReturn<boolean>> => {
+export const rabbitMQ_sendDataAsync = async (data: IRabbitMqMessage): Promise<IQueryReturn<boolean>> => {
+    await rabbitMQ_createConnectionAsync();
+
     if (_channel) {
-        await _channel.sendToQueue(CHANNEL_NAME, Buffer.from(JSON.stringify(data)));
+        await _channel.sendToQueue(CONST.RABBIT_MQ_CHANNEL_NAME, Buffer.from(JSON.stringify(data)));
         return [true];
     } else {
         console.log('channel is null');

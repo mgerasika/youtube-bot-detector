@@ -22,11 +22,11 @@ const writeTsToFile = (outFile, content) => {
 	sb.appendLine(indexContent.substring(endIndex));
 	fs.writeFileSync(path.resolve(outFile), sb.toString());
 
-	try {
-		formatFile(outFile, outFile);
-	} catch {
-		console.error("format with prettier error " + outFile);
-	}
+	// try {
+	// 	formatFile(outFile, outFile);
+	// } catch {
+	// 	console.error("format with prettier error " + outFile);
+	// }
 	console.log("generate typescript code success. " + outFile);
 };
 
@@ -43,7 +43,7 @@ const formatFile = (inputFilePath, outputFilePath) => {
 	});
 };
 
-const res = fs.readFileSync("../spec.json").toString();
+const res = fs.readFileSync("../spec-server.json").toString();
 const doc = getDoc(JSON.parse(res));
 if (!doc) {
 	throw "Document cannot be null";

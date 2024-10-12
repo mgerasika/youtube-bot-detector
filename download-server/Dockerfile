@@ -1,4 +1,4 @@
-FROM cypress/base:16.17.0
+FROM node:16.14-alpine
 
 ARG PORT
 COPY . .

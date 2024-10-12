@@ -4,8 +4,9 @@
   "author": "",
   "license": "MIT",
   "scripts": {
-    "codegen": "yarn codegen-server && yarn codegen-ext",
+    "codegen": "yarn codegen-server && yarn codegen-download-server && yarn codegen-ext",
     "codegen-server": "cd server && yarn codegen",
+    "codegen-download-server": "cd download-server && yarn codegen",
     "codegen-ext": "cd ext && yarn codegen",
     "dev": "concurrently --kill-others \"yarn dev-server\" \"yarn dev-ext\" ",
     "dev-server": "cd server && yarn dev",

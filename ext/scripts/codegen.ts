@@ -43,7 +43,7 @@ const formatFile = (inputFilePath: string, outputFilePath: string): void => {
   });
 };
 
-const res = fs.readFileSync("../spec.json").toString();
+const res = fs.readFileSync("../spec-server.json").toString();
 const doc = getDoc(JSON.parse(res));
 if (!doc) {
   throw "Document cannot be null";
