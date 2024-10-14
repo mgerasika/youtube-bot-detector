@@ -1,7 +1,7 @@
 import amqp, { Channel, Connection, ConsumeMessage } from 'amqplib';
 import { IQueryReturn } from './utils/to-query.util';
 import { ENV } from './constants/env';
-import { IRabbitMqMessage } from './interfaces/rabbit-mq-message.interface';
+import { IRabbitMqMessage } from './interfaces/async-promise-result.interface';
 import { CONST } from './constants/const.contant';
 
 let _connection: Connection | undefined;

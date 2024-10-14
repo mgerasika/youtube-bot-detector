@@ -8,14 +8,14 @@
         "build": "npx tsc",
         "start": "node dist/index.js",
         "dev": "concurrently \"npx tsc --watch\" \"nodemon -r dotenv/config -q dist/index.js\"",
-        "codegen": "npx ts-node scripts/codegen.ts",
+        "codegen": "npx ts-node scripts/codegen-spec.ts",
         "deploy": "firebase deploy"
     },
     "author": "",
     "license": "ISC",
     "type": "commonjs",
-    "engines": {
-        "node": "16.14"
+   "engines": {
+        "node": "18.19.0"
     },
     "dependencies": {
         "amqplib": "^0.10.3",

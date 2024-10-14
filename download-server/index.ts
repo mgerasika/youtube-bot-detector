@@ -1,11 +1,12 @@
 require('module-alias/register');
 import { rabbitMQ_subscribeAsync } from '@server/rabbit-mq';
-import { dbService } from './src/controller/db.service';
+import { allServices } from './src/controller/all-services';
 import { app } from './src/express-app';
 import { ENV } from '@server/constants/env';
+import './src/controller/all-controllers';
 
 app.get('/', (req, res) => {
-    res.send(JSON.stringify(dbService, null, 2));
+    res.send(JSON.stringify(allServices, null, 2));
 });
 
 const port = process.env.PORT || 8006;

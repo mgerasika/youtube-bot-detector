@@ -6,49 +6,22 @@
     "version": "0.0.1"
   },
   "paths": {
-    "api/example/": {
-      "get": {
+    "api/scan/get-channel-id/": {
+      "post": {
         "operationId": "",
         "summary": "",
-        "parameters": [
-          {
-            "name": "actor_name",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "movie_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "imdb_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IActorResponse"
-                  }
-                }
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IGetChannelIdBody"
               }
             }
-          },
+          }
+        },
+        "responses": {
           "400": {
             "content": {
               "application/json": {
@@ -59,7 +32,9 @@
             }
           }
         }
-      },
+      }
+    },
+    "api/scan/get-channel-info/": {
       "post": {
         "operationId": "",
         "summary": "",
@@ -69,24 +44,68 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/IExampleBody"
+                "$ref": "#/components/schemas/IGetChannelInfoBody"
               }
             }
           }
         },
         "responses": {
-          "200": {
+          "400": {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IActorResponse"
-                  }
+                  "$ref": "#/components/schemas/ void"
                 }
               }
             }
-          },
+          }
+        }
+      }
+    },
+    "api/scan/get-comments/": {
+      "post": {
+        "operationId": "",
+        "summary": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IGetCommentsBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "api/scan/get-videos/": {
+      "post": {
+        "operationId": "",
+        "summary": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IGetVideosBody"
+              }
+            }
+          }
+        },
+        "responses": {
           "400": {
             "content": {
               "application/json": {
@@ -102,15 +121,49 @@
   },
   "components": {
     "schemas": {
-      "IActorResponse": {
+      "IGetChannelIdBody": {
         "type": "object",
-        "required": [],
-        "properties": {}
+        "required": [
+          "channelName"
+        ],
+        "properties": {
+          "channelName": {
+            "type": "string"
+          }
+        }
       },
-      "IExampleBody": {
+      "IGetChannelInfoBody": {
         "type": "object",
-        "required": [],
-        "properties": {}
+        "required": [
+          "channelName"
+        ],
+        "properties": {
+          "channelName": {
+            "type": "string"
+          }
+        }
+      },
+      "IGetCommentsBody": {
+        "type": "object",
+        "required": [
+          "videoId"
+        ],
+        "properties": {
+          "videoId": {
+            "type": "string"
+          }
+        }
+      },
+      "IGetVideosBody": {
+        "type": "object",
+        "required": [
+          "channelName"
+        ],
+        "properties": {
+          "channelName": {
+            "type": "string"
+          }
+        }
       }
     }
   }

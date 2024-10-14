@@ -20,14 +20,15 @@ const writeTsToFile = (outFile, content) => {
 	sb.append(content);
 
 	sb.appendLine(indexContent.substring(endIndex));
-	fs.writeFileSync(path.resolve(outFile), sb.toString());
+	const fullPath = path.resolve(outFile);
+	fs.writeFileSync(fullPath, sb.toString());
 
 	// try {
 	// 	formatFile(outFile, outFile);
 	// } catch {
 	// 	console.error("format with prettier error " + outFile);
 	// }
-	console.log("generate typescript code success. " + outFile);
+	console.log("generate typescript code success " + fullPath);
 };
 
 const formatFile = (inputFilePath, outputFilePath) => {

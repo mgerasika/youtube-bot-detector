@@ -2,6 +2,8 @@ import { ENV } from '@server/constants/env';
 import { DataSource } from 'typeorm';
 import { IQueryReturn } from './to-query.util';
 import { ActorDto } from '@server/dto/actor.dto';
+import { VideoDto } from '@server/dto/video.dto';
+import { ChannelDto } from '@server/dto/channel.dto';
 
 const IS_DEBUG = ENV.node_env === 'development';
 
@@ -17,7 +19,7 @@ const getDataSource = (): DataSource => {
         database: ENV.database,
         password: IS_DEBUG ? ENV.owner_password : ENV.password,
         port: ENV.port,
-        entities: [ActorDto],
+        entities: [ActorDto,VideoDto,ChannelDto],
         synchronize: true,
         poolSize: 10,
         logging: false,
