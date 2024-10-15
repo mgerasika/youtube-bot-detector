@@ -6,6 +6,61 @@
     "version": "0.0.1"
   },
   "paths": {
+    "api/api-key/active/": {
+      "get": {
+        "operationId": "",
+        "summary": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IApiKeyDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "api/api-key/": {
+      "post": {
+        "operationId": "",
+        "summary": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IApiKeyPostBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "api/channel/": {
       "get": {
         "operationId": "",
@@ -59,18 +114,6 @@
           }
         },
         "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IChannelDto"
-                  }
-                }
-              }
-            }
-          },
           "400": {
             "content": {
               "application/json": {
@@ -142,15 +185,6 @@
           }
         },
         "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IChannelDto"
-                }
-              }
-            }
-          },
           "400": {
             "content": {
               "application/json": {
@@ -176,18 +210,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IChannelDto"
-                  }
-                }
-              }
-            }
-          },
           "400": {
             "content": {
               "application/json": {
@@ -283,24 +305,12 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/IcommentPostBody"
+                "$ref": "#/components/schemas/ICommentPostBody"
               }
             }
           }
         },
         "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ICommentDto"
-                  }
-                }
-              }
-            }
-          },
           "400": {
             "content": {
               "application/json": {
@@ -372,15 +382,6 @@
           }
         },
         "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ICommentDto"
-                }
-              }
-            }
-          },
           "400": {
             "content": {
               "application/json": {
@@ -406,14 +407,38 @@
           }
         ],
         "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "api/statistic/by-video/": {
+      "get": {
+        "operationId": "",
+        "summary": "",
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
           "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ICommentDto"
-                  }
+                  "$ref": "#/components/schemas/IApiKeyDto"
                 }
               }
             }
@@ -519,18 +544,6 @@
           }
         },
         "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IVideoDto"
-                  }
-                }
-              }
-            }
-          },
           "400": {
             "content": {
               "application/json": {
@@ -602,15 +615,6 @@
           }
         },
         "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IVideoDto"
-                }
-              }
-            }
-          },
           "400": {
             "content": {
               "application/json": {
@@ -636,18 +640,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IVideoDto"
-                  }
-                }
-              }
-            }
-          },
           "400": {
             "content": {
               "application/json": {
@@ -663,6 +655,36 @@
   },
   "components": {
     "schemas": {
+      "IApiKeyDto": {
+        "type": "object",
+        "required": [
+          "email",
+          "youtube_key"
+        ],
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "youtube_key": {
+            "type": "string"
+          }
+        }
+      },
+      "IApiKeyPostBody": {
+        "type": "object",
+        "required": [
+          "email",
+          "youtube_key"
+        ],
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "youtube_key": {
+            "type": "string"
+          }
+        }
+      },
       "IChannelDto": {
         "type": "object",
         "required": [
@@ -672,7 +694,7 @@
           "viewCount",
           "subscriber_count",
           "title",
-          "custom_url"
+          "author_url"
         ],
         "properties": {
           "id": {
@@ -693,7 +715,7 @@
           "title": {
             "type": "string"
           },
-          "custom_url": {
+          "author_url": {
             "type": "string"
           }
         }
@@ -707,7 +729,7 @@
           "viewCount",
           "subscriber_count",
           "title",
-          "custom_url"
+          "author_url"
         ],
         "properties": {
           "id": {
@@ -728,7 +750,7 @@
           "title": {
             "type": "string"
           },
-          "custom_url": {
+          "author_url": {
             "type": "string"
           }
         }
@@ -760,7 +782,7 @@
           }
         }
       },
-      "IcommentPostBody": {
+      "ICommentPostBody": {
         "type": "object",
         "required": [
           "comments"

@@ -43,15 +43,14 @@ interface IPostRequest extends IExpressRequest {
     body: IChannelPostBody;
 }
 
-interface IPostResponse extends IExpressResponse<IChannelDto[], void> {}
+interface IPostResponse extends IExpressResponse<void, void> {}
 
 app.post(API_URL.api.channel.toString(), async (req: IPostRequest, res: IPostResponse) => {
     const [, error] = await allServices.channel.postChannelAsync(req.body);
     if (error) {
         return res.status(400).send( error);
     }
-    const [data] = await getChannelListAllAsync({});
-    return res.send(data);
+    return res.send();
 });
 
 interface IPutRequest extends IExpressRequest {
@@ -61,7 +60,7 @@ interface IPutRequest extends IExpressRequest {
     };
 }
 
-interface IPutResponse extends IExpressResponse<IChannelDto, void> {}
+interface IPutResponse extends IExpressResponse<void, void> {}
 
 app.put(API_URL.api.channel.id().toString(), async (req: IPutRequest, res: IPutResponse) => {
     const [, error] = await allServices.channel.putChannelAsync(req.params.id, req.body);
@@ -69,8 +68,7 @@ app.put(API_URL.api.channel.id().toString(), async (req: IPutRequest, res: IPutR
         return res.status(400).send(error);
     }
 
-    const [data] = await allServices.channel.getChannelDetailsAsync(req.params.id);
-    return res.send(data);
+    return res.send();
 });
 
 interface IDeleteRequest extends IExpressRequest {
@@ -79,13 +77,12 @@ interface IDeleteRequest extends IExpressRequest {
     };
 }
 
-interface IDeleteResponse extends IExpressResponse<IChannelDto[], void> {}
+interface IDeleteResponse extends IExpressResponse<void, void> {}
 
 app.delete(API_URL.api.channel.id().toString(), async (req: IDeleteRequest, res: IDeleteResponse) => {
     const [, error] = await allServices.channel.deleteChannelAsync(req.params.id);
     if (error) {
         return res.status(400).send( error);
     }
-    const [data] = await getChannelListAllAsync({});
-    return res.send(data);
+    return res.send();
 });

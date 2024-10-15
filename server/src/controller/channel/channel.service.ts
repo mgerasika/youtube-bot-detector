@@ -7,8 +7,7 @@ import { typeOrmAsync } from "@server/utils/type-orm-async.util";
 
  export const getChannelListAllAsync = async ({channel_id}: {channel_id?:string}) : IAsyncPromiseResult<IChannelDto[]>=> {
     return await sqlAsync<IChannelDto[]>(async (client) => {
-        const { rows } = await client.query(`select * from channel ${sql_where('id', channel_id)} 
-			`);
+        const { rows } = await client.query(`select * from channel ${sql_where('id', channel_id)} `);
         return rows;
     });
 };

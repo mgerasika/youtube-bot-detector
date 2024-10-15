@@ -14,6 +14,14 @@ interface IApiUrl {
                 lastDate: IUrlItem;
                 id: (id?: string) => IUrlItem;
             };
+            apiKey: {
+                active: IUrlItem,
+            };
+
+            statistic: {
+                byVideo: IUrlItem,
+                byChannel: IUrlItem,
+            };
     };
 }
 
@@ -30,6 +38,13 @@ export const API_URL = createUrls<IApiUrl>({
             video: {
                 lastDate: EMPTY_URL_ITEM,
                 id: (id?: string) => EMPTY_URL_ITEM,
+            },
+            apiKey: {
+                active: EMPTY_URL_ITEM,
+            },
+            statistic: {
+                byVideo: EMPTY_URL_ITEM,
+                byChannel: EMPTY_URL_ITEM,
             },
     },
 });

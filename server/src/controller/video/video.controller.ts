@@ -60,7 +60,7 @@ interface IPostRequest extends IExpressRequest {
     body: IVideoPostBody;
 }
 
-interface IPostResponse extends IExpressResponse<IVideoDto[], void> {}
+interface IPostResponse extends IExpressResponse<void, void> {}
 
 app.post(API_URL.api.video.toString(), async (req: IPostRequest, res: IPostResponse) => {
     const [, error] = await allServices.video.postVideoAsync(req.body.videos);
@@ -77,7 +77,7 @@ interface IPutRequest extends IExpressRequest {
     };
 }
 
-interface IPutResponse extends IExpressResponse<IVideoDto, void> {}
+interface IPutResponse extends IExpressResponse<void, void> {}
 
 app.put(API_URL.api.video.id().toString(), async (req: IPutRequest, res: IPutResponse) => {
     const [, error] = await allServices.video.putVideoAsync(req.params.id, req.body);
@@ -85,8 +85,7 @@ app.put(API_URL.api.video.id().toString(), async (req: IPutRequest, res: IPutRes
         return res.status(400).send(error);
     }
 
-    const [data] = await allServices.video.getVideoDetailsAsync(req.params.id);
-    return res.send(data);
+    return res.send();
 });
 
 interface IDeleteRequest extends IExpressRequest {
@@ -95,13 +94,12 @@ interface IDeleteRequest extends IExpressRequest {
     };
 }
 
-interface IDeleteResponse extends IExpressResponse<IVideoDto[], void> {}
+interface IDeleteResponse extends IExpressResponse<void, void> {}
 
 app.delete(API_URL.api.video.id().toString(), async (req: IDeleteRequest, res: IDeleteResponse) => {
     const [, error] = await allServices.video.deleteVideoAsync(req.params.id);
     if (error) {
         return res.status(400).send( error);
     }
-    const [data] = await allServices.video.getVideoListAllAsync({});
-    return res.send(data);
+    return res.send();
 });

@@ -7,6 +7,7 @@ import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.int
 import { allServices } from '@server/controller/all-services';
 import { ICollection } from '@server/interfaces/collection';
 import { toQuery } from '@server/utils/to-query.util';
+import { getYoutube, processYoutubeErrorAsync } from '@server/youtube';
 
 export interface IGetVideosBody {
     channelName: string;
@@ -20,12 +21,11 @@ export interface IShortVideoInfo {
     privacyStatus: string;
 }
 
-const youtube = google.youtube({
-    version: 'v3',
-    auth: ENV.youtube_key,
-});
+
 
 export const getVideosAsync = async ({channelName, publishedAt}: IGetVideosBody): IAsyncPromiseResult<ICollection<IShortVideoInfo>> => {
+    const youtube = await getYoutube();
+    
     const [channelId, channelIdError] = await allServices.youtube.getChannelIdAsync(channelName);
     if (channelIdError) {
         return [, channelIdError];
@@ -41,10 +41,7 @@ export const getVideosAsync = async ({channelName, publishedAt}: IGetVideosBody)
     }));
 
     if (channelError) {
-        if (channelError.toString().includes('quota')) {
-            return [, 'youtube quota']
-        }
-        return [, channelError]
+        return await processYoutubeErrorAsync(channelError);
     }
 
     if (!channelResponse?.data.items || channelResponse.data.items.length === 0) {
@@ -70,10 +67,7 @@ export const getVideosAsync = async ({channelName, publishedAt}: IGetVideosBody)
         }));
 
         if (playListError) {
-            if (playListError.toString().includes('quota')) {
-                return [, 'youtube quota']
-            }
-            return [, playListError]
+            return await processYoutubeErrorAsync(playListError);
         }
 
         if (!playlistItemsResponse?.data.items || playlistItemsResponse.data.items.length === 0) {

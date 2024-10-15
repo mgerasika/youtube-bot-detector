@@ -5,7 +5,7 @@ import { AxiosResponse } from 'axios';
 import { ENV } from '@server/constants/env';
 import { allServices } from '@server/controller/all-services';
 import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
-import { api } from '@server/api.generated';
+import { api, IChannelDto } from '@server/api.generated';
 import { toQuery } from '@server/utils/to-query.util';
 import { rabbitMQ_sendDataAsync } from '@server/rabbit-mq';
 import { IScanVideosBody } from '../scan-videos/scan-videos.service';
@@ -16,7 +16,7 @@ export interface IGetChannelInfoBody {
 }
 
 
-export const scanChannelInfoAsync = async (body: IGetChannelInfoBody): IAsyncPromiseResult => {
+export const scanChannelInfoAsync = async (body: IGetChannelInfoBody): IAsyncPromiseResult<void> => {
     const [data,error] = await allServices.youtube.getChannelInfoAsync({channelName: body.channelName});
 
     if (data) {
@@ -25,7 +25,7 @@ export const scanChannelInfoAsync = async (body: IGetChannelInfoBody): IAsyncPro
                 published_at: new Date(data.publishedAt),
                 id: data.channelId,
                 title: data.title,
-                custom_url: data.customUrl || '',
+                author_url: data.authorUrl || '',
                 subscriber_count: +(data.subscriberCount || 0),
                 video_count: +(data.videoCount || 0),
                 viewCount: +(data.viewCount || 0),
@@ -42,5 +42,5 @@ export const scanChannelInfoAsync = async (body: IGetChannelInfoBody): IAsyncPro
         }
     }
 
-    return [data,error];
+    return [,error];
 };

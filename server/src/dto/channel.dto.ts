@@ -13,7 +13,7 @@ export interface IChannelDto {
 
     title: string;
 
-    custom_url: string;
+    author_url: string;
 }
 
 @Entity('channel')
@@ -25,7 +25,7 @@ export class ChannelDto implements IChannelDto {
     title!: string;
 
     @Column({ nullable: false, type: 'text'})
-    custom_url!: string;
+    author_url!: string;
 
     @Column({ nullable: false, type: 'date'})
     published_at!: Date;

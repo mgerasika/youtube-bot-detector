@@ -6,6 +6,7 @@ import { ENV } from '@server/constants/env';
 import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
 import { ICollection } from '@server/interfaces/collection';
 import { toQuery } from '@server/utils/to-query.util';
+import { getYoutube, processYoutubeErrorAsync } from '@server/youtube';
 
 export interface IGetCommentsBody {
     videoId: string;
@@ -21,12 +22,11 @@ export interface IShortCommentInfo {
     channelId: string;
 }
 
-const youtube = google.youtube({
-    version: 'v3',
-    auth: ENV.youtube_key,
-});
+
 
 export const getCommentsAsync = async ({videoId, publishedAt}: IGetCommentsBody): IAsyncPromiseResult<ICollection<IShortCommentInfo>> => {
+    const youtube = await getYoutube();
+    
     let allComments: Array<IShortCommentInfo> = [];
     let nextPageToken: string | null | undefined = '';
 
@@ -42,10 +42,7 @@ export const getCommentsAsync = async ({videoId, publishedAt}: IGetCommentsBody)
         }));
 
         if(commentsError) {
-            if(commentsError.toString().includes('quota')) {
-                return [, 'youtube quota']
-            }
-            return [, commentsError]
+           return processYoutubeErrorAsync(commentsError);
         }
 
         if (commentResponse?.data.items) {

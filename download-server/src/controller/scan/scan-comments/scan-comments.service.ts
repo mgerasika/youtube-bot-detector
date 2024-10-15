@@ -30,8 +30,8 @@ export const scanCommentsAsync = async (body: IScanCommentsBody): IAsyncPromiseR
     if (data) {
         const comments = data.items.reverse();
 
-        const groupedArray = groupArray(comments, 100);
-        await oneByOneAsync(groupedArray, async (group) => {
+        const groupedComments = groupArray(comments, 100);
+        await oneByOneAsync(groupedComments, async (group) => {
             const [, apiError] = await toQuery(() =>
                 api.commentPost({
                     comments: group.map((item) => {
@@ -48,7 +48,7 @@ export const scanCommentsAsync = async (body: IScanCommentsBody): IAsyncPromiseR
                 }),
             );
             if (apiError) {
-                console.log('error ', apiError);
+                throw apiError;
             } 
         });
 

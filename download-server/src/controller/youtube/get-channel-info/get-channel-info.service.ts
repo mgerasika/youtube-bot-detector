@@ -6,6 +6,7 @@ import { ENV } from '@server/constants/env';
 import { allServices } from '@server/controller/all-services';
 import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
 import { toQuery } from '@server/utils/to-query.util';
+import { getYoutube, processYoutubeErrorAsync } from '@server/youtube';
 
 export interface IGetChannelInfoBody {
     channelName: string;
@@ -17,19 +18,17 @@ export interface IShortChennelInfo {
     publishedAt: string;
     photo?: string;
     title: string;
-    customUrl?: string;
+    authorUrl?: string;
     viewCount?: string;
     subscriberCount?: string;
     hiddenSubscriberCount?: boolean;
     videoCount?: string;
 }
 
-const youtube = google.youtube({
-    version: 'v3',
-    auth: ENV.youtube_key,
-});
+
 
 export const getChannelInfoAsync = async (body: IGetChannelInfoBody): IAsyncPromiseResult<IShortChennelInfo> => {
+    const youtube = await getYoutube();
     const [channelId, channelIdError] = await allServices.youtube.getChannelIdAsync(body.channelName);
     if (channelIdError) {
         return [, channelIdError];
@@ -46,17 +45,14 @@ export const getChannelInfoAsync = async (body: IGetChannelInfoBody): IAsyncProm
             // 'localizations',
             'snippet',
             'statistics',
-            // 'status',
+            'status',
             // 'topicDetails',
         ],
         id: [channelId || ''],
     }));
 
     if (responseError) {
-        if (responseError.toString().includes('quota')) {
-            return [, 'youtube quota']
-        }
-        return [, responseError]
+       return await processYoutubeErrorAsync(responseError);
     }
 
     if (response?.data.items && response.data.items.length > 0) {
@@ -65,7 +61,7 @@ export const getChannelInfoAsync = async (body: IGetChannelInfoBody): IAsyncProm
             title: channel.snippet?.title || '',
             channelId: channel.id || '',
             publishedAt: channel.snippet?.publishedAt || '',
-            customUrl: channel.snippet?.customUrl || '',
+            authorUrl: channel.snippet?.customUrl || '',
             viewCount: channel.statistics?.videoCount || undefined,
             subscriberCount: channel.statistics?.subscriberCount || undefined,
             hiddenSubscriberCount: channel.statistics?.hiddenSubscriberCount || undefined,

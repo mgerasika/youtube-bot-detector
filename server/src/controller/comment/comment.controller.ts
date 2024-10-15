@@ -55,15 +55,15 @@ app.get(API_URL.api.comment.id().toString(), async (req: IGetRequest, res: IGetR
     return res.send(data);
 });
 
-export interface IcommentPostBody  {
+export interface ICommentPostBody  {
     comments: ICommentDto[];
 }
 
 interface IPostRequest extends IExpressRequest {
-    body: IcommentPostBody;
+    body: ICommentPostBody;
 }
 
-interface IPostResponse extends IExpressResponse<ICommentDto[], void> {}
+interface IPostResponse extends IExpressResponse<void, void> {}
 
 app.post(API_URL.api.comment.toString(), async (req: IPostRequest, res: IPostResponse) => {
     const [, error] = await allServices.comment.postCommentAsync(req.body.comments);
@@ -80,7 +80,7 @@ interface IPutRequest extends IExpressRequest {
     };
 }
 
-interface IPutResponse extends IExpressResponse<ICommentDto, void> {}
+interface IPutResponse extends IExpressResponse<void, void> {}
 
 app.put(API_URL.api.comment.id().toString(), async (req: IPutRequest, res: IPutResponse) => {
     const [, error] = await allServices.comment.putCommentAsync(req.params.id, req.body);
@@ -88,8 +88,7 @@ app.put(API_URL.api.comment.id().toString(), async (req: IPutRequest, res: IPutR
         return res.status(400).send(error);
     }
 
-    const [data] = await allServices.comment.getCommentDetailsAsync(req.params.id);
-    return res.send(data);
+    return res.send();
 });
 
 interface IDeleteRequest extends IExpressRequest {
@@ -98,13 +97,12 @@ interface IDeleteRequest extends IExpressRequest {
     };
 }
 
-interface IDeleteResponse extends IExpressResponse<ICommentDto[], void> {}
+interface IDeleteResponse extends IExpressResponse<void, void> {}
 
 app.delete(API_URL.api.comment.id().toString(), async (req: IDeleteRequest, res: IDeleteResponse) => {
     const [, error] = await allServices.comment.deleteCommentAsync(req.params.id);
     if (error) {
         return res.status(400).send( error);
     }
-    const [data] = await getCommentListAllAsync({});
-    return res.send(data);
+    return res.send();
 });

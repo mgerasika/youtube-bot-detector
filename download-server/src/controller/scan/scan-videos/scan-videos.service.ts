@@ -31,8 +31,8 @@ export const scanVideosAsync = async (body: IScanVideosBody): IAsyncPromiseResul
     if (data) {
         const videos = data.items.reverse();
 
-        const groupedArray = groupArray(videos, 100);
-        await oneByOneAsync(groupedArray, async (group) => {
+        const groupedVideos = groupArray(videos, 100);
+        await oneByOneAsync(groupedVideos, async (group) => {
             const [, apiError] = await toQuery(() =>
                 api.videoPost({
                     videos: group.map((item) => {
@@ -46,7 +46,7 @@ export const scanVideosAsync = async (body: IScanVideosBody): IAsyncPromiseResul
                 }),
             );
             if (apiError) {
-                console.log('error ', apiError);
+                throw apiError;
             } 
         });
 
