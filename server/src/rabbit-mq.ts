@@ -1,8 +1,8 @@
 import amqp, { Channel, Connection, ConsumeMessage } from 'amqplib';
-import { IQueryReturn } from './utils/to-query.util';
 import { ENV } from './constants/env';
 import { IRabbitMqMessage } from './interfaces/rabbit-mq-message.interface';
 import { CONST } from './constants/const.contant';
+import { IAsyncPromiseResult } from './interfaces/async-promise-result.interface';
 
 let _connection: Connection | undefined;
 let _channel: Channel;
@@ -37,7 +37,7 @@ export async function rabbitMQ_subscribeAsync(callback: (data: IRabbitMqMessage)
                 (data: ConsumeMessage | null) => {
                     if (data) {
                         const body = Buffer.from(data.content);
-                        console.log('Rabbit MQ Data received :', `${body}`);
+                        console.log('Rabbit MQ Data received on server :', `${body}`);
                         let obj;
                         try {
                             obj = JSON.parse(body.toString());
@@ -68,7 +68,7 @@ export async function rabbitMQ_subscribeAsync(callback: (data: IRabbitMqMessage)
     }
 }
 
-export const rabbitMQ_sendDataAsync = async (data: IRabbitMqMessage): Promise<IQueryReturn<boolean>> => {
+export const rabbitMQ_sendDataAsync = async (data: IRabbitMqMessage): IAsyncPromiseResult<boolean> => {
     await rabbitMQ_createConnectionAsync();
 
     if (_channel) {

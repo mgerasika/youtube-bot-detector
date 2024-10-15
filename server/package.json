@@ -15,7 +15,7 @@
     "license": "ISC",
     "type": "commonjs",
    "engines": {
-        "node": "18.19.0"
+        "node": "18.19.1"
     },
     "dependencies": {
         "amqplib": "^0.10.3",

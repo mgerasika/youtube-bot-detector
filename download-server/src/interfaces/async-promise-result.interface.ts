@@ -1,2 +1,4 @@
+import { AxiosError } from "axios";
 
-export type IAsyncPromiseResult<T> = Promise<([T , string]) | ([T]) | [undefined, string]>
+type TError = string | undefined | Error | AxiosError;
+export type IAsyncPromiseResult<T> = Promise<[T] | [void, TError] > 

@@ -6,35 +6,7 @@
     "version": "0.0.1"
   },
   "paths": {
-    "api/scan/get-channel-id/": {
-      "post": {
-        "operationId": "",
-        "summary": "",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IGetChannelIdBody"
-              }
-            }
-          }
-        },
-        "responses": {
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "api/scan/get-channel-info/": {
+    "api/scan/scan-channel-info/": {
       "post": {
         "operationId": "",
         "summary": "",
@@ -62,7 +34,119 @@
         }
       }
     },
-    "api/scan/get-comments/": {
+    "api/scan/scan-comments/": {
+      "post": {
+        "operationId": "",
+        "summary": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IScanCommentsBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "api/scan/scan-videos/": {
+      "post": {
+        "operationId": "",
+        "summary": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IScanVideosBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "api/youtube/get-channel-id/": {
+      "post": {
+        "operationId": "",
+        "summary": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IGetChannelIdBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "api/youtube/get-channel-info/": {
+      "post": {
+        "operationId": "",
+        "summary": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IGetChannelInfoBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "api/youtube/get-comments/": {
       "post": {
         "operationId": "",
         "summary": "",
@@ -90,7 +174,7 @@
         }
       }
     },
-    "api/scan/get-videos/": {
+    "api/youtube/get-videos/": {
       "post": {
         "operationId": "",
         "summary": "",
@@ -121,7 +205,7 @@
   },
   "components": {
     "schemas": {
-      "IGetChannelIdBody": {
+      "IGetChannelInfoBody": {
         "type": "object",
         "required": [
           "channelName"
@@ -132,7 +216,29 @@
           }
         }
       },
-      "IGetChannelInfoBody": {
+      "IScanCommentsBody": {
+        "type": "object",
+        "required": [
+          "videoId"
+        ],
+        "properties": {
+          "videoId": {
+            "type": "string"
+          }
+        }
+      },
+      "IScanVideosBody": {
+        "type": "object",
+        "required": [
+          "channelName"
+        ],
+        "properties": {
+          "channelName": {
+            "type": "string"
+          }
+        }
+      },
+      "IGetChannelIdBody": {
         "type": "object",
         "required": [
           "channelName"
@@ -146,10 +252,14 @@
       "IGetCommentsBody": {
         "type": "object",
         "required": [
-          "videoId"
+          "videoId",
+          "publishedAt"
         ],
         "properties": {
           "videoId": {
+            "type": "string"
+          },
+          "publishedAt": {
             "type": "string"
           }
         }
@@ -157,10 +267,14 @@
       "IGetVideosBody": {
         "type": "object",
         "required": [
-          "channelName"
+          "channelName",
+          "publishedAt"
         ],
         "properties": {
           "channelName": {
+            "type": "string"
+          },
+          "publishedAt": {
             "type": "string"
           }
         }

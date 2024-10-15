@@ -1,9 +1,9 @@
 import { ENV } from '@server/constants/env';
 import { DataSource } from 'typeorm';
-import { IQueryReturn } from './to-query.util';
-import { ActorDto } from '@server/dto/actor.dto';
 import { VideoDto } from '@server/dto/video.dto';
 import { ChannelDto } from '@server/dto/channel.dto';
+import { CommentDto } from '@server/dto/comment.dto';
+import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
 
 const IS_DEBUG = ENV.node_env === 'development';
 
@@ -19,7 +19,7 @@ const getDataSource = (): DataSource => {
         database: ENV.database,
         password: IS_DEBUG ? ENV.owner_password : ENV.password,
         port: ENV.port,
-        entities: [ActorDto,VideoDto,ChannelDto],
+        entities: [VideoDto,ChannelDto,CommentDto],
         synchronize: true,
         poolSize: 10,
         logging: false,
@@ -27,7 +27,7 @@ const getDataSource = (): DataSource => {
     return _dataSource;
 };
 
-export async function typeOrmAsync<T>(callback: (client: DataSource) => Promise<IQueryReturn<T>>): Promise<IQueryReturn<T>> {
+export async function typeOrmAsync<T>(callback: (client: DataSource) => IAsyncPromiseResult<T>): IAsyncPromiseResult<T> {
     let client = getDataSource();
     try {
         if (!client.isInitialized) {
@@ -36,7 +36,7 @@ export async function typeOrmAsync<T>(callback: (client: DataSource) => Promise<
         if (!client.isInitialized) {
             return [, 'Client is not Initialized'];
         }
-        const data: IQueryReturn<T> = (await callback(client)) as IQueryReturn<T>;
+        const data = (await callback(client));
         return data;
     } catch (error) {
         console.log('typeOrm error ', error);

@@ -13,9 +13,12 @@ const port = process.env.PORT || 8006;
 if (ENV.rabbit_mq) {
     rabbitMQ_subscribeAsync((data) => {
         if (data.msg) {
-            // console.log('recieved from rabbit mq', data.setupBody);
+            const method = (allServices.scan as any)[data.msg.methodName] as Function;
+            if(method) {
+                return  method.call(allServices.scan, data.msg.methodArgumentsJson);
+            }
         }
-        return Promise.resolve('empty');
+        return Promise.resolve();
     });
 }
 // console.log('ENV = ', ENV);

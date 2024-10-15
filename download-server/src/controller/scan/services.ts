@@ -1,11 +1,9 @@
-import { getVideosAsync } from './get-videos/get-videos.service';
-import { getCommentsAsync } from './get-comments/get-comments.service';
-import { getChannelInfoAsync } from './get-channel-info/get-channel-info.service';
-import { getChannelIdAsync } from './get-channel-id/get-channel-id.service';
+import { scanVideosAsync } from './scan-videos/scan-videos.service';
+import { scanCommentsAsync } from './scan-comments/scan-comments.service';
+import { scanChannelInfoAsync } from './scan-channel-info/scan-channel-info.service';
 
 export const scan = {
-      getVideosAsync,
-      getCommentsAsync,
-      getChannelInfoAsync,
-      getChannelIdAsync,
+       scanVideosAsync,
+       scanCommentsAsync,
+       scanChannelInfoAsync,
 };

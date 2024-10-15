@@ -1,8 +1,6 @@
-import { AxiosError } from 'axios';
+import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
 
-export type IQueryReturn<T> = [T, undefined] | [undefined, string | Error | AxiosError] | [T];
-
-export async function toQuery<T>(callback: () => Promise<T>): Promise<IQueryReturn<T>> {
+export async function toQuery<T>(callback: () => Promise<T>): IAsyncPromiseResult<T>{
     try {
         const data = (await callback()) as T;
         return [data];
@@ -14,7 +12,7 @@ export async function toQuery<T>(callback: () => Promise<T>): Promise<IQueryRetu
 
 export async function toQueryPromise<T>(
     callback: (resolve: (data: T) => void, reject: (error: string | Error) => void) => void,
-): Promise<IQueryReturn<T>> {
+): IAsyncPromiseResult<T> {
     return await toQuery(() => {
         return new Promise((resolve, reject) => {
             return callback(resolve, reject);

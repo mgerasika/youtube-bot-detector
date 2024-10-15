@@ -1,6 +1,6 @@
 export interface IRabbitMqBody {
-    exampleMessage?: string;
-    exampleFlag?: boolean;
+    methodArgumentsJson: any;
+    methodName: string;
 }
 
 export interface IRabbitMqMessage {

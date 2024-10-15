@@ -3,9 +3,9 @@ import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn } from 'typeorm';
 export interface IVideoDto {
     id: string;
 
-    publishedAt: string;
+    published_at: Date;
 
-    authorId: string;
+    channel_id: string;
 
     title: string;
    
@@ -17,10 +17,10 @@ export class VideoDto implements IVideoDto {
     id!: string;
 
     @Column({ nullable: false, type: 'date'})
-    publishedAt!: string;
+    published_at!: Date;
 
     @Column({ nullable: false, type: 'text'})
-    authorId!: string;
+    channel_id!: string;
 
     @Column({ nullable: false, type: 'text'})
     title!: string;

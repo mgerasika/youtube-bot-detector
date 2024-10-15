@@ -3,11 +3,13 @@ import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn } from 'typeorm';
 export interface ICommentDto {
     id: string;
 
-    publishedAt: string;
+    published_at: Date;
 
-    authorId: string;
+    author_id: string;
 
-    videoId: string;
+    video_id: string;
+
+    text: string;
    
 }
 
@@ -17,13 +19,16 @@ export class CommentDto implements ICommentDto {
     id!: string;
 
     @Column({ nullable: false, type: 'date'})
-    publishedAt!: string;
+    published_at!: Date;
 
     @Column({ nullable: false, type: 'text'})
-    authorId!: string;
+    author_id!: string;
 
     @Column({ nullable: false, type: 'text'})
-    videoId!: string;
+    text!: string;
+
+    @Column({ nullable: false, type: 'text'})
+    video_id!: string;
 
     constructor(id: string) {
         this.id = id;

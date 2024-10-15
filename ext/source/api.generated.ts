@@ -17,58 +17,169 @@ const API_SERVER_URL = "http://localhost:8005/";
 
 // DON'T REMOVE THIS COMMENTS!!! Code between comments auto-generated
 // INSERT START
-export interface IActorResponse {
+export interface IChannelDto {
 	'id': string;
-	'name': string;
+	'published_at': Date;
+	'video_count': number;
+	'viewCount': number;
+	'subscriber_count': number;
+	'title': string;
+	'custom_url': string;
 }
-export interface IPostActorBody {
-	'name': string;
+export interface IChannelPostBody {
+	'id': string;
+	'published_at': Date;
+	'video_count': number;
+	'viewCount': number;
+	'subscriber_count': number;
+	'title': string;
+	'custom_url': string;
 }
-export interface IPutActorBody {
-	'name': string;
+export interface ICommentDto {
+	'id': string;
+	'published_at': Date;
+	'author_id': string;
+	'video_id': string;
+	'text': string;
 }
-export type TActorIdDeleteError = ''
+export interface IcommentPostBody {
+	'comments': ICommentDto[];
+}
+export interface IVideoDto {
+	'id': string;
+	'published_at': Date;
+	'channel_id': string;
+	'title': string;
+}
+export interface IVideoPostBody {
+	'videos': IVideoDto[];
+}
+export type TChannelGetError = ''
 	 |'undefined';
-export type TActorIdGetError = ''
+export type TChannelPostError = ''
 	 |'undefined';
-export type TActorIdPutError = ''
+export type TChannelIdGetError = ''
 	 |'undefined';
-export type TActorGetError = ''
+export type TChannelIdPutError = ''
 	 |'undefined';
-export type TActorPostError = ''
+export type TChannelIdDeleteError = ''
+	 |'undefined';
+export type TCommentLastDateGetError = ''
+	 |'undefined';
+export type TCommentGetError = ''
+	 |'undefined';
+export type TCommentPostError = ''
+	 |'undefined';
+export type TCommentIdGetError = ''
+	 |'undefined';
+export type TCommentIdPutError = ''
+	 |'undefined';
+export type TCommentIdDeleteError = ''
+	 |'undefined';
+export type TVideoLastDateGetError = ''
+	 |'undefined';
+export type TVideoGetError = ''
+	 |'undefined';
+export type TVideoPostError = ''
+	 |'undefined';
+export type TVideoIdGetError = ''
+	 |'undefined';
+export type TVideoIdPutError = ''
+	 |'undefined';
+export type TVideoIdDeleteError = ''
 	 |'undefined';
 export type TPartialErrorCodes =
 
-	 | TActorIdDeleteError
-	 | TActorIdGetError
-	 | TActorIdPutError
-	 | TActorGetError
-	 | TActorPostError	 | '';
+	 | TChannelGetError
+	 | TChannelPostError
+	 | TChannelIdGetError
+	 | TChannelIdPutError
+	 | TChannelIdDeleteError
+	 | TCommentLastDateGetError
+	 | TCommentGetError
+	 | TCommentPostError
+	 | TCommentIdGetError
+	 | TCommentIdPutError
+	 | TCommentIdDeleteError
+	 | TVideoLastDateGetError
+	 | TVideoGetError
+	 | TVideoPostError
+	 | TVideoIdGetError
+	 | TVideoIdPutError
+	 | TVideoIdDeleteError	 | '';
 
 export const createApiRequest = (rs: IRequestService) => ({
-	actorIdDelete : (id:string): CustomPromise<CustomAxiosResponse<Array<IActorResponse>,TActorIdDeleteError>,IBEError<TActorIdDeleteError>> =>
-		rs.delete(formatUrl(API_SERVER_URL + `api/actor/${id}`) ),
+	channelGet : (query: {channel_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<IChannelDto>,TChannelGetError>,IBEError<TChannelGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `api/channel/`, query) ),
 
-	actorIdGet : (id:string): CustomPromise<CustomAxiosResponse<IActorResponse,TActorIdGetError>,IBEError<TActorIdGetError>> =>
-		rs.get(formatUrl(API_SERVER_URL + `api/actor/${id}`) ),
+	channelPost : (body: IChannelPostBody): CustomPromise<CustomAxiosResponse<Array<IChannelDto>,TChannelPostError>,IBEError<TChannelPostError>> =>
+		rs.post(formatUrl(API_SERVER_URL + `api/channel/`) , body),
 
-	actorIdPut : (id:string, body: IPutActorBody): CustomPromise<CustomAxiosResponse<IActorResponse,TActorIdPutError>,IBEError<TActorIdPutError>> =>
-		rs.put(formatUrl(API_SERVER_URL + `api/actor/${id}`) , body),
+	channelIdGet : (id:string): CustomPromise<CustomAxiosResponse<IChannelDto,TChannelIdGetError>,IBEError<TChannelIdGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `api/channel/${id}`) ),
 
-	actorGet : (query: {actor_name?:string,movie_id?:string,imdb_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<IActorResponse>,TActorGetError>,IBEError<TActorGetError>> =>
-		rs.get(formatUrl(API_SERVER_URL + `api/actor/`, query) ),
+	channelIdPut : (id:string, body: IChannelDto): CustomPromise<CustomAxiosResponse<IChannelDto,TChannelIdPutError>,IBEError<TChannelIdPutError>> =>
+		rs.put(formatUrl(API_SERVER_URL + `api/channel/${id}`) , body),
 
-	actorPost : (body: IPostActorBody): CustomPromise<CustomAxiosResponse<Array<IActorResponse>,TActorPostError>,IBEError<TActorPostError>> =>
-		rs.post(formatUrl(API_SERVER_URL + `api/actor/`) , body),
+	channelIdDelete : (id:string): CustomPromise<CustomAxiosResponse<Array<IChannelDto>,TChannelIdDeleteError>,IBEError<TChannelIdDeleteError>> =>
+		rs.delete(formatUrl(API_SERVER_URL + `api/channel/${id}`) ),
+
+	commentLastDateGet : (query: {video_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Date,TCommentLastDateGetError>,IBEError<TCommentLastDateGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `api/comment/last-date/`, query) ),
+
+	commentGet : (query: {comment_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<ICommentDto>,TCommentGetError>,IBEError<TCommentGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `api/comment/`, query) ),
+
+	commentPost : (body: IcommentPostBody): CustomPromise<CustomAxiosResponse<Array<ICommentDto>,TCommentPostError>,IBEError<TCommentPostError>> =>
+		rs.post(formatUrl(API_SERVER_URL + `api/comment/`) , body),
+
+	commentIdGet : (id:string): CustomPromise<CustomAxiosResponse<ICommentDto,TCommentIdGetError>,IBEError<TCommentIdGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `api/comment/${id}`) ),
+
+	commentIdPut : (id:string, body: ICommentDto): CustomPromise<CustomAxiosResponse<ICommentDto,TCommentIdPutError>,IBEError<TCommentIdPutError>> =>
+		rs.put(formatUrl(API_SERVER_URL + `api/comment/${id}`) , body),
+
+	commentIdDelete : (id:string): CustomPromise<CustomAxiosResponse<Array<ICommentDto>,TCommentIdDeleteError>,IBEError<TCommentIdDeleteError>> =>
+		rs.delete(formatUrl(API_SERVER_URL + `api/comment/${id}`) ),
+
+	videoLastDateGet : (query: {channel_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Date,TVideoLastDateGetError>,IBEError<TVideoLastDateGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `api/video/last-date/`, query) ),
+
+	videoGet : (query: {video_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<IVideoDto>,TVideoGetError>,IBEError<TVideoGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `api/video/`, query) ),
+
+	videoPost : (body: IVideoPostBody): CustomPromise<CustomAxiosResponse<Array<IVideoDto>,TVideoPostError>,IBEError<TVideoPostError>> =>
+		rs.post(formatUrl(API_SERVER_URL + `api/video/`) , body),
+
+	videoIdGet : (id:string): CustomPromise<CustomAxiosResponse<IVideoDto,TVideoIdGetError>,IBEError<TVideoIdGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `api/video/${id}`) ),
+
+	videoIdPut : (id:string, body: IVideoDto): CustomPromise<CustomAxiosResponse<IVideoDto,TVideoIdPutError>,IBEError<TVideoIdPutError>> =>
+		rs.put(formatUrl(API_SERVER_URL + `api/video/${id}`) , body),
+
+	videoIdDelete : (id:string): CustomPromise<CustomAxiosResponse<Array<IVideoDto>,TVideoIdDeleteError>,IBEError<TVideoIdDeleteError>> =>
+		rs.delete(formatUrl(API_SERVER_URL + `api/video/${id}`) ),
 
 });
 
 const URL = {
-	actorIdDelete:  (id:string): string => `api/actor/${id}`,
-	actorIdGet:  (id:string): string => `api/actor/${id}`,
-	actorIdPut:  (id:string): string => `api/actor/${id}`,
-	actorGet:  (): string => `api/actor/`,
-	actorPost:  (): string => `api/actor/`,
+	channelGet:  (): string => `api/channel/`,
+	channelPost:  (): string => `api/channel/`,
+	channelIdGet:  (id:string): string => `api/channel/${id}`,
+	channelIdPut:  (id:string): string => `api/channel/${id}`,
+	channelIdDelete:  (id:string): string => `api/channel/${id}`,
+	commentLastDateGet:  (): string => `api/comment/last-date/`,
+	commentGet:  (): string => `api/comment/`,
+	commentPost:  (): string => `api/comment/`,
+	commentIdGet:  (id:string): string => `api/comment/${id}`,
+	commentIdPut:  (id:string): string => `api/comment/${id}`,
+	commentIdDelete:  (id:string): string => `api/comment/${id}`,
+	videoLastDateGet:  (): string => `api/video/last-date/`,
+	videoGet:  (): string => `api/video/`,
+	videoPost:  (): string => `api/video/`,
+	videoIdGet:  (id:string): string => `api/video/${id}`,
+	videoIdPut:  (id:string): string => `api/video/${id}`,
+	videoIdDelete:  (id:string): string => `api/video/${id}`,
 };
 // INSERT END
 // DON'T REMOVE THIS COMMENTS!!!
@@ -77,6 +188,30 @@ export const API_URL = URL;
 export const api = {
   ...createApiRequest(requestService),
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

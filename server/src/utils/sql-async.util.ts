@@ -1,6 +1,6 @@
 const { Pool } = require('pg');
 import { ENV } from '@server/constants/env';
-import { IQueryReturn } from './to-query.util';
+import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
 // create a new PostgreSQL pool with your database configuration
 let _pool: typeof Pool | undefined = undefined;
 
@@ -33,7 +33,7 @@ class ClientAdapter {
 	}
 }
 
-export async function sqlAsync<T>(callback: (client: any) => Promise<T>): Promise<IQueryReturn<T>> {
+export async function sqlAsync<T>(callback: (client: any) => Promise<T>): IAsyncPromiseResult<T> {
     let client;
     try {
         client = await getPool().connect();
