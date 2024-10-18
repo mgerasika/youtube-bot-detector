@@ -10,7 +10,7 @@ const getActiveApiKeyAsync = async (old_key: string | undefined): IAsyncPromiseR
         const [, updateError] = await sqlAsync<IApiKeyDto[]>(async (client) => {
             const { rows } = await client.query(`UPDATE public.api_key
                 SET expired=${sql_escape(new Date().toISOString())}
-                WHERE youtube_key = ${sql_escape(old_key)}`);
+                WHERE youtube_key = ${sql_escape(old_key)} and youtube_key IS NULL`);
             return rows;
         });
         if (updateError) {
