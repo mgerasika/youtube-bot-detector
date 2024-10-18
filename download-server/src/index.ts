@@ -1,10 +1,16 @@
 require('module-alias/register');
-import { rabbitMQ_subscribeAsync } from '@server/rabbit-mq';
-import { connectToRedisAsync } from '@server/redis';
+
+import dotenv from 'dotenv';
+dotenv.config(); // Load environment variables from .env
+
+import { ENV } from '@server/constants/env';
 import { allServices } from './controller/all-services';
 import { app } from './express-app';
-import { ENV } from '@server/constants/env';
 import './controller/all-controllers';
+import { rabbitMQ_subscribeAsync } from '@server/rabbit-mq';
+import { connectToRedisAsync } from '@server/redis';
+
+console.log('ENV=', ENV);
 
 app.get('/', (req, res) => {
     res.send(JSON.stringify(allServices, null, 2));

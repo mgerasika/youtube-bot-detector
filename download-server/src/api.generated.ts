@@ -14,7 +14,7 @@ import {
 } from 'swagger-to-typescript2';
 import { ENV } from './constants/env';
 
-const API_SERVER_URL = ENV.API_SERVER_URL;
+const API_SERVER_URL = ENV.api_server_url;
 
 // DON'T REMOVE THIS COMMENTS!!! Code between comments auto-generated
 // INSERT START

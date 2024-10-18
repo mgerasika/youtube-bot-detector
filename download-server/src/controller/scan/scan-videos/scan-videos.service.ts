@@ -1,12 +1,13 @@
 import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
-import { allServices } from '@server/controller/all-services';
-import { api } from '@server/api.generated';
 import { oneByOneAsync } from '@server/utils/one-by-one-async.util';
 import { toQuery } from '@server/utils/to-query.util';
 import { groupArray } from '@server/utils/group-array.util';
 import { IScanCommentsBody } from '../scan-comments/scan-comments.service';
 import { nameOf } from '@server/utils/name-of';
 import { rabbitMQ_sendDataAsync } from '@server/rabbit-mq';
+import { getVideosAsync } from '@server/controller/youtube/get-videos/get-videos.service';
+import { api } from '@server/api.generated';
+import { scan } from '../services';
 
 export interface IScanVideosBody {
     channelId: string;
@@ -23,7 +24,7 @@ export const scanVideosAsync = async (body: IScanVideosBody): IAsyncPromiseResul
     }
     console.log('last_date = ', lastDate?.data);
 
-    const [data, error] = await allServices.youtube.getVideosAsync({channelId:body.channelId, publishedAt: lastDate?.data?.toString() || ''});
+    const [data, error] = await getVideosAsync({channelId:body.channelId, publishedAt: lastDate?.data?.toString() || ''});
     console.log('recieved videos count = ', data?.items.length);
 
     if (data) {
@@ -52,7 +53,7 @@ export const scanVideosAsync = async (body: IScanVideosBody): IAsyncPromiseResul
             const arg: IScanCommentsBody = {
                 videoId: video.videoId
             }
-            rabbitMQ_sendDataAsync({msg:{methodName:  nameOf<typeof allServices.scan>('scanCommentsAsync'), methodArgumentsJson: arg}})
+            rabbitMQ_sendDataAsync({msg:{methodName:  nameOf<typeof scan>('scanCommentsAsync'), methodArgumentsJson: arg}})
         })
         return [`post to videos db ${videos.length}`];
     }

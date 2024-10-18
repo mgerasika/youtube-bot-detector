@@ -5,7 +5,6 @@ import { AxiosResponse } from 'axios';
 import { ENV } from '@server/constants/env';
 import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
 import { ICollection } from '@server/interfaces/collection';
-import { allServices } from '@server/controller/all-services';
 import { api } from '@server/api.generated';
 import { rabbitMQ_sendDataAsync } from '@server/rabbit-mq';
 import { groupArray } from '@server/utils/group-array.util';
@@ -14,6 +13,8 @@ import { oneByOneAsync } from '@server/utils/one-by-one-async.util';
 import { toQuery } from '@server/utils/to-query.util';
 import { IScanChannelInfoBody } from '../scan-channel-info/scan-channel-info.service';
 import { IScanAuthorsBody } from '../scan-auhors/scan-authors.service';
+import { getCommentsAsync } from '@server/controller/youtube/get-comments/get-comments.service';
+import { scan } from '../services';
 
 export interface IScanCommentsBody {
     videoId: string;
@@ -26,7 +27,7 @@ export const scanCommentsAsync = async (body: IScanCommentsBody): IAsyncPromiseR
     }
     console.log('last_date = ', lastDate?.data);
 
-    const [data, error] = await allServices.youtube.getCommentsAsync({videoId:body.videoId, publishedAt: lastDate?.data?.toString() || '' });
+    const [data, error] = await getCommentsAsync({videoId:body.videoId, publishedAt: lastDate?.data?.toString() || '' });
     console.log('recieved comments count = ', data?.items.length);
 
     if (data) {
@@ -58,7 +59,7 @@ export const scanCommentsAsync = async (body: IScanCommentsBody): IAsyncPromiseR
             videoId: body.videoId
         }
         
-        rabbitMQ_sendDataAsync({msg:{methodName:  nameOf<typeof allServices.scan>('scanAuthorsAsync'), methodArgumentsJson: arg}})
+        rabbitMQ_sendDataAsync({msg:{methodName:  nameOf<typeof scan>('scanAuthorsAsync'), methodArgumentsJson: arg}})
 
      
         return [`post to db comments ${comments.length}`];

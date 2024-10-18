@@ -1,4 +1,5 @@
 import { createClient } from 'redis';
+import { ENV } from './constants/env';
 
 // docker run -d --name redis-container --restart always -p 6379:6379 redis
 // docker run -d --name redisinsight -p 5540:5540 redis/redisinsight:latest
@@ -11,7 +12,7 @@ export async function connectToRedisAsync(): Promise<TRedisClient > {
     if (!_client) {
         // Create a Redis client
         _client = createClient({
-            url: 'redis://192.168.0.16:6379', // Use the appropriate connection string
+            url: ENV.redis_url, // Use the appropriate connection string
         });
         try {
             await _client.connect();

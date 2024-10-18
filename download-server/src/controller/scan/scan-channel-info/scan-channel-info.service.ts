@@ -3,13 +3,14 @@ import { API_URL } from '@server/constants/api-url.constant';
 import { google, youtube_v3 } from 'googleapis';
 import { AxiosResponse } from 'axios';
 import { ENV } from '@server/constants/env';
-import { allServices } from '@server/controller/all-services';
 import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
 import { api, IChannelDto } from '@server/api.generated';
 import { toQuery } from '@server/utils/to-query.util';
 import { rabbitMQ_sendDataAsync } from '@server/rabbit-mq';
 import { IScanVideosBody } from '../scan-videos/scan-videos.service';
 import { nameOf } from '@server/utils/name-of';
+import { scan } from '../services';
+import { getChannelInfoAsync } from '@server/controller/youtube/get-channel-info/get-channel-info.service';
 
 export interface IScanChannelInfoBody {
     channelId: string;
@@ -18,7 +19,7 @@ export interface IScanChannelInfoBody {
 
 
 export const scanChannelInfoAsync = async (body: IScanChannelInfoBody): IAsyncPromiseResult<void> => {
-    const [data,error] = await allServices.youtube.getChannelInfoAsync({channelId: body.channelId});
+    const [data,error] = await getChannelInfoAsync({channelId: body.channelId});
 
     if (data) {
         const [success, apiError] = await toQuery(() =>
@@ -39,7 +40,7 @@ export const scanChannelInfoAsync = async (body: IScanChannelInfoBody): IAsyncPr
             const arg: IScanVideosBody = {
                 channelId: body.channelId
             }
-            rabbitMQ_sendDataAsync({msg:{methodName:  nameOf<typeof allServices.scan>('scanVideosAsync'), methodArgumentsJson: arg}})
+            rabbitMQ_sendDataAsync({msg:{methodName:  nameOf<typeof scan>('scanVideosAsync'), methodArgumentsJson: arg}})
         }
     }
 

@@ -80,7 +80,7 @@ function sendAgain(body: Buffer) {
         _channel.sendToQueue(CONST.RABBIT_MQ_CHANNEL_NAME, body, {
             persistent: true, // Ensure the message is durable
         });
-    }, ENV.SEND_TO_RABBIT_MQ_AGAIN_DELAY);
+    }, ENV.send_to_rabbit_mq_again_delay);
 }
 
 const getMessageId = (msg: IRabbitMqBody) => {
