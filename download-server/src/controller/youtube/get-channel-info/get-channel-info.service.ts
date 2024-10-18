@@ -1,7 +1,7 @@
 import { IExpressRequest, IExpressResponse, app } from '@server/express-app';
 import { API_URL } from '@server/constants/api-url.constant';
 import { google, youtube_v3 } from 'googleapis';
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { ENV } from '@server/constants/env';
 import { allServices } from '@server/controller/all-services';
 import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
@@ -9,7 +9,7 @@ import { toQuery } from '@server/utils/to-query.util';
 import { getYoutube, processYoutubeErrorAsync } from '@server/youtube';
 
 export interface IGetChannelInfoBody {
-    channelName: string;
+    channelId: string;
 }
 
 // TODO add support string | null in code generator.
@@ -25,15 +25,12 @@ export interface IShortChennelInfo {
     videoCount?: string;
 }
 
-
-
 export const getChannelInfoAsync = async (body: IGetChannelInfoBody): IAsyncPromiseResult<IShortChennelInfo> => {
-    const youtube = await getYoutube();
-    const [channelId, channelIdError] = await allServices.youtube.getChannelIdAsync(body.channelName);
-    if (channelIdError) {
-        return [, channelIdError];
+    const [youtube, youtubeError] = await getYoutube();
+    if(!youtube || youtubeError) {
+        return [, youtubeError];
     }
-
+    
     // Search for the channel based on the custom name or username
     const [response, responseError] = await toQuery(() => youtube.channels.list({
         part: [
@@ -48,11 +45,11 @@ export const getChannelInfoAsync = async (body: IGetChannelInfoBody): IAsyncProm
             'status',
             // 'topicDetails',
         ],
-        id: [channelId || ''],
+        id: [body.channelId || ''],
     }));
 
     if (responseError) {
-       return await processYoutubeErrorAsync(responseError);
+       return await processYoutubeErrorAsync(responseError as AxiosError);
     }
 
     if (response?.data.items && response.data.items.length > 0) {

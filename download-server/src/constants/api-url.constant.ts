@@ -8,6 +8,7 @@ interface IApiUrl {
             scanVideos: IUrlItem;
             scanComments: IUrlItem;
             scanChannelInfo: IUrlItem;
+            scanAuthors: IUrlItem;
         };
 
         youtube: {
@@ -26,7 +27,8 @@ export const API_URL = createUrls<IApiUrl>({
         scan: {
             scanVideos: EMPTY_URL_ITEM,
             scanComments: EMPTY_URL_ITEM,
-            scanChannelInfo: EMPTY_URL_ITEM
+            scanChannelInfo: EMPTY_URL_ITEM,
+            scanAuthors: EMPTY_URL_ITEM
         },
         youtube: {
             getVideos: EMPTY_URL_ITEM,

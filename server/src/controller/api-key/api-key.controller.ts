@@ -5,12 +5,15 @@ import { IApiKeyDto } from "@server/dto/api-key.dto";
 
 
 interface IGetRequest extends IExpressRequest {
+    query: {
+        old_key?: string;
+    }
 }
 
 interface IGetResponse extends IExpressResponse<IApiKeyDto, void> {}
 
 app.get(API_URL.api.apiKey.active.toString(), async (req: IGetRequest, res: IGetResponse) => {
-    const [data, error] = await allServices.apiKey.getActiveApiKeyAsync();
+    const [data, error] = await allServices.apiKey.getActiveApiKeyAsync(req.query.old_key as string);
     if (error) {
         return res.status(400).send( error);
     }

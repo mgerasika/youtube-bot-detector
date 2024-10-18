@@ -1,7 +1,7 @@
 import { IExpressRequest, IExpressResponse, app } from '@server/express-app';
 import { API_URL } from '@server/constants/api-url.constant';
 import { google, youtube_v3 } from 'googleapis';
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { ENV } from '@server/constants/env';
 import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
 import { allServices } from '@server/controller/all-services';
@@ -10,7 +10,7 @@ import { toQuery } from '@server/utils/to-query.util';
 import { getYoutube, processYoutubeErrorAsync } from '@server/youtube';
 
 export interface IGetVideosBody {
-    channelName: string;
+    channelId: string;
     publishedAt: string;
 }
 export interface IShortVideoInfo {
@@ -21,16 +21,12 @@ export interface IShortVideoInfo {
     privacyStatus: string;
 }
 
-
-
-export const getVideosAsync = async ({channelName, publishedAt}: IGetVideosBody): IAsyncPromiseResult<ICollection<IShortVideoInfo>> => {
-    const youtube = await getYoutube();
-    
-    const [channelId, channelIdError] = await allServices.youtube.getChannelIdAsync(channelName);
-    if (channelIdError) {
-        return [, channelIdError];
+export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody): IAsyncPromiseResult<ICollection<IShortVideoInfo>> => {
+    const [youtube, youtubeError] = await getYoutube();
+    if(!youtube || youtubeError) {
+        return [, youtubeError];
     }
-
+    
     const publishedAtDate = publishedAt ? new Date(publishedAt) : new Date(1970);
     console.log('publishedAtDate', publishedAtDate, publishedAt)
 
@@ -40,8 +36,9 @@ export const getVideosAsync = async ({channelName, publishedAt}: IGetVideosBody)
         id: [channelId || '' ],
     }));
 
+    
     if (channelError) {
-        return await processYoutubeErrorAsync(channelError);
+        return await processYoutubeErrorAsync(channelError as AxiosError);
     }
 
     if (!channelResponse?.data.items || channelResponse.data.items.length === 0) {
@@ -67,14 +64,20 @@ export const getVideosAsync = async ({channelName, publishedAt}: IGetVideosBody)
         }));
 
         if (playListError) {
-            return await processYoutubeErrorAsync(playListError);
+            return await processYoutubeErrorAsync(playListError as AxiosError);
         }
 
         if (!playlistItemsResponse?.data.items || playlistItemsResponse.data.items.length === 0) {
             return [, 'No videos found'];
         }
 
+        const videoIds = playlistItemsResponse.data.items.map(item => item.snippet?.resourceId?.videoId || '' )
+        // const [videoStatisticItems, statError] = await getVideoStatsisticItems(videoIds);
+        // if(statError) {
+        //     return [,statError];
+        // }
         const videos = playlistItemsResponse.data.items.map((item: youtube_v3.Schema$PlaylistItem): IShortVideoInfo => {
+            // const videoStatistic = videoStatisticItems?.find(v => v.id === item.snippet?.resourceId?.videoId)
             return {
                 title: item.snippet?.title || '',
                 videoId: item.snippet?.resourceId?.videoId || '',
@@ -101,3 +104,21 @@ export const getVideosAsync = async ({channelName, publishedAt}: IGetVideosBody)
         items: allVideos
     }]
 }
+
+async function getVideoStatsisticItems(videoIds:string[]): IAsyncPromiseResult<youtube_v3.Schema$Video[]> {
+    const [youtube, youtubeError] = await getYoutube();
+    if(!youtube || youtubeError) {
+        return [, youtubeError];
+    }
+
+    const [res, error] = await toQuery( () => youtube.videos.list({
+      part: ['statistics'],
+      id: videoIds,
+    }));
+
+    if (error) {
+        return await processYoutubeErrorAsync(error as AxiosError);
+    }
+
+    return [res?.data?.items || []]
+  }

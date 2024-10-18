@@ -20,10 +20,12 @@ const API_SERVER_URL = "http://localhost:8005/";
 export interface IApiKeyDto {
 	'email': string;
 	'youtube_key': string;
+	'expired': Date;
 }
 export interface IApiKeyPostBody {
 	'email': string;
 	'youtube_key': string;
+	'expired': Date;
 }
 export interface IChannelDto {
 	'id': string;
@@ -52,6 +54,11 @@ export interface ICommentDto {
 }
 export interface ICommentPostBody {
 	'comments': ICommentDto[];
+}
+export interface IStatistic {
+	'comment_count': number;
+	'author_id': string;
+	'author_url': string;
 }
 export interface IVideoDto {
 	'id': string;
@@ -90,6 +97,8 @@ export type TCommentIdDeleteError = ''
 	 |'undefined';
 export type TStatisticByVideoGetError = ''
 	 |'undefined';
+export type TStatisticByChannelGetError = ''
+	 |'undefined';
 export type TVideoLastDateGetError = ''
 	 |'undefined';
 export type TVideoGetError = ''
@@ -118,6 +127,7 @@ export type TPartialErrorCodes =
 	 | TCommentIdPutError
 	 | TCommentIdDeleteError
 	 | TStatisticByVideoGetError
+	 | TStatisticByChannelGetError
 	 | TVideoLastDateGetError
 	 | TVideoGetError
 	 | TVideoPostError
@@ -126,8 +136,8 @@ export type TPartialErrorCodes =
 	 | TVideoIdDeleteError	 | '';
 
 export const createApiRequest = (rs: IRequestService) => ({
-	keyActiveGet : (): CustomPromise<CustomAxiosResponse<IApiKeyDto,TKeyActiveGetError>,IBEError<TKeyActiveGetError>> =>
-		rs.get(formatUrl(API_SERVER_URL + `api/api-key/active/`) ),
+	keyActiveGet : (query: {old_key?:string} | undefined): CustomPromise<CustomAxiosResponse<IApiKeyDto,TKeyActiveGetError>,IBEError<TKeyActiveGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `api/api-key/active/`, query) ),
 
 	keyPost : (body: IApiKeyPostBody): CustomPromise<CustomAxiosResponse<void,TKeyPostError>,IBEError<TKeyPostError>> =>
 		rs.post(formatUrl(API_SERVER_URL + `api/api-key/`) , body),
@@ -165,8 +175,11 @@ export const createApiRequest = (rs: IRequestService) => ({
 	commentIdDelete : (id:string): CustomPromise<CustomAxiosResponse<void,TCommentIdDeleteError>,IBEError<TCommentIdDeleteError>> =>
 		rs.delete(formatUrl(API_SERVER_URL + `api/comment/${id}`) ),
 
-	statisticByVideoGet : (query: {video_id?:string} | undefined): CustomPromise<CustomAxiosResponse<IApiKeyDto,TStatisticByVideoGetError>,IBEError<TStatisticByVideoGetError>> =>
+	statisticByVideoGet : (query: {video_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<IStatistic>,TStatisticByVideoGetError>,IBEError<TStatisticByVideoGetError>> =>
 		rs.get(formatUrl(API_SERVER_URL + `api/statistic/by-video/`, query) ),
+
+	statisticByChannelGet : (query: {channel_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<IStatistic>,TStatisticByChannelGetError>,IBEError<TStatisticByChannelGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `api/statistic/by-channel/`, query) ),
 
 	videoLastDateGet : (query: {channel_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Date,TVideoLastDateGetError>,IBEError<TVideoLastDateGetError>> =>
 		rs.get(formatUrl(API_SERVER_URL + `api/video/last-date/`, query) ),
@@ -203,6 +216,7 @@ const URL = {
 	commentIdPut:  (id:string): string => `api/comment/${id}`,
 	commentIdDelete:  (id:string): string => `api/comment/${id}`,
 	statisticByVideoGet:  (): string => `api/statistic/by-video/`,
+	statisticByChannelGet:  (): string => `api/statistic/by-channel/`,
 	videoLastDateGet:  (): string => `api/video/last-date/`,
 	videoGet:  (): string => `api/video/`,
 	videoPost:  (): string => `api/video/`,
@@ -217,6 +231,13 @@ export const API_URL = URL;
 export const api = {
   ...createApiRequest(requestService),
 };
+
+
+
+
+
+
+
 
 
 

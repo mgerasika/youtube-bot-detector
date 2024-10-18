@@ -1,7 +1,7 @@
 import { IExpressRequest, IExpressResponse, app } from '@server/express-app';
 import { API_URL } from '@server/constants/api-url.constant';
 import { google, youtube_v3 } from 'googleapis';
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { ENV } from '@server/constants/env';
 import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
 import { ICollection } from '@server/interfaces/collection';
@@ -23,10 +23,12 @@ export interface IShortCommentInfo {
 }
 
 
-
 export const getCommentsAsync = async ({videoId, publishedAt}: IGetCommentsBody): IAsyncPromiseResult<ICollection<IShortCommentInfo>> => {
-    const youtube = await getYoutube();
-    
+    const [youtube, youtubeError] = await getYoutube();
+    if(!youtube || youtubeError) {
+        return [, youtubeError];
+    }
+   
     let allComments: Array<IShortCommentInfo> = [];
     let nextPageToken: string | null | undefined = '';
 
@@ -41,8 +43,12 @@ export const getCommentsAsync = async ({videoId, publishedAt}: IGetCommentsBody)
             textFormat: 'plainText', // Retrieve comments as plain text
         }));
 
+        if((commentsError as any)?.message?.includes('has disabled comments')) {
+            return [{items:[], total:0}]
+        }
+
         if(commentsError) {
-           return processYoutubeErrorAsync(commentsError);
+           return await processYoutubeErrorAsync(commentsError as AxiosError);
         }
 
         if (commentResponse?.data.items) {

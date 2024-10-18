@@ -21,4 +21,6 @@ left outer join channel on channel.id = comment.author_id
 WHERE video.channel_id = 'UCXoJ8kY9zpLBEz-8saaT3ew'
 GROUP BY comment.author_id, channel.id order by comment_count desc;
 
+1 027 927
 
+1 028 768

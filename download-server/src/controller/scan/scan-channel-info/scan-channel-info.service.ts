@@ -11,13 +11,14 @@ import { rabbitMQ_sendDataAsync } from '@server/rabbit-mq';
 import { IScanVideosBody } from '../scan-videos/scan-videos.service';
 import { nameOf } from '@server/utils/name-of';
 
-export interface IGetChannelInfoBody {
-    channelName: string;
+export interface IScanChannelInfoBody {
+    channelId: string;
+    scan_videos: boolean;
 }
 
 
-export const scanChannelInfoAsync = async (body: IGetChannelInfoBody): IAsyncPromiseResult<void> => {
-    const [data,error] = await allServices.youtube.getChannelInfoAsync({channelName: body.channelName});
+export const scanChannelInfoAsync = async (body: IScanChannelInfoBody): IAsyncPromiseResult<void> => {
+    const [data,error] = await allServices.youtube.getChannelInfoAsync({channelId: body.channelId});
 
     if (data) {
         const [success, apiError] = await toQuery(() =>
@@ -34,9 +35,9 @@ export const scanChannelInfoAsync = async (body: IGetChannelInfoBody): IAsyncPro
         if(apiError) {
             return [, apiError]
         }
-        if(success) {
+        if(success && body.scan_videos) {
             const arg: IScanVideosBody = {
-                channelName: body.channelName
+                channelId: body.channelId
             }
             rabbitMQ_sendDataAsync({msg:{methodName:  nameOf<typeof allServices.scan>('scanVideosAsync'), methodArgumentsJson: arg}})
         }

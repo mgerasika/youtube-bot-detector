@@ -12,6 +12,8 @@ import { groupArray } from '@server/utils/group-array.util';
 import { nameOf } from '@server/utils/name-of';
 import { oneByOneAsync } from '@server/utils/one-by-one-async.util';
 import { toQuery } from '@server/utils/to-query.util';
+import { IScanChannelInfoBody } from '../scan-channel-info/scan-channel-info.service';
+import { IScanAuthorsBody } from '../scan-auhors/scan-authors.service';
 
 export interface IScanCommentsBody {
     videoId: string;
@@ -51,6 +53,12 @@ export const scanCommentsAsync = async (body: IScanCommentsBody): IAsyncPromiseR
                 throw apiError;
             } 
         });
+
+        const arg: IScanAuthorsBody = {
+            videoId: body.videoId
+        }
+        
+        rabbitMQ_sendDataAsync({msg:{methodName:  nameOf<typeof allServices.scan>('scanAuthorsAsync'), methodArgumentsJson: arg}})
 
      
         return [`post to db comments ${comments.length}`];

@@ -9,23 +9,21 @@ import { nameOf } from '@server/utils/name-of';
 import { rabbitMQ_sendDataAsync } from '@server/rabbit-mq';
 
 export interface IScanVideosBody {
-    channelName: string;
+    channelId: string;
 }
 
 export const scanVideosAsync = async (body: IScanVideosBody): IAsyncPromiseResult<string> => {
     console.log('scanVideosAsync', body);
+   
+    const channel_id = body.channelId;
 
-    const [channelId, channelIdError] = await allServices.youtube.getChannelIdAsync(body.channelName);
-    if (channelIdError) {
-        return [, channelIdError];
-    }
-    const [lastDate, lastDateError] = await toQuery(() => api.videoLastDateGet({ channel_id: channelId || '' }));
+    const [lastDate, lastDateError] = await toQuery(() => api.videoLastDateGet({ channel_id  }));
     if (lastDateError) {
         return [, lastDateError];
     }
     console.log('last_date = ', lastDate?.data);
 
-    const [data, error] = await allServices.youtube.getVideosAsync({channelName:body.channelName, publishedAt: lastDate?.data?.toString() || ''});
+    const [data, error] = await allServices.youtube.getVideosAsync({channelId:body.channelId, publishedAt: lastDate?.data?.toString() || ''});
     console.log('recieved videos count = ', data?.items.length);
 
     if (data) {

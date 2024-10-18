@@ -2,8 +2,9 @@ import amqp, { Channel, Connection, ConsumeMessage } from 'amqplib';
 import { IQueryReturn } from './utils/to-query.util';
 import { ENV } from './constants/env';
 import { CONST } from './constants/const.contant';
-import { IRabbitMqMessage } from './interfaces/rabbit-mq-message.interface';
+import { IRabbitMqBody, IRabbitMqMessage } from './interfaces/rabbit-mq-message.interface';
 import { IAsyncPromiseResult } from './interfaces/async-promise-result.interface';
+import { connectToRedisAsync, TRedisClient } from './redis';
 
 let _connection: Connection | undefined;
 let _channel: Channel;
@@ -75,19 +76,33 @@ export async function rabbitMQ_subscribeAsync(callback: (data: IRabbitMqMessage)
 
 function sendAgain(body: Buffer) {
     console.log('Rabbit MQ send again = ', `${body}`);
-                                        setTimeout(() => {
-                                            _channel.sendToQueue(CONST.RABBIT_MQ_CHANNEL_NAME, body, {
-                                                persistent: true, // Ensure the message is durable
-                                            });
-                                        }, ENV.SEND_TO_RABBIT_MQ_AGAIN_DELAY);
+    setTimeout(() => {
+        _channel.sendToQueue(CONST.RABBIT_MQ_CHANNEL_NAME, body, {
+            persistent: true, // Ensure the message is durable
+        });
+    }, ENV.SEND_TO_RABBIT_MQ_AGAIN_DELAY);
 }
 
+const getMessageId = (msg: IRabbitMqBody) => {
+    return `rabbitMQ:-${JSON.stringify(msg)}`;
+}
 export const rabbitMQ_sendDataAsync = async (data: IRabbitMqMessage): Promise<IQueryReturn<boolean>> => {
     await rabbitMQ_createConnectionAsync();
+    const redisClient = await connectToRedisAsync();
 
     if (_channel) {
-        console.log('Rabbit MQ Data send :', data);
-        await _channel.sendToQueue(CONST.RABBIT_MQ_CHANNEL_NAME, Buffer.from(JSON.stringify(data)));
+        const messageId = getMessageId(data.msg);
+        const exist = await redisClient.exists(messageId);
+        if (!exist) {
+            await redisClient.set(messageId, '', {
+                EX: 7*24*3600,//one week
+            });
+
+            console.log('Rabbit MQ Data send and add to Redis:', data);
+            await _channel.sendToQueue(CONST.RABBIT_MQ_CHANNEL_NAME, Buffer.from(JSON.stringify(data)));
+        } else {
+            console.log('Rabbit MQ - already exist in Redis, skip');
+        }
         return [true];
     } else {
         console.log('channel is null');

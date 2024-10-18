@@ -6,6 +6,34 @@
     "version": "0.0.1"
   },
   "paths": {
+    "api/scan/scan-authors/": {
+      "post": {
+        "operationId": "",
+        "summary": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IScanAuthorsBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "api/scan/scan-channel-info/": {
       "post": {
         "operationId": "",
@@ -16,7 +44,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/IGetChannelInfoBody"
+                "$ref": "#/components/schemas/IScanChannelInfoBody"
               }
             }
           }
@@ -205,14 +233,29 @@
   },
   "components": {
     "schemas": {
-      "IGetChannelInfoBody": {
+      "IScanAuthorsBody": {
         "type": "object",
         "required": [
-          "channelName"
+          "videoId"
         ],
         "properties": {
-          "channelName": {
+          "videoId": {
             "type": "string"
+          }
+        }
+      },
+      "IScanChannelInfoBody": {
+        "type": "object",
+        "required": [
+          "channelId",
+          "scan_videos"
+        ],
+        "properties": {
+          "channelId": {
+            "type": "string"
+          },
+          "scan_videos": {
+            "type": "boolean"
           }
         }
       },
@@ -230,10 +273,10 @@
       "IScanVideosBody": {
         "type": "object",
         "required": [
-          "channelName"
+          "channelId"
         ],
         "properties": {
-          "channelName": {
+          "channelId": {
             "type": "string"
           }
         }
@@ -245,6 +288,17 @@
         ],
         "properties": {
           "channelName": {
+            "type": "string"
+          }
+        }
+      },
+      "IGetChannelInfoBody": {
+        "type": "object",
+        "required": [
+          "channelId"
+        ],
+        "properties": {
+          "channelId": {
             "type": "string"
           }
         }
@@ -267,11 +321,11 @@
       "IGetVideosBody": {
         "type": "object",
         "required": [
-          "channelName",
+          "channelId",
           "publishedAt"
         ],
         "properties": {
-          "channelName": {
+          "channelId": {
             "type": "string"
           },
           "publishedAt": {
