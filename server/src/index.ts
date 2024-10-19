@@ -31,7 +31,7 @@ if (ENV.rabbit_mq) {
     // });
 
     
-    // rabbitMQ_createConnectionAsync(); 
+    rabbitMQ_createConnectionAsync(); 
 }
 // console.log('ENV = ', ENV);
 console.log('port',  port)

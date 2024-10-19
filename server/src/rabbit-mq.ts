@@ -28,6 +28,21 @@ export async function rabbitMQ_createConnectionAsync() {
     return _connection;
 }
 
+export async function rabbitMQ_createChannelAsync() {
+   await rabbitMQ_createConnectionAsync()
+    return _channel;
+}
+
+export const rabbit_mq_getMessageCountAsync = async (): Promise<number> => {
+    const channel = await rabbitMQ_createChannelAsync();
+    try {
+      const { messageCount } = await channel.checkQueue(CONST.RABBIT_MQ_CHANNEL_NAME);
+      return messageCount; // Return the count of messages in the queue
+    } catch (error) {
+      throw new Error(`Error fetching message count: ${error}`);
+    }
+  };
+
 export async function rabbitMQ_subscribeAsync(callback: (data: IRabbitMqMessage) => Promise<any>) {
     try {
         const connection = await rabbitMQ_createConnectionAsync();

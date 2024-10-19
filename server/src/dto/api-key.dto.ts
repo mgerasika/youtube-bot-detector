@@ -17,7 +17,7 @@ export class ApiKeyDto implements IApiKeyDto {
     @Column({ nullable: false, type: 'text'})
     youtube_key!: string;
 
-    @Column({ nullable: true, type: 'date'})
+    @Column({ nullable: true, type: 'timestamptz'})
     expired!: Date;
 
     

@@ -235,11 +235,12 @@
     "schemas": {
       "IScanAuthorsBody": {
         "type": "object",
-        "required": [
-          "videoId"
-        ],
+        "required": [],
         "properties": {
           "videoId": {
+            "type": "string"
+          },
+          "channelId": {
             "type": "string"
           }
         }

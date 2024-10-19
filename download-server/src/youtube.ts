@@ -8,7 +8,7 @@ let _youtubeInstance: youtube_v3.Youtube | undefined;
 
 export async function getYoutube(oldKey?:string): IAsyncPromiseResult<youtube_v3.Youtube > {
     if (oldKey || !_youtubeInstance) {
-_youtubeInstance = undefined;        
+        _youtubeInstance = undefined;        
         const [key, keyError] = await toQuery(() => api.keyActiveGet({old_key: oldKey}));
         if (keyError) {
             return [,keyError]

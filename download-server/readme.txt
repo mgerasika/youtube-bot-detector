@@ -41,3 +41,6 @@ AIzaSyBQn6hna3tyPc6SvG2WQ_KAw6LvGpDFMms
 
 gerasikaivanna@gmail.com
 AIzaSyBZ-d-VRkWQc6uUi0u3mXwS13y9KMswIOU
+
+mgerasika84@gmail.com
+AIzaSyCqwDMvexrDjINTDW5DP4Xa8AOivRBLCHE

@@ -428,6 +428,33 @@
         }
       }
     },
+    "api/statistic/info/": {
+      "get": {
+        "operationId": "",
+        "summary": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IStatisticInfo"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "api/statistic/by-video/": {
       "get": {
         "operationId": "",
@@ -849,6 +876,25 @@
         "properties": {
           "comments": {
             "type": "ICommentDto[]"
+          }
+        }
+      },
+      "IStatisticInfo": {
+        "type": "object",
+        "required": [
+          "comment_count",
+          "author_id",
+          "author_url"
+        ],
+        "properties": {
+          "comment_count": {
+            "type": "integer"
+          },
+          "author_id": {
+            "type": "string"
+          },
+          "author_url": {
+            "type": "string"
           }
         }
       },

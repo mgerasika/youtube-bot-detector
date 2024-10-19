@@ -9,19 +9,38 @@ const getActiveApiKeyAsync = async (old_key: string | undefined): IAsyncPromiseR
     if (old_key) {
         const [, updateError] = await sqlAsync<IApiKeyDto[]>(async (client) => {
             const { rows } = await client.query(`UPDATE public.api_key
-                SET expired=${sql_escape(new Date().toISOString())}
-                WHERE youtube_key = ${sql_escape(old_key)} and youtube_key IS NULL`);
+                SET expired=NOW()
+                WHERE youtube_key = ${sql_escape(old_key)} and expired IS NULL`);
             return rows;
         });
         if (updateError) {
             return [, updateError];
         }
     }
-    const [list, error] = await sqlAsync<IApiKeyDto[]>(async (client) => {
-        const { rows } = await client.query(`select * from api_key `);
+    const [list, listError] = await sqlAsync<IApiKeyDto[]>(async (client) => {
+        const { rows } = await client.query(`SELECT * 
+FROM api_key 
+WHERE expired < NOW() 
+AND NOW() - expired > INTERVAL '60 minutes';`);
         return rows;
     });
-    return list && list.length > 0 ? [getRandomElement(list)] : [, error];
+    if(listError) {
+        return [, listError];
+    }
+    const apiKeyObj = list && list.length > 0 ? getRandomElement(list) : undefined;
+    if (apiKeyObj) {
+        const [, updateError] = await sqlAsync<IApiKeyDto[]>(async (client) => {
+            const { rows } = await client.query(`UPDATE public.api_key
+                SET expired=NULL
+                WHERE youtube_key = ${sql_escape(apiKeyObj.youtube_key)};`);
+            return rows;
+        });
+        if (updateError) {
+            return [, updateError];
+        }
+        return [apiKeyObj];
+    }
+    return [, 'no valid api key ' ];
 };
 
 const postApiKey = async (data: IApiKeyDto): IAsyncPromiseResult<IApiKeyDto> => {

@@ -2,7 +2,21 @@ import { API_URL } from "@server/constants/api-url.constant";
 import { app, IExpressRequest, IExpressResponse } from "@server/express-app";
 import { allServices } from "../all-services";
 import { IApiKeyDto } from "@server/dto/api-key.dto";
-import { IStatistic } from "./statistic.service";
+import { IStatistic, IStatisticInfo } from "./statistic.service";
+import { memoryCache } from "@server/memory-cache";
+
+interface IStatisticInfoRequest extends IExpressRequest {
+}
+
+interface IStatisticInfoResponse extends IExpressResponse<IStatisticInfo, void> {}
+
+app.get(API_URL.api.statistic.info.toString(), memoryCache(60*60), async (req: IStatisticInfoRequest, res: IStatisticInfoResponse) => {
+    const [data, error] = await allServices.statistic.getStatisticInfoAsync();
+    if (error) {
+        return res.status(400).send( error);
+    }
+    return res.send(data);
+});
 
 
 interface IByVideoRequest extends IExpressRequest {

@@ -56,6 +56,11 @@ export interface ICommentDto {
 export interface ICommentPostBody {
     comments: ICommentDto[];
 }
+export interface IStatisticInfo {
+    comment_count: number;
+    author_id: string;
+    author_url: string;
+}
 export interface IStatistic {
     comment_count: number;
     author_id: string;
@@ -83,6 +88,7 @@ export type TCommentPostError = '' | 'undefined';
 export type TCommentIdGetError = '' | 'undefined';
 export type TCommentIdPutError = '' | 'undefined';
 export type TCommentIdDeleteError = '' | 'undefined';
+export type TStatisticInfoGetError = '' | 'undefined';
 export type TStatisticByVideoGetError = '' | 'undefined';
 export type TStatisticByChannelGetError = '' | 'undefined';
 export type TVideoLastDateGetError = '' | 'undefined';
@@ -105,6 +111,7 @@ export type TPartialErrorCodes =
     | TCommentIdGetError
     | TCommentIdPutError
     | TCommentIdDeleteError
+    | TStatisticInfoGetError
     | TStatisticByVideoGetError
     | TStatisticByChannelGetError
     | TVideoLastDateGetError
@@ -181,6 +188,11 @@ export const createApiRequest = (rs: IRequestService) => ({
     ): CustomPromise<CustomAxiosResponse<void, TCommentIdDeleteError>, IBEError<TCommentIdDeleteError>> =>
         rs.delete(formatUrl(API_SERVER_URL + `api/comment/${id}`)),
 
+    statisticInfoGet: (): CustomPromise<
+        CustomAxiosResponse<IStatisticInfo, TStatisticInfoGetError>,
+        IBEError<TStatisticInfoGetError>
+    > => rs.get(formatUrl(API_SERVER_URL + `api/statistic/info/`)),
+
     statisticByVideoGet: (
         query: { video_id?: string } | undefined,
     ): CustomPromise<
@@ -239,6 +251,7 @@ const URL = {
     commentIdGet: (id: string): string => `api/comment/${id}`,
     commentIdPut: (id: string): string => `api/comment/${id}`,
     commentIdDelete: (id: string): string => `api/comment/${id}`,
+    statisticInfoGet: (): string => `api/statistic/info/`,
     statisticByVideoGet: (): string => `api/statistic/by-video/`,
     statisticByChannelGet: (): string => `api/statistic/by-channel/`,
     videoLastDateGet: (): string => `api/video/last-date/`,
