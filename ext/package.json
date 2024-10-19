@@ -24,7 +24,6 @@
     "build": "yarn run build:chrome && yarn run build:firefox && yarn run build:opera",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
-    "codegen:ts": "npx babel-node-ts --config-file ./scripts/custom-babel-config.js scripts/codegen.ts",
     "codegen": "npx babel-node-ts --config-file ./scripts/custom-babel-config.js scripts/codegen.js",
     "dev": "yarn dev:chrome"
   },
