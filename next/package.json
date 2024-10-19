@@ -13,7 +13,7 @@
     "codegen": "npx babel-node-ts --config-file ./scripts/custom-babel-config.js scripts/codegen.js"
   },
   "engines": {
-    "node": "18.19.1"
+    "node": "18"
   },
   "dependencies": {
     "@babel/core": "^7.25.8",
@@ -21,10 +21,11 @@
     "@babel/preset-typescript": "^7.25.7",
     "axios": "^1.7.7",
     "babel-node-ts": "^1.0.3",
+    "firebase": "^10.14.1",
     "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.3",
-    "marked": "^14.1.0",
-    "next": "^14.2.7",
+    "marked": "^14.1.3",
+    "next": "^14.2.15",
     "next-mdx-remote": "^5.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -35,23 +36,24 @@
     "rehype-slug": "^6.0.0",
     "remark-gfm": "^4.0.0",
     "swagger-to-typescript2": "^0.1.28",
-    "swiper": "^8.4.5"
+    "swiper": "^11.1.14",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
-    "@tailwindcss/forms": "^0.5.8",
+    "@tailwindcss/forms": "^0.5.9",
     "@tailwindcss/typography": "^0.5.15",
     "autoprefixer": "^10.4.20",
-    "date-fns": "^3.6.0",
-    "date-fns-tz": "^3.1.3",
-    "eslint": "8.29.0",
-    "eslint-config-next": "13.0.6",
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
+    "eslint": "9.13.0",
+    "eslint-config-next": "14.2.15",
     "jshint": "^2.13.6",
-    "postcss": "^8.4.42",
+    "postcss": "^8.4.47",
     "prettier": "^3.3.3",
-    "prettier-plugin-tailwindcss": "^0.6.6",
-    "sass": "^1.77.8",
+    "prettier-plugin-tailwindcss": "^0.6.8",
+    "sass": "^1.80.3",
     "sharp": "^0.33.5",
     "tailwind-bootstrap-grid": "^5.1.0",
-    "tailwindcss": "^3.4.10"
+    "tailwindcss": "^3.4.14"
   }
 }

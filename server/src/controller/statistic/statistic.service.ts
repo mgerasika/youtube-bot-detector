@@ -1,6 +1,6 @@
 import { ApiKeyDto, IApiKeyDto } from '@server/dto/api-key.dto';
 import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
-import { rabbit_mq_getMessageCountAsync, rabbitMQ_createChannelAsync, rabbitMQ_createConnectionAsync } from '@server/rabbit-mq';
+import { rabbit_mq_getConnectionInfoAsync, rabbitMQ_createChannelAsync, rabbitMQ_createConnectionAsync } from '@server/rabbit-mq';
 import { sqlAsync } from '@server/utils/sql-async.util';
 import { sql_escape } from '@server/utils/sql.util';
 
@@ -9,11 +9,11 @@ export interface IStatisticInfo {
     comment_count: number;
     channel_count: number;
     rabbitm_mq_messages_count: number;
+    rabbitm_mq_consumer_count: number;
 }
 
 const getStatisticInfoAsync = async (): IAsyncPromiseResult<IStatisticInfo> => {
-
-    const messagesCount = await rabbit_mq_getMessageCountAsync();
+    const {consumerCount, messageCount} = await rabbit_mq_getConnectionInfoAsync();
     const [data, error] = await sqlAsync<any>(async (client) => {
         const { rows } = await client.query(`SELECT (SELECT COUNT(*) from video) AS video_count,
             (SELECT COUNT(*) from comment) AS comment_count,
@@ -23,13 +23,13 @@ const getStatisticInfoAsync = async (): IAsyncPromiseResult<IStatisticInfo> => {
     if(error) {
         return [,error]
     }
-   
     
     return [{
         video_count: +data.video_count,
         comment_count: +data.comment_count,
         channel_count: +data.channel_count,
-        rabbitm_mq_messages_count: messagesCount,
+        rabbitm_mq_messages_count: messageCount,
+        rabbitm_mq_consumer_count: consumerCount,
 
     }];
 };
