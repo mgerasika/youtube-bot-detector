@@ -7,11 +7,11 @@ INSERT INTO public.api_key(
 	('oddbox.cypress@gmail.com', 'AIzaSyB2_b83SZDhN4WKMX5V-drV3DoQ8F5xzN0'),
 	('mherasika@gmail.com', 'AIzaSyBQEx9McZ82-bshI2jTw2IuU47VJH0gszs');
 
-	-- SELECT COUNT(*) AS comment_count, comment.author_id, channel.custom_url
--- FROM comment
--- left outer join channel on channel.id = comment.author_id
--- WHERE comment.video_id = 'nN5awumyZMw'
--- GROUP BY comment.author_id, channel.id;
+	SELECT COUNT(*) AS comment_count, comment.author_id, channel.custom_url
+FROM comment
+left outer join channel on channel.id = comment.author_id
+WHERE comment.video_id = 'nN5awumyZMw'
+GROUP BY comment.author_id, channel.id;
 
 
 SELECT COUNT(*) AS comment_count, comment.author_id, channel.custom_url

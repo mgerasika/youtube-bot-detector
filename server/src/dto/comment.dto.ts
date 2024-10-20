@@ -4,6 +4,7 @@ export interface ICommentDto {
     id: string;
 
     published_at: Date;
+    published_at_time?: Date;
 
     author_id: string;
 
@@ -20,6 +21,9 @@ export class CommentDto implements ICommentDto {
 
     @Column({ nullable: false, type: 'date'})
     published_at!: Date;
+
+    @Column({ nullable: true, type: 'timestamptz'})
+    published_at_time?: Date;
 
     @Column({ nullable: false, type: 'text'})
     author_id!: string;

@@ -7,6 +7,7 @@ import { typeOrmAsync } from '@server/utils/type-orm-async.util';
 const getActiveApiKeyAsync = async (old_key: string | undefined): IAsyncPromiseResult<IApiKeyDto> => {
     console.log('OLD_KEY', old_key)
     if (old_key) {
+        // update old key, set expired to NOW()
         const [, updateError] = await sqlAsync<IApiKeyDto[]>(async (client) => {
             const { rows } = await client.query(`UPDATE public.api_key
                 SET expired=NOW()
@@ -18,10 +19,11 @@ const getActiveApiKeyAsync = async (old_key: string | undefined): IAsyncPromiseR
         }
     }
     const [list, listError] = await sqlAsync<IApiKeyDto[]>(async (client) => {
+
         const { rows } = await client.query(`SELECT * 
 FROM api_key 
-WHERE expired < NOW() 
-AND NOW() - expired > INTERVAL '60 minutes';`);
+WHERE (expired < NOW() AND NOW() - expired > INTERVAL '60 minutes')
+   OR expired IS NULL;`);
         return rows;
     });
     if(listError) {
@@ -29,6 +31,7 @@ AND NOW() - expired > INTERVAL '60 minutes';`);
     }
     const apiKeyObj = list && list.length > 0 ? getRandomElement(list) : undefined;
     if (apiKeyObj) {
+        // reset apiKey after 1 hour (set expired to NULL)
         const [, updateError] = await sqlAsync<IApiKeyDto[]>(async (client) => {
             const { rows } = await client.query(`UPDATE public.api_key
                 SET expired=NULL

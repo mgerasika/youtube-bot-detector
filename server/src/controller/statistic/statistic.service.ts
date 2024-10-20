@@ -10,6 +10,7 @@ export interface IStatisticInfo {
     channel_count: number;
     rabbitm_mq_messages_count: number;
     rabbitm_mq_consumer_count: number;
+    youtube_accounts_count: number;
 }
 
 const getStatisticInfoAsync = async (): IAsyncPromiseResult<IStatisticInfo> => {
@@ -17,6 +18,7 @@ const getStatisticInfoAsync = async (): IAsyncPromiseResult<IStatisticInfo> => {
     const [data, error] = await sqlAsync<any>(async (client) => {
         const { rows } = await client.query(`SELECT (SELECT COUNT(*) from video) AS video_count,
             (SELECT COUNT(*) from comment) AS comment_count,
+            (SELECT COUNT(*) from api_key) AS youtube_accounts_count,
             (SELECT COUNT(*) from channel) AS channel_count`);
         return rows.length ? rows[0]: undefined;
     });
@@ -28,6 +30,7 @@ const getStatisticInfoAsync = async (): IAsyncPromiseResult<IStatisticInfo> => {
         video_count: +data.video_count,
         comment_count: +data.comment_count,
         channel_count: +data.channel_count,
+        youtube_accounts_count: +data.youtube_accounts_count,
         rabbitm_mq_messages_count: messageCount,
         rabbitm_mq_consumer_count: consumerCount,
 
@@ -38,10 +41,15 @@ export interface IStatistic {
     comment_count: number;
     author_id: string;
     author_url: string;
+    id: string;
+    published_at: Date;
+    video_count: number;
+    subscriber_count: number;
+    title: string;
 }
 const getStatisticByVideoAsync = async (video_id?: string): IAsyncPromiseResult<IStatistic[]> => {
     const [list, error] = await sqlAsync<IApiKeyDto[]>(async (client) => {
-        const { rows } = await client.query(`SELECT COUNT(*) AS comment_count, comment.author_id, channel.author_url
+        const { rows } = await client.query(`SELECT COUNT(*) AS comment_count, comment.author_id, channel.*
 FROM comment
 left outer join channel on channel.id = comment.author_id
 WHERE comment.video_id = ${sql_escape(video_id)}
@@ -51,12 +59,12 @@ GROUP BY comment.author_id, channel.id  order by comment_count desc;`);
     if(error) {
         return [,error]
     }
-    return [removeRowsWithoutAuthorUrl(list as [])];
+    return [getRowsOnlyWithAuthorUrl(list as [])];
 };
 
 const getStatisticByChannelAsync = async (channel_id?: string): IAsyncPromiseResult<IStatistic[]> => {
     const [list, error] = await sqlAsync<IApiKeyDto[]>(async (client) => {
-        const { rows } = await client.query(`SELECT COUNT(*) AS comment_count, comment.author_id, channel.author_url
+        const { rows } = await client.query(`SELECT COUNT(*) AS comment_count, comment.author_id, channel.*
 FROM comment
 inner join video on video.id = comment.video_id
 left outer join channel on channel.id = comment.author_id
@@ -67,11 +75,11 @@ GROUP BY comment.author_id, channel.id order by comment_count desc;`);
     if(error) {
         return [,error]
     }
-    return [removeRowsWithoutAuthorUrl(list as [])];
+    return [getRowsOnlyWithAuthorUrl(list as [])];
 };
 
-function removeRowsWithoutAuthorUrl(statistics: IStatistic[]):IStatistic[] {
-    return statistics.filter(s => !s.author_url);
+function getRowsOnlyWithAuthorUrl(statistics: IStatistic[]):IStatistic[] {
+    return statistics.filter(s => s.author_url);
 }
 
 export const statistic = {

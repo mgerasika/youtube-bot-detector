@@ -12,8 +12,9 @@ import {
   formatUrl,
   requestService,
 } from "swagger-to-typescript2";
+import { ENV } from "./env";
 
-const API_SERVER_URL = "http://localhost:8005/";
+const API_SERVER_URL = ENV.API_SERVER_URL;
 
 // DON'T REMOVE THIS COMMENTS!!! Code between comments auto-generated
 // INSERT START

@@ -6,13 +6,20 @@ const Statistic = () => {
   const [statistic, setStatistic] = useState();
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      const response = await fetch('/api/statistic');
+    const fetchStatistic = async () => {
+      const response = await fetch('/api/statistic/info');
       const data = await response.json();
       setStatistic(data);
     };
 
-    fetchUsers();
+    const postStatistic = async() =>{
+      const video_id = 'nN5awumyZMw'
+      const response = await fetch(`/api/statistic/by-video?video_id=${video_id}`);
+      const data = await response.json();
+    }
+
+    postStatistic();
+    fetchStatistic();
   }, []);
 
   return (

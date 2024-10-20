@@ -1,41 +1,46 @@
-[debug] [2024-10-19T13:54:05.732Z] ----------------------------------------------------------------------
-[debug] [2024-10-19T13:54:05.734Z] Command:       /home/mgerasika/.nvm/versions/node/v18.19.1/bin/node /home/mgerasika/.nvm/versions/node/v18.19.1/bin/firebase deploy
-[debug] [2024-10-19T13:54:05.734Z] CLI Version:   13.22.1
-[debug] [2024-10-19T13:54:05.735Z] Platform:      linux
-[debug] [2024-10-19T13:54:05.735Z] Node Version:  v18.19.1
-[debug] [2024-10-19T13:54:05.735Z] Time:          Sat Oct 19 2024 16:54:05 GMT+0300 (Eastern European Summer Time)
-[debug] [2024-10-19T13:54:05.735Z] ----------------------------------------------------------------------
+[debug] [2024-10-20T00:58:45.982Z] ----------------------------------------------------------------------
+[debug] [2024-10-20T00:58:45.984Z] Command:       /home/mgerasika/.nvm/versions/node/v18.19.1/bin/node /home/mgerasika/.nvm/versions/node/v18.19.1/bin/firebase deploy
+[debug] [2024-10-20T00:58:45.985Z] CLI Version:   13.22.1
+[debug] [2024-10-20T00:58:45.985Z] Platform:      linux
+[debug] [2024-10-20T00:58:45.985Z] Node Version:  v18.19.1
+[debug] [2024-10-20T00:58:45.986Z] Time:          Sun Oct 20 2024 03:58:45 GMT+0300 (Eastern European Summer Time)
+[debug] [2024-10-20T00:58:45.986Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2024-10-19T13:54:05.812Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2024-10-19T13:54:05.812Z] > authorizing via signed-in user (mgerasika@gmail.com)
-[debug] [2024-10-19T13:54:05.812Z] [iam] checking project youtube-bot-landing for permissions ["firebase.projects.get","firebasehosting.sites.update"]
-[debug] [2024-10-19T13:54:05.813Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:54:05.814Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:54:05.815Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions [none]
-[debug] [2024-10-19T13:54:05.815Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions x-goog-quota-user=projects/youtube-bot-landing
-[debug] [2024-10-19T13:54:05.815Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
-[debug] [2024-10-19T13:54:06.626Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions 200
-[debug] [2024-10-19T13:54:06.626Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
-[debug] [2024-10-19T13:54:06.627Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:54:06.627Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:54:06.628Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing [none]
-[debug] [2024-10-19T13:54:06.911Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing 200
-[debug] [2024-10-19T13:54:06.911Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing {"projectId":"youtube-bot-landing","projectNumber":"913230354604","displayName":"youtube-bot-landing","name":"projects/youtube-bot-landing","resources":{"hostingSite":"bot-landing-6a052"},"state":"ACTIVE","etag":"1_9bf0ebe9-40e1-4596-b364-9ba874f44461"}
-[debug] [2024-10-19T13:54:10.233Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:54:10.233Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:54:10.234Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites pageToken=&pageSize=10
-[debug] [2024-10-19T13:54:11.219Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites 200
-[debug] [2024-10-19T13:54:11.219Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites {"sites":[{"name":"projects/youtube-bot-landing/sites/bot-landing-6a052","defaultUrl":"https://bot-landing-6a052.web.app","type":"DEFAULT_SITE"}]}
-[debug] [2024-10-19T13:54:11.221Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:54:11.221Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:54:11.221Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites 
-[debug] [2024-10-19T13:54:12.524Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites 200
-[debug] [2024-10-19T13:54:12.524Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites {"sites":[{"name":"projects/youtube-bot-landing/sites/bot-landing-6a052","defaultUrl":"https://bot-landing-6a052.web.app","type":"DEFAULT_SITE"}]}
-[debug] [2024-10-19T13:54:12.524Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:54:12.524Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:54:12.525Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing/webApps/-/config [none]
-[debug] [2024-10-19T13:54:13.118Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing/webApps/-/config 200
-[debug] [2024-10-19T13:54:13.118Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing/webApps/-/config {"projectId":"youtube-bot-landing","storageBucket":"youtube-bot-landing.appspot.com","apiKey":"AIzaSyAV3UNs3KO7xytGzbZMXB14qlAmPDP1FME","authDomain":"bot-landing-6a052.firebaseapp.com","messagingSenderId":"913230354604"}
+[debug] [2024-10-20T00:58:46.046Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-10-20T00:58:46.047Z] > authorizing via signed-in user (mgerasika@gmail.com)
+[debug] [2024-10-20T00:58:46.047Z] [iam] checking project youtube-bot-landing for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2024-10-20T00:58:46.048Z] Checked if tokens are valid: false, expires at: 1729386769924
+[debug] [2024-10-20T00:58:46.048Z] Checked if tokens are valid: false, expires at: 1729386769924
+[debug] [2024-10-20T00:58:46.049Z] > refreshing access token with scopes: []
+[debug] [2024-10-20T00:58:46.050Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2024-10-20T00:58:46.050Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2024-10-20T00:58:46.234Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2024-10-20T00:58:46.235Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2024-10-20T00:58:46.245Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions [none]
+[debug] [2024-10-20T00:58:46.245Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions x-goog-quota-user=projects/youtube-bot-landing
+[debug] [2024-10-20T00:58:46.245Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-10-20T00:58:47.099Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions 200
+[debug] [2024-10-20T00:58:47.100Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-10-20T00:58:47.102Z] Checked if tokens are valid: true, expires at: 1729389525235
+[debug] [2024-10-20T00:58:47.102Z] Checked if tokens are valid: true, expires at: 1729389525235
+[debug] [2024-10-20T00:58:47.104Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing [none]
+[debug] [2024-10-20T00:58:47.466Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing 200
+[debug] [2024-10-20T00:58:47.467Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing {"projectId":"youtube-bot-landing","projectNumber":"913230354604","displayName":"youtube-bot-landing","name":"projects/youtube-bot-landing","resources":{"hostingSite":"bot-landing-6a052"},"state":"ACTIVE","etag":"1_9bf0ebe9-40e1-4596-b364-9ba874f44461"}
+[debug] [2024-10-20T00:58:50.503Z] Checked if tokens are valid: true, expires at: 1729389525235
+[debug] [2024-10-20T00:58:50.503Z] Checked if tokens are valid: true, expires at: 1729389525235
+[debug] [2024-10-20T00:58:50.504Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites pageToken=&pageSize=10
+[debug] [2024-10-20T00:58:51.565Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites 200
+[debug] [2024-10-20T00:58:51.565Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites {"sites":[{"name":"projects/youtube-bot-landing/sites/bot-landing-6a052","defaultUrl":"https://bot-landing-6a052.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2024-10-20T00:58:51.566Z] Checked if tokens are valid: true, expires at: 1729389525235
+[debug] [2024-10-20T00:58:51.566Z] Checked if tokens are valid: true, expires at: 1729389525235
+[debug] [2024-10-20T00:58:51.566Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites 
+[debug] [2024-10-20T00:58:52.855Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites 200
+[debug] [2024-10-20T00:58:52.855Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites {"sites":[{"name":"projects/youtube-bot-landing/sites/bot-landing-6a052","defaultUrl":"https://bot-landing-6a052.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2024-10-20T00:58:52.856Z] Checked if tokens are valid: true, expires at: 1729389525235
+[debug] [2024-10-20T00:58:52.856Z] Checked if tokens are valid: true, expires at: 1729389525235
+[debug] [2024-10-20T00:58:52.856Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing/webApps/-/config [none]
+[debug] [2024-10-20T00:58:53.461Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing/webApps/-/config 200
+[debug] [2024-10-20T00:58:53.461Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing/webApps/-/config {"projectId":"youtube-bot-landing","storageBucket":"youtube-bot-landing.appspot.com","apiKey":"AIzaSyAV3UNs3KO7xytGzbZMXB14qlAmPDP1FME","authDomain":"bot-landing-6a052.firebaseapp.com","messagingSenderId":"913230354604"}
 [info] 
    Thank you for trying our early preview of Next.js support on Firebase Hosting.
    During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
@@ -47,370 +52,30 @@
 
    We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
 
-[debug] [2024-10-19T13:54:21.464Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:54:21.464Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:54:21.464Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 [none]
-[debug] [2024-10-19T13:54:22.408Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 200
-[debug] [2024-10-19T13:54:22.409Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 {"name":"projects/youtube-bot-landing/sites/bot-landing-6a052","defaultUrl":"https://bot-landing-6a052.web.app","type":"DEFAULT_SITE"}
+[debug] [2024-10-20T00:59:03.201Z] Checked if tokens are valid: true, expires at: 1729389525235
+[debug] [2024-10-20T00:59:03.202Z] Checked if tokens are valid: true, expires at: 1729389525235
+[debug] [2024-10-20T00:59:03.202Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 [none]
+[debug] [2024-10-20T00:59:04.120Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 200
+[debug] [2024-10-20T00:59:04.120Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 {"name":"projects/youtube-bot-landing/sites/bot-landing-6a052","defaultUrl":"https://bot-landing-6a052.web.app","type":"DEFAULT_SITE"}
 [info]   ▲ Next.js 14.2.15
 
 [info] 
 
 [info]    Creating an optimized production build ...
 
-[info]  ✓ Compiled successfully
+[info] Failed to compile.
 
-[info]    Linting and checking validity of types ...
 
-[info] Pages directory cannot be found at /home/mgerasika/Documents/git/home/youtube-bot-filter/next/pages or /home/mgerasika/Documents/git/home/youtube-bot-filter/next/src/pages. If using a custom path, please configure with the `no-html-link-for-pages` rule in your eslint config file.
+[info] ./layouts/partials/Services.js
+Module not found: Package path ./swiper.min.css is not exported from package /home/mgerasika/Documents/git/home/youtube-bot-filter/next/node_modules/swiper (see exports field in /home/mgerasika/Documents/git/home/youtube-bot-filter/next/node_modules/swiper/package.json)
 
-[info]  ⨯ ESLint: Failed to load parser '@typescript-eslint/parser' declared in '.eslintrc.json » eslint-config-next/core-web-vitals » /home/mgerasika/Documents/git/home/youtube-bot-filter/next/node_modules/eslint-config-next/index.js#overrides[0]': Cannot find module 'typescript' Require stack: - /home/mgerasika/Documents/git/home/youtube-bot-filter/next/node_modules/@typescript-eslint/typescript-estree/dist/convert.js - /home/mgerasika/Documents/git/home/youtube-bot-filter/next/node_modules/@typescript-eslint/typescript-estree/dist/ast-converter.js - /home/mgerasika/Documents/git/home/youtube-bot-filter/next/node_modules/@typescript-eslint/typescript-estree/dist/parser.js - /home/mgerasika/Documents/git/home/youtube-bot-filter/next/node_modules/@typescript-eslint/typescript-estree/dist/index.js - /home/mgerasika/Documents/git/home/youtube-bot-filter/next/node_modules/@typescript-eslint/parser/dist/parser.js - /home/mgerasika/Documents/git/home/youtube-bot-filter/next/node_modules/@typescript-eslint/parser/dist/index.js - /home/mgerasika/Documents/git/home/youtube-bot-filter/next/node_modules/@eslint/eslintrc/dist/eslintrc.cjs
+https://nextjs.org/docs/messages/module-not-found
 
-[info]    Collecting page data ...
-
-[info]    Generating static pages (0/16) ...
-
-[info]    Generating static pages (4/16) 
-
-[info]    Generating static pages (8/16) 
-
-[info]    Generating static pages (12/16) 
-
-[info]  ✓ Generating static pages (16/16)
-
-[info]    Finalizing page optimization ...
-
-[info]    Collecting build traces ...
 
 [info] 
 
-[info] Route (app)                              Size     First Load JS
-┌ ○ /                                    27.1 kB         136 kB
-├ ○ /_not-found                          142 B          87.3 kB
-├ ● /[regular]                           2.01 kB         111 kB
-├   ├ /contact
-├   ├ /elements
-├   ├ /faq
-├   └ /pricing
-├ ƒ /api/statistic                       0 B                0 B
-├ ○ /blogs                               961 B           110 kB
-├ ● /blogs/[single]                      2.01 kB         111 kB
-├   ├ /blogs/blog-1
-├   ├ /blogs/blog-2
-├   ├ /blogs/blog-3
-├   └ [+2 more paths]
-└ ● /blogs/page/[slug]                   961 B           110 kB
-    └ /blogs/page/2
-+ First Load JS shared by all            87.1 kB
-  ├ chunks/117-92d8c50094429da8.js       31.6 kB
-  ├ chunks/fd9d1056-edcb90ebe5c4ef55.js  53.6 kB
-  └ other shared chunks (total)          1.91 kB
+[info] > Build failed because of webpack errors
 
-
-
-[info] ○  (Static)   prerendered as static content
-●  (SSG)      prerendered as static HTML (uses getStaticProps)
-ƒ  (Dynamic)  server-rendered on demand
-
-
-[info] Building a Cloud Function to run this application. This is needed due to:
-[info]  • Image Optimization
-[info]  • use of fallback /blogs/page/[slug]
-[info]  • use of fallback /[regular]
-[info]  • use of fallback /blogs/[single]
-[info]  • non-static component /api/statistic/route
-[info] 
-[debug] [2024-10-19T13:54:48.081Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:54:48.081Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:54:48.082Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 [none]
-[debug] [2024-10-19T13:54:49.231Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 200
-[debug] [2024-10-19T13:54:49.231Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 {"name":"projects/youtube-bot-landing/sites/bot-landing-6a052","defaultUrl":"https://bot-landing-6a052.web.app","type":"DEFAULT_SITE"}
-[debug] [2024-10-19T13:55:24.605Z] [web frameworks] effective firebase.json:  {
-  "hosting": [
-    {
-      "source": ".",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
-      "frameworksBackend": {
-        "region": "europe-west1"
-      },
-      "site": "bot-landing-6a052",
-      "rewrites": [
-        {
-          "source": "**",
-          "function": {
-            "functionId": "ssrbotlanding6a052",
-            "region": "europe-west1",
-            "pinTag": true
-          }
-        }
-      ],
-      "redirects": [],
-      "headers": [
-        {
-          "source": "/blogs",
-          "headers": [
-            {
-              "key": "x-next-cache-tags",
-              "value": "_N_T_/layout,_N_T_/blogs/layout,_N_T_/blogs/page,_N_T_/blogs"
-            }
-          ]
-        },
-        {
-          "source": "/_not-found",
-          "headers": [
-            {
-              "key": "x-next-cache-tags",
-              "value": "_N_T_/layout,_N_T_/_not-found/layout,_N_T_/_not-found/page,_N_T_/_not-found"
-            }
-          ]
-        },
-        {
-          "source": "**/*.[jt]s",
-          "headers": [
-            {
-              "key": "Set-Cookie",
-              "value": "__FIREBASE_DEFAULTS__=eyJjb25maWciOnsicHJvamVjdElkIjoieW91dHViZS1ib3QtbGFuZGluZyIsInN0b3JhZ2VCdWNrZXQiOiJ5b3V0dWJlLWJvdC1sYW5kaW5nLmFwcHNwb3QuY29tIiwiYXBpS2V5IjoiQUl6YVN5QVYzVU5zM0tPN3h5dEd6YlpNWEIxNHFsQW1QRFAxRk1FIiwiYXV0aERvbWFpbiI6ImJvdC1sYW5kaW5nLTZhMDUyLmZpcmViYXNlYXBwLmNvbSIsIm1lc3NhZ2luZ1NlbmRlcklkIjoiOTEzMjMwMzU0NjA0In0sIl9hdXRoVG9rZW5TeW5jVVJMIjoiL19fc2Vzc2lvbiJ9; SameSite=Strict; Expires=2026-09-14T00:35:24.605Z; Path=/;"
-            }
-          ]
-        }
-      ],
-      "cleanUrls": true,
-      "trailingSlash": false,
-      "public": ".firebase/bot-landing-6a052/hosting",
-      "webFramework": "next_ssr"
-    }
-  ],
-  "functions": [
-    {
-      "source": ".firebase/bot-landing-6a052/functions",
-      "codebase": "firebase-frameworks-bot-landing-6a052"
-    }
-  ]
-}
-[debug] [2024-10-19T13:55:24.606Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2024-10-19T13:55:24.606Z] > authorizing via signed-in user (mgerasika@gmail.com)
-[debug] [2024-10-19T13:55:24.606Z] [iam] checking project youtube-bot-landing for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
-[debug] [2024-10-19T13:55:24.607Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:24.607Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:24.607Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions [none]
-[debug] [2024-10-19T13:55:24.607Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions x-goog-quota-user=projects/youtube-bot-landing
-[debug] [2024-10-19T13:55:24.607Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
-[debug] [2024-10-19T13:55:25.478Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions 200
-[debug] [2024-10-19T13:55:25.479Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
-[info] 
-[info] === Deploying to 'youtube-bot-landing'...
-[info] 
-[info] i  deploying functions, hosting 
-[debug] [2024-10-19T13:55:25.481Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:25.481Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:25.482Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing [none]
-[debug] [2024-10-19T13:55:25.848Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing 200
-[debug] [2024-10-19T13:55:25.848Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing {"projectId":"youtube-bot-landing","projectNumber":"913230354604","displayName":"youtube-bot-landing","name":"projects/youtube-bot-landing","resources":{"hostingSite":"bot-landing-6a052"},"state":"ACTIVE","etag":"1_9bf0ebe9-40e1-4596-b364-9ba874f44461"}
-[info] i  functions: preparing codebase firebase-frameworks-bot-landing-6a052 for deployment 
-[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
-[debug] [2024-10-19T13:55:25.854Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:25.854Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:25.855Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:25.855Z] Checked if tokens are valid: true, expires at: 1729348724937
-[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
-[debug] [2024-10-19T13:55:25.856Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:25.856Z] Checked if tokens are valid: true, expires at: 1729348724937
-[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
-[debug] [2024-10-19T13:55:25.860Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:25.860Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:25.861Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/cloudfunctions.googleapis.com [none]
-[debug] [2024-10-19T13:55:25.861Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/youtube-bot-landing
-[debug] [2024-10-19T13:55:25.864Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/runtimeconfig.googleapis.com [none]
-[debug] [2024-10-19T13:55:25.864Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/youtube-bot-landing
-[debug] [2024-10-19T13:55:25.866Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/cloudbuild.googleapis.com [none]
-[debug] [2024-10-19T13:55:25.867Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/cloudbuild.googleapis.com x-goog-quota-user=projects/youtube-bot-landing
-[debug] [2024-10-19T13:55:25.870Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/artifactregistry.googleapis.com [none]
-[debug] [2024-10-19T13:55:25.870Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/artifactregistry.googleapis.com x-goog-quota-user=projects/youtube-bot-landing
-[debug] [2024-10-19T13:55:26.837Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/runtimeconfig.googleapis.com 200
-[debug] [2024-10-19T13:55:26.837Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/runtimeconfig.googleapis.com [omitted]
-[debug] [2024-10-19T13:55:26.838Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/cloudfunctions.googleapis.com 200
-[debug] [2024-10-19T13:55:26.838Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/cloudfunctions.googleapis.com [omitted]
-[info] ✔  functions: required API cloudfunctions.googleapis.com is enabled 
-[debug] [2024-10-19T13:55:26.844Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/cloudbuild.googleapis.com 200
-[debug] [2024-10-19T13:55:26.844Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/cloudbuild.googleapis.com [omitted]
-[info] ✔  functions: required API cloudbuild.googleapis.com is enabled 
-[debug] [2024-10-19T13:55:26.852Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/artifactregistry.googleapis.com 200
-[debug] [2024-10-19T13:55:26.852Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/artifactregistry.googleapis.com [omitted]
-[info] ✔  artifactregistry: required API artifactregistry.googleapis.com is enabled 
-[debug] [2024-10-19T13:55:26.852Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:26.852Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:26.852Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing/adminSdkConfig [none]
-[debug] [2024-10-19T13:55:27.198Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing/adminSdkConfig 200
-[debug] [2024-10-19T13:55:27.198Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing/adminSdkConfig {"projectId":"youtube-bot-landing","storageBucket":"youtube-bot-landing.appspot.com"}
-[debug] [2024-10-19T13:55:27.200Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:27.200Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:27.201Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/youtube-bot-landing/configs [none]
-[debug] [2024-10-19T13:55:27.466Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/youtube-bot-landing/configs 200
-[debug] [2024-10-19T13:55:27.466Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/youtube-bot-landing/configs {}
-[debug] [2024-10-19T13:55:27.468Z] Validating nodejs source
-[debug] [2024-10-19T13:55:28.194Z] > [functions] package.json contents: {
-  "name": "bigspring-light-nextjs",
-  "description": "a nextjs and tailwindcss SAAS starter template",
-  "version": "2.0.0",
-  "private": true,
-  "license": "MIT",
-  "engines": {
-    "node": "18"
-  },
-  "dependencies": {
-    "@babel/core": "^7.25.8",
-    "@babel/node": "^7.25.7",
-    "@babel/preset-typescript": "^7.25.7",
-    "axios": "^1.7.7",
-    "babel-node-ts": "^1.0.3",
-    "firebase": "^10.14.1",
-    "github-slugger": "^2.0.0",
-    "gray-matter": "^4.0.3",
-    "marked": "^14.1.3",
-    "next": "^14.2.15",
-    "next-mdx-remote": "^5.0.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-gtm-module": "^2.0.11",
-    "react-icons": "^5.3.0",
-    "react-lite-youtube-embed": "^2.4.0",
-    "rehype-highlight": "^7.0.0",
-    "rehype-slug": "^6.0.0",
-    "remark-gfm": "^4.0.0",
-    "swagger-to-typescript2": "^0.1.28",
-    "swiper": "^11.1.14",
-    "yarn": "^1.22.22",
-    "sharp": "^0.32 || ^0.33",
-    "firebase-frameworks": "^0.11.0",
-    "firebase-functions": "^6.0.1",
-    "firebase-admin": "^11.11.1"
-  },
-  "main": "server.js"
-}
-[debug] [2024-10-19T13:55:28.194Z] Building nodejs source
-[info] i  functions: Loading and analyzing source code for codebase firebase-frameworks-bot-landing-6a052 to determine what to deploy 
-[debug] [2024-10-19T13:55:28.195Z] Could not find functions.yaml. Must use http discovery
-[debug] [2024-10-19T13:55:28.199Z] Found firebase-functions binary at '/home/mgerasika/Documents/git/home/youtube-bot-filter/next/.firebase/bot-landing-6a052/functions/node_modules/.bin/firebase-functions'
-[info] Serving at port 8964
-
-[debug] [2024-10-19T13:55:28.489Z] Got response from /__/functions.yaml {"endpoints":{"ssrbotlanding6a052":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west1"],"labels":{},"httpsTrigger":{},"entryPoint":"ssrbotlanding6a052"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
-[info] i  extensions: ensuring required API firebaseextensions.googleapis.com is enabled... 
-[debug] [2024-10-19T13:55:28.512Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:28.512Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:28.512Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/firebaseextensions.googleapis.com [none]
-[debug] [2024-10-19T13:55:28.512Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/firebaseextensions.googleapis.com x-goog-quota-user=projects/youtube-bot-landing
-[debug] [2024-10-19T13:55:29.471Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/firebaseextensions.googleapis.com 200
-[debug] [2024-10-19T13:55:29.472Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/firebaseextensions.googleapis.com [omitted]
-[warn] ⚠  extensions: missing required API firebaseextensions.googleapis.com. Enabling now... 
-[debug] [2024-10-19T13:55:29.472Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:29.472Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:29.472Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/firebaseextensions.googleapis.com:enable [none]
-[debug] [2024-10-19T13:55:29.472Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/firebaseextensions.googleapis.com:enable x-goog-quota-user=projects/youtube-bot-landing
-[debug] [2024-10-19T13:55:30.728Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/firebaseextensions.googleapis.com:enable 200
-[debug] [2024-10-19T13:55:30.728Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/firebaseextensions.googleapis.com:enable [omitted]
-[debug] [2024-10-19T13:55:40.731Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:40.731Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:40.732Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/firebaseextensions.googleapis.com [none]
-[debug] [2024-10-19T13:55:40.732Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/firebaseextensions.googleapis.com x-goog-quota-user=projects/youtube-bot-landing
-[debug] [2024-10-19T13:55:41.690Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/firebaseextensions.googleapis.com 200
-[debug] [2024-10-19T13:55:41.690Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/firebaseextensions.googleapis.com [omitted]
-[info] ✔  extensions: required API firebaseextensions.googleapis.com is enabled 
-[debug] [2024-10-19T13:55:41.691Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2024-10-19T13:55:41.691Z] > authorizing via signed-in user (mgerasika@gmail.com)
-[debug] [2024-10-19T13:55:41.691Z] [iam] checking project youtube-bot-landing for permissions ["firebase.projects.get","firebaseextensions.instances.list"]
-[debug] [2024-10-19T13:55:41.691Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:41.691Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:41.691Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions [none]
-[debug] [2024-10-19T13:55:41.691Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions x-goog-quota-user=projects/youtube-bot-landing
-[debug] [2024-10-19T13:55:41.691Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions {"permissions":["firebase.projects.get","firebaseextensions.instances.list"]}
-[debug] [2024-10-19T13:55:42.463Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions 200
-[debug] [2024-10-19T13:55:42.463Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions {"permissions":["firebase.projects.get","firebaseextensions.instances.list"]}
-[debug] [2024-10-19T13:55:42.463Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:42.463Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:42.464Z] >>> [apiv2][query] GET https://firebaseextensions.googleapis.com/v1beta/projects/youtube-bot-landing/instances pageSize=100&pageToken=
-[debug] [2024-10-19T13:55:44.473Z] <<< [apiv2][status] GET https://firebaseextensions.googleapis.com/v1beta/projects/youtube-bot-landing/instances 200
-[debug] [2024-10-19T13:55:44.473Z] <<< [apiv2][body] GET https://firebaseextensions.googleapis.com/v1beta/projects/youtube-bot-landing/instances {}
-[info] i  functions: Loaded environment variables from .env. 
-[info] i  functions: preparing .firebase/bot-landing-6a052/functions directory for uploading... 
-[info] i  functions: packaged /home/mgerasika/Documents/git/home/youtube-bot-filter/next/.firebase/bot-landing-6a052/functions (18.75 MB) for uploading 
-[debug] [2024-10-19T13:55:45.959Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:45.959Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:45.960Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/projects/youtube-bot-landing/locations/-/functions [none]
-[debug] [2024-10-19T13:55:46.696Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/projects/youtube-bot-landing/locations/-/functions 200
-[debug] [2024-10-19T13:55:46.696Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/projects/youtube-bot-landing/locations/-/functions {}
-[debug] [2024-10-19T13:55:46.696Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:46.696Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:46.697Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/youtube-bot-landing/locations/-/functions filter=environment%3D%22GEN_2%22
-[debug] [2024-10-19T13:55:47.781Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/youtube-bot-landing/locations/-/functions 200
-[debug] [2024-10-19T13:55:47.781Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/youtube-bot-landing/locations/-/functions {"functions":[{"name":"projects/youtube-bot-landing/locations/europe-west1/functions/ssrbotlanding6a052","buildConfig":{"build":"projects/913230354604/locations/europe-west1/builds/3fc101f0-1657-4a13-aafe-a764480fc06d","runtime":"nodejs18","entryPoint":"ssrbotlanding6a052","source":{"storageSource":{"bucket":"gcf-v2-sources-913230354604-europe-west1","object":"ssrbotlanding6a052/function-source.zip","generation":"1728720294834191"}},"environmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"dockerRepository":"projects/youtube-bot-landing/locations/europe-west1/repositories/gcf-artifacts","sourceProvenance":{"resolvedStorageSource":{"bucket":"gcf-v2-sources-913230354604-europe-west1","object":"ssrbotlanding6a052/function-source.zip","generation":"1728720294834191"}},"dockerRegistry":"ARTIFACT_REGISTRY","serviceAccount":"projects/youtube-bot-landing/serviceAccounts/913230354604-compute@developer.gserviceaccount.com","automaticUpdatePolicy":{}},"serviceConfig":{"service":"projects/youtube-bot-landing/locations/europe-west1/services/ssrbotlanding6a052","timeoutSeconds":60,"environmentVariables":{"VERCEL_URL":"bot-landing-6a052.web.app","__FIREBASE_FRAMEWORKS_ENTRY__":"next.js","FIREBASE_CONFIG":"{\"projectId\":\"youtube-bot-landing\",\"storageBucket\":\"youtube-bot-landing.appspot.com\"}","GCLOUD_PROJECT":"youtube-bot-landing","EVENTARC_CLOUD_EVENT_SOURCE":"projects/youtube-bot-landing/locations/europe-west1/services/ssrbotlanding6a052","FUNCTION_TARGET":"ssrbotlanding6a052","LOG_EXECUTION_ID":"true"},"maxInstanceCount":100,"ingressSettings":"ALLOW_ALL","uri":"https://ssrbotlanding6a052-u5vqdeij3a-ew.a.run.app","serviceAccountEmail":"913230354604-compute@developer.gserviceaccount.com","availableMemory":"256Mi","allTrafficOnLatestRevision":true,"revision":"ssrbotlanding6a052-00005-muq","maxInstanceRequestConcurrency":80,"availableCpu":"1"},"state":"ACTIVE","updateTime":"2024-10-12T08:06:45.114829665Z","labels":{"firebase-functions-codebase":"firebase-frameworks-bot-landing-6a052","firebase-functions-hash":"6fd7a4bae83eaa45d201964782591b523cd784c5","deployment-tool":"cli-firebase"},"environment":"GEN_2","url":"https://europe-west1-youtube-bot-landing.cloudfunctions.net/ssrbotlanding6a052","createTime":"2024-10-11T09:35:46.027823343Z"}]}
-[info] i  functions: ensuring required API run.googleapis.com is enabled... 
-[debug] [2024-10-19T13:55:47.786Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:47.786Z] Checked if tokens are valid: true, expires at: 1729348724937
-[info] i  functions: ensuring required API eventarc.googleapis.com is enabled... 
-[debug] [2024-10-19T13:55:47.786Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:47.786Z] Checked if tokens are valid: true, expires at: 1729348724937
-[info] i  functions: ensuring required API pubsub.googleapis.com is enabled... 
-[debug] [2024-10-19T13:55:47.786Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:47.786Z] Checked if tokens are valid: true, expires at: 1729348724937
-[info] i  functions: ensuring required API storage.googleapis.com is enabled... 
-[debug] [2024-10-19T13:55:47.786Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:47.787Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:47.787Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/run.googleapis.com [none]
-[debug] [2024-10-19T13:55:47.787Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/run.googleapis.com x-goog-quota-user=projects/youtube-bot-landing
-[debug] [2024-10-19T13:55:47.789Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/eventarc.googleapis.com [none]
-[debug] [2024-10-19T13:55:47.789Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/eventarc.googleapis.com x-goog-quota-user=projects/youtube-bot-landing
-[debug] [2024-10-19T13:55:47.792Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/pubsub.googleapis.com [none]
-[debug] [2024-10-19T13:55:47.792Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/pubsub.googleapis.com x-goog-quota-user=projects/youtube-bot-landing
-[debug] [2024-10-19T13:55:47.795Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/storage.googleapis.com [none]
-[debug] [2024-10-19T13:55:47.795Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/storage.googleapis.com x-goog-quota-user=projects/youtube-bot-landing
-[debug] [2024-10-19T13:55:48.741Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/eventarc.googleapis.com 200
-[debug] [2024-10-19T13:55:48.741Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/eventarc.googleapis.com [omitted]
-[info] ✔  functions: required API eventarc.googleapis.com is enabled 
-[debug] [2024-10-19T13:55:48.742Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/run.googleapis.com 200
-[debug] [2024-10-19T13:55:48.742Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/run.googleapis.com [omitted]
-[info] ✔  functions: required API run.googleapis.com is enabled 
-[debug] [2024-10-19T13:55:48.752Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/pubsub.googleapis.com 200
-[debug] [2024-10-19T13:55:48.753Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/pubsub.googleapis.com [omitted]
-[info] ✔  functions: required API pubsub.googleapis.com is enabled 
-[debug] [2024-10-19T13:55:48.777Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/storage.googleapis.com 200
-[debug] [2024-10-19T13:55:48.777Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/youtube-bot-landing/services/storage.googleapis.com [omitted]
-[info] ✔  functions: required API storage.googleapis.com is enabled 
-[info] i  functions: generating the service identity for pubsub.googleapis.com... 
-[debug] [2024-10-19T13:55:48.778Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:48.778Z] Checked if tokens are valid: true, expires at: 1729348724937
-[info] i  functions: generating the service identity for eventarc.googleapis.com... 
-[debug] [2024-10-19T13:55:48.778Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:48.778Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:48.778Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1beta1/projects/913230354604/services/pubsub.googleapis.com:generateServiceIdentity [none]
-[debug] [2024-10-19T13:55:48.781Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1beta1/projects/913230354604/services/eventarc.googleapis.com:generateServiceIdentity [none]
-[debug] [2024-10-19T13:55:49.358Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1beta1/projects/913230354604/services/eventarc.googleapis.com:generateServiceIdentity 200
-[debug] [2024-10-19T13:55:49.359Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1beta1/projects/913230354604/services/eventarc.googleapis.com:generateServiceIdentity {"name":"operations/finished.DONE_OPERATION","done":true,"response":{"@type":"type.googleapis.com/google.api.serviceusage.v1beta1.ServiceIdentity","email":"service-913230354604@gcp-sa-eventarc.iam.gserviceaccount.com","uniqueId":"110175683223412967881"}}
-[debug] [2024-10-19T13:55:49.762Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1beta1/projects/913230354604/services/pubsub.googleapis.com:generateServiceIdentity 200
-[debug] [2024-10-19T13:55:49.762Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1beta1/projects/913230354604/services/pubsub.googleapis.com:generateServiceIdentity {"name":"operations/finished.DONE_OPERATION","done":true,"response":{"@type":"type.googleapis.com/google.api.serviceusage.v1beta1.ServiceIdentity","email":"service-913230354604@gcp-sa-pubsub.iam.gserviceaccount.com","uniqueId":"113839517417547232762"}}
-[debug] [2024-10-19T13:55:49.764Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:49.764Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:49.765Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing [none]
-[debug] [2024-10-19T13:55:50.089Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing 200
-[debug] [2024-10-19T13:55:50.089Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing {"projectId":"youtube-bot-landing","projectNumber":"913230354604","displayName":"youtube-bot-landing","name":"projects/youtube-bot-landing","resources":{"hostingSite":"bot-landing-6a052"},"state":"ACTIVE","etag":"1_9bf0ebe9-40e1-4596-b364-9ba874f44461"}
-[debug] [2024-10-19T13:55:50.091Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:50.091Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:50.091Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/bot-landing-6a052/versions [none]
-[debug] [2024-10-19T13:55:50.091Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/bot-landing-6a052/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase","firebase-web-framework":"next_ssr"}}
-[debug] [2024-10-19T13:55:51.806Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/bot-landing-6a052/versions 200
-[debug] [2024-10-19T13:55:51.806Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/bot-landing-6a052/versions {"name":"projects/913230354604/sites/bot-landing-6a052/versions/d90b51f730d17a47","status":"CREATED","config":{},"labels":{"deployment-tool":"cli-firebase","firebase-web-framework":"next_ssr"}}
-[debug] [2024-10-19T13:55:51.808Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:51.809Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:51.809Z] >>> [apiv2][query] GET https://cloudbilling.googleapis.com/v1/projects/youtube-bot-landing/billingInfo [none]
-[debug] [2024-10-19T13:55:52.638Z] <<< [apiv2][status] GET https://cloudbilling.googleapis.com/v1/projects/youtube-bot-landing/billingInfo 200
-[debug] [2024-10-19T13:55:52.638Z] <<< [apiv2][body] GET https://cloudbilling.googleapis.com/v1/projects/youtube-bot-landing/billingInfo {"name":"projects/youtube-bot-landing/billingInfo","projectId":"youtube-bot-landing","billingAccountName":"billingAccounts/00EC5A-D8CC94-30F76B","billingEnabled":true}
-[debug] [2024-10-19T13:55:52.643Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:52.643Z] Checked if tokens are valid: true, expires at: 1729348724937
-[debug] [2024-10-19T13:55:52.643Z] >>> [apiv2][query] POST https://cloudfunctions.googleapis.com/v2/projects/youtube-bot-landing/locations/europe-west1/functions:generateUploadUrl [none]
-[debug] [2024-10-19T13:55:52.909Z] <<< [apiv2][status] POST https://cloudfunctions.googleapis.com/v2/projects/youtube-bot-landing/locations/europe-west1/functions:generateUploadUrl 200
-[debug] [2024-10-19T13:55:52.909Z] <<< [apiv2][body] POST https://cloudfunctions.googleapis.com/v2/projects/youtube-bot-landing/locations/europe-west1/functions:generateUploadUrl {"uploadUrl":"https://storage.googleapis.com/gcf-v2-uploads-913230354604-europe-west1/9aac0405-e9f9-4d98-98fd-2fe2692943fa.zip?GoogleAccessId=service-913230354604@gcf-admin-robot.iam.gserviceaccount.com&Expires=1729347952&Signature=M7tiEUOc1GdzEAnhUnsDm956ir07a0mKzLOv2T8gChqDNT%2FnUr3MCn%2FTUEmwK6o1Yz3rthccCay9o3on2PSM0nJ2QHKB%2FvobT%2BsN0SHDCbzl1WWOgfWbEJeZTQ9uIbhvXdsVlyQKvmLUZGLt84wammFE%2BTl00VKsJC8vgCd6wknKSg%2BwNDrkyUU%2FpH21bPjlQCZITNlE%2BsaKiyiN0xSeVs3eVLxDvn%2FpkZWu84gc3iq4r%2Fox9bCpezbLffBEfTBXgqxc2A78EVDPor0ue3dwye5lBMDUQAajEw3PjVCGZa7jV9CHJgJlYKRh8BBHPmUz6fqCRsNkzGhgVNV9H1%2BgVg%3D%3D","storageSource":{"bucket":"gcf-v2-uploads-913230354604-europe-west1","object":"9aac0405-e9f9-4d98-98fd-2fe2692943fa.zip"}}
-[debug] [2024-10-19T13:55:52.910Z] >>> [apiv2][query] PUT https://storage.googleapis.com/gcf-v2-uploads-913230354604-europe-west1/9aac0405-e9f9-4d98-98fd-2fe2692943fa.zip GoogleAccessId=service-913230354604%40gcf-admin-robot.iam.gserviceaccount.com&Expires=1729347952&Signature=M7tiEUOc1GdzEAnhUnsDm956ir07a0mKzLOv2T8gChqDNT%2FnUr3MCn%2FTUEmwK6o1Yz3rthccCay9o3on2PSM0nJ2QHKB%2FvobT%2BsN0SHDCbzl1WWOgfWbEJeZTQ9uIbhvXdsVlyQKvmLUZGLt84wammFE%2BTl00VKsJC8vgCd6wknKSg%2BwNDrkyUU%2FpH21bPjlQCZITNlE%2BsaKiyiN0xSeVs3eVLxDvn%2FpkZWu84gc3iq4r%2Fox9bCpezbLffBEfTBXgqxc2A78EVDPor0ue3dwye5lBMDUQAajEw3PjVCGZa7jV9CHJgJlYKRh8BBHPmUz6fqCRsNkzGhgVNV9H1%2BgVg%3D%3D
-[debug] [2024-10-19T13:55:52.910Z] >>> [apiv2][body] PUT https://storage.googleapis.com/gcf-v2-uploads-913230354604-europe-west1/9aac0405-e9f9-4d98-98fd-2fe2692943fa.zip [stream]
+[debug] [2024-10-20T00:59:13.857Z] Error: ENOENT: no such file or directory, open '/home/mgerasika/Documents/git/home/youtube-bot-filter/next/.next/server/middleware-manifest.json'
+[error] 
+[error] Error: An unexpected error has occurred.

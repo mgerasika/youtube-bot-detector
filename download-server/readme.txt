@@ -44,3 +44,6 @@ AIzaSyBZ-d-VRkWQc6uUi0u3mXwS13y9KMswIOU
 
 mgerasika84@gmail.com
 AIzaSyCqwDMvexrDjINTDW5DP4Xa8AOivRBLCHE
+
+mykhaylo.gerasika@gmail.com
+AIzaSyAG2Yrr86p-FaPHBzD2Ct13sswP3iytC9M

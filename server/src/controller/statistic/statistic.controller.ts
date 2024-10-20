@@ -10,7 +10,7 @@ interface IStatisticInfoRequest extends IExpressRequest {
 
 interface IStatisticInfoResponse extends IExpressResponse<IStatisticInfo, void> {}
 
-app.get(API_URL.api.statistic.info.toString(), memoryCache(60*60), async (req: IStatisticInfoRequest, res: IStatisticInfoResponse) => {
+app.get(API_URL.api.statistic.info.toString(), memoryCache(5), async (req: IStatisticInfoRequest, res: IStatisticInfoResponse) => {
     const [data, error] = await allServices.statistic.getStatisticInfoAsync();
     if (error) {
         return res.status(400).send( error);
