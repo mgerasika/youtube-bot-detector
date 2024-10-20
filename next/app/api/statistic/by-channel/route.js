@@ -1,14 +1,19 @@
 import { myCors } from "@lib/my-cors";
 import { api } from "src/api.generated";
 
+
 // Handle GET requests
 export async function GET(request) {
   const corsErrorResponse = myCors(request);
   if (corsErrorResponse) {
     return corsErrorResponse; // Return the CORS error response if not allowed
   }
+  
+  const { searchParams } = new URL(request.url);
+  
+  const channel_url = searchParams.get('channel_url'); 
 
-  const data = await api.statisticInfoGet();
+  const data = await api.statisticByChannelGet({channel_url: channel_url});
   return new Response(JSON.stringify(data.data), {
     status: 200,
     headers: {
@@ -29,4 +34,5 @@ export async function OPTIONS(request) {
     },
   });
 }
+
 

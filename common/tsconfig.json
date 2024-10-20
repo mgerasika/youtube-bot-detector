@@ -16,8 +16,7 @@
         "outDir": "./dist",
         "baseUrl": ".",
         "paths": {
-            "@server/*": ["src/*"],
-            "@common/*": ["../common/src/*"]
+            "@common/*": ["src/*"]
         }
     },
     "exclude": ["node_modules"]

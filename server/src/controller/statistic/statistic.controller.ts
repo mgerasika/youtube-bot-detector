@@ -38,12 +38,13 @@ app.get(API_URL.api.statistic.byVideo.toString(), async (req: IByVideoRequest, r
 interface IByChannelRequest extends IExpressRequest {
     query: {
         channel_id?: string;
+        channel_url?: string;
     };
 }
 
 interface IByChannelResponse extends IExpressResponse<IStatistic[], void> {}
 app.get(API_URL.api.statistic.byChannel.toString(), async (req: IByChannelRequest, res: IByChannelResponse) => {
-    const [data, error] = await allServices.statistic.getStatisticByChannelAsync(req.query.channel_id);
+    const [data, error] = await allServices.statistic.getStatisticByChannelAsync(req.query.channel_id, req.query.channel_url);
     if (error) {
         return res.status(400).send( error);
     }

@@ -62,7 +62,10 @@ GROUP BY comment.author_id, channel.id  order by comment_count desc;`);
     return [getRowsOnlyWithAuthorUrl(list as [])];
 };
 
-const getStatisticByChannelAsync = async (channel_id?: string): IAsyncPromiseResult<IStatistic[]> => {
+const getStatisticByChannelAsync = async (channel_id?: string, channel_url?:string): IAsyncPromiseResult<IStatistic[]> => {
+    if(channel_url) {
+        return [[{} as any]];
+    }
     const [list, error] = await sqlAsync<IApiKeyDto[]>(async (client) => {
         const { rows } = await client.query(`SELECT COUNT(*) AS comment_count, comment.author_id, channel.*
 FROM comment

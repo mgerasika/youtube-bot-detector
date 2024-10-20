@@ -5,9 +5,7 @@
     "main": "dist/src/index.js",
     "scripts": {
         "build": "npx tsc",
-        "start": "node dist/src/index.js",
-        "dev": "nodemon",
-        "codegen": "npx ts-node scripts/codegen-spec.ts && npx ts-node scripts/codegen-ts.ts"
+        "start": "node dist/src/index.js"
     },
     "author": "",
     "license": "ISC",
@@ -33,8 +31,7 @@
         "swagger-to-typescript2": "^0.1.28"
     },
     "_moduleAliases": {
-        "@server": "dist/src/",
-        "@common": "../common/dist/src/"
+        "@server": "dist/src/"
     },
     "devDependencies": {
         "@types/amqplib": "^0.10.1",

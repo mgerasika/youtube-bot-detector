@@ -3,6 +3,7 @@
 import {style} from './style';
 import { ENV } from '../env';
 import axios from 'axios';
+import { IStatisticInfo } from '../api.generated';
 let timeoutRes = 0;
 window.addEventListener("scroll", () => {
   window.clearTimeout(timeoutRes);
@@ -16,9 +17,22 @@ function getBotDiv() {
   div.className = 'botDiv';
   const iconDiv = document.createElement("div");
   iconDiv.className = "iconDiv";
-  iconDiv.innerHTML = "Bot";
+  iconDiv.innerHTML = "";
   div.appendChild(iconDiv);
   return div; 
+}
+
+
+function getChannelUrl() : string | undefined {
+const container = document.querySelector("ytd-channel-name[id='channel-name']")
+if(container) {
+  const link  = container.querySelector("a")
+  if(link) {
+    return link.href.split('/').pop();
+  }
+
+}
+return undefined
 }
 function getRootElements() {
   const rootElements: any[] = document.body.getElementsByTagName(
@@ -36,9 +50,7 @@ function render() {
     const el = rootElements[i];
 
     if(!el.className?.includes('iconDivContainer')) {
-      const linkElement = el.querySelector("a[id=author-text]");
-      const id = linkElement.getAttribute("href").replace("/channel/", "");
-      console.log("id = ", id);
+     
       el.className = 'iconDivContainer ' + el.className;
       const cloneBotDiv = botDiv.cloneNode(true) as HTMLElement;
       updateState(el, cloneBotDiv);
@@ -52,7 +64,25 @@ function render() {
   }
 }
 
+function getAuthorUrl(el: HTMLElement): string | undefined {
+  const linkElement = el.querySelector("a[id=author-text]");
+  if(linkElement && linkElement.getAttribute) {
+    const id = linkElement?.getAttribute("href")?.replace("/channel/", "");
+    return id ? id.replace('/@','@') : undefined;
+  }
+  return undefined;
+}
+
+function findStatisticItem(el: HTMLElement): IStatisticInfo | undefined {
+  const authorUrl = getAuthorUrl(el);
+  if(authorUrl) {
+    const statisticItem = _statisticByVideo.find(stat => stat.author_url === authorUrl);
+    return statisticItem;
+  }
+  return undefined;
+}
 function updateState(el: HTMLElement, botDiv: HTMLElement) {
+  const statisticItem = findStatisticItem(el);
   const toolbar = el.querySelector("div[id=toolbar]");
   const [likeBtn, dislikeBtn, authorLikedBtn] = toolbar?.getElementsByTagName("button") || [];
   if(likeBtn?.getAttribute("aria-pressed") === "true") {
@@ -68,8 +98,16 @@ function updateState(el: HTMLElement, botDiv: HTMLElement) {
   if(authorLikedBtn?.getAttribute("aria-label") === "Heart") {
     // botDiv.childNodes[0].innerHTML = 'Author Liked';
   }
+
+  if(statisticItem) {
+    if(botDiv.childNodes[0]) {
+      (botDiv.childNodes[0] as HTMLElement).innerHTML = `${statisticItem.comment_count}`
+    }
+  }
 };
 
+let _statisticByVideo: IStatisticInfo[] = [];
+let _statisticByChannel: IStatisticInfo[] = [];
 function load() {
  
   const rootElements = getRootElements();
@@ -79,13 +117,24 @@ function load() {
     const videoId = params.get('v');
     console.log('videoId', videoId)
 
-    axios.get(`${ENV.NEXT_SERVER_URL}api/statistic/by-video?video_id=${videoId}`).then(statistic => {
-      console.log('statistic', statistic)
-    })
-    // api.statisticByVideoGet({video_id:videoId || ''}).then(() => {
+    const channelUrl = getChannelUrl();
+      console.log('channelUrl',channelUrl)
 
-    // })
-    render()
+    axios.get(`${ENV.NEXT_SERVER_URL}api/statistic/by-video?video_id=${videoId}`).then(statistic => {
+      _statisticByVideo = statistic.data;
+      console.log('statistic', _statisticByVideo)
+
+      render()
+    })
+
+    axios.get(`${ENV.NEXT_SERVER_URL}api/statistic/by-channel?channel_url=${channelUrl}`).then(statistic => {
+      _statisticByChannel = statistic.data;
+      console.log('statistic', _statisticByChannel)
+
+      render()
+    })
+ 
+   
   }
   else {
     window.setTimeout(load,50);
