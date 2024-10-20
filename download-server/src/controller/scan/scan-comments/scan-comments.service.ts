@@ -6,7 +6,7 @@ import { ENV } from '@server/constants/env';
 import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
 import { ICollection } from '@server/interfaces/collection';
 import { api } from '@server/api.generated';
-import { rabbitMQ_sendDataAsync } from '@server/rabbit-mq';
+import { rabbitMQ_sendDataAsync } from '@server/utils/rabbit-mq';
 import { groupArray } from '@server/utils/group-array.util';
 import { nameOf } from '@server/utils/name-of';
 import { oneByOneAsync } from '@server/utils/one-by-one-async.util';

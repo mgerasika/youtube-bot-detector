@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config(); // Load environment variables from .env
 
 import { ENV } from '@server/constants/env';
-import { rabbitMQ_createConnectionAsync, rabbitMQ_subscribeAsync } from '@server/rabbit-mq';
+import { rabbitMQ_createConnectionAsync, rabbitMQ_subscribeAsync } from '@server/utils/rabbit-mq';
 import { allServices } from './controller/all-services';
 import { app } from './express-app';
 import { typeOrmAsync } from './utils/type-orm-async.util';

@@ -1,3 +1,3 @@
 export const ENV = {
-    API_SERVER_URL: 'http://178.210.131.101:8007/'
+    api_server_url: 'http://178.210.131.101:8007/'
 }

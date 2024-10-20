@@ -3,7 +3,7 @@ import { app, IExpressRequest, IExpressResponse } from "@server/express-app";
 import { allServices } from "../all-services";
 import { IApiKeyDto } from "@server/dto/api-key.dto";
 import { IStatistic, IStatisticInfo } from "./statistic.service";
-import { memoryCache } from "@server/memory-cache";
+import { memoryCache } from "@server/utils/memory-cache";
 
 interface IStatisticInfoRequest extends IExpressRequest {
 }

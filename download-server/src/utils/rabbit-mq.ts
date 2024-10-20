@@ -1,13 +1,32 @@
 import amqp, { Channel, Connection, ConsumeMessage } from 'amqplib';
-import { IQueryReturn } from './utils/to-query.util';
-import { ENV } from './constants/env';
-import { CONST } from './constants/const.contant';
-import { IRabbitMqBody, IRabbitMqMessage } from './interfaces/rabbit-mq-message.interface';
+import { IQueryReturn } from './to-query.util';
+import { ENV } from '../constants/env';
+import { CONST } from '../constants/const.contant';
+import { IRabbitMqBody, IRabbitMqMessage } from '../interfaces/rabbit-mq-message.interface';
 import { connectToRedisAsync } from './redis';
 
 let _connection: Connection | undefined;
 let _channel: Channel;
 
+export async function rabbitMQ_createChannelAsync() {
+    await rabbitMQ_createConnectionAsync()
+     return _channel;
+ }
+ 
+ export interface IConnectionInfo {
+     messageCount: number;
+     consumerCount: number;
+ }
+ export const rabbit_mq_getConnectionInfoAsync = async (): Promise<IConnectionInfo> => {
+     const channel = await rabbitMQ_createChannelAsync();
+     try {
+       const { messageCount, consumerCount } = await channel.checkQueue(CONST.RABBIT_MQ_CHANNEL_NAME);
+       return {messageCount, consumerCount};
+     } catch (error) {
+       throw new Error(`Error fetching message count: ${error}`);
+     }
+   };
+   
 export async function rabbitMQ_createConnectionAsync() {
     if (!_connection || !_channel) {
         try {
@@ -79,7 +98,7 @@ function sendAgain(body: Buffer) {
         _channel.sendToQueue(CONST.RABBIT_MQ_CHANNEL_NAME, body, {
             persistent: true, // Ensure the message is durable
         });
-    }, ENV.send_to_rabbit_mq_again_delay);
+    }, 1000);
 }
 
 const getMessageId = (msg: IRabbitMqBody) => {

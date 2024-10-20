@@ -1,8 +1,8 @@
 import { google, youtube_v3 } from 'googleapis';
-import { IAsyncPromiseResult } from './interfaces/async-promise-result.interface';
+import { IAsyncPromiseResult } from '../interfaces/async-promise-result.interface';
 import { AxiosError } from 'axios';
-import { api } from './api.generated';
-import { toQuery } from './utils/to-query.util';
+import { api } from '../api.generated';
+import { toQuery } from './to-query.util';
 
 let _youtubeInstance: youtube_v3.Youtube | undefined;
 

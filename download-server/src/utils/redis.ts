@@ -1,5 +1,5 @@
 import { createClient } from 'redis';
-import { ENV } from './constants/env';
+import { ENV } from '../constants/env';
 
 // docker run -d --name redis-container --restart always -p 6379:6379 redis
 // docker run -d --name redisinsight -p 5540:5540 redis/redisinsight:latest

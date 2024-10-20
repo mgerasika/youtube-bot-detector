@@ -120,14 +120,14 @@ function load() {
     const channelUrl = getChannelUrl();
       console.log('channelUrl',channelUrl)
 
-    axios.get(`${ENV.NEXT_SERVER_URL}api/statistic/by-video?video_id=${videoId}`).then(statistic => {
+    axios.get(`${ENV.next_server_url}api/statistic/by-video?video_id=${videoId}`).then(statistic => {
       _statisticByVideo = statistic.data;
       console.log('statistic', _statisticByVideo)
 
       render()
     })
 
-    axios.get(`${ENV.NEXT_SERVER_URL}api/statistic/by-channel?channel_url=${channelUrl}`).then(statistic => {
+    axios.get(`${ENV.next_server_url}api/statistic/by-channel?channel_url=${channelUrl}`).then(statistic => {
       _statisticByChannel = statistic.data;
       console.log('statistic', _statisticByChannel)
 

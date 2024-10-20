@@ -1,6 +1,6 @@
 import { ApiKeyDto, IApiKeyDto } from '@server/dto/api-key.dto';
 import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
-import { rabbit_mq_getConnectionInfoAsync, rabbitMQ_createChannelAsync, rabbitMQ_createConnectionAsync } from '@server/rabbit-mq';
+import { rabbit_mq_getConnectionInfoAsync, rabbitMQ_createChannelAsync, rabbitMQ_createConnectionAsync } from '@server/utils/rabbit-mq';
 import { sqlAsync } from '@server/utils/sql-async.util';
 import { sql_escape } from '@server/utils/sql.util';
 

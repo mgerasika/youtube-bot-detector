@@ -8,4 +8,5 @@ export const ENV = {
     node_env: process.env.NODE_ENV,
     port: 5432,
     rabbit_mq: process.env.RABBIT_MQ,
+    redis_url: process.env.REDIS_URL
 };

@@ -6,7 +6,7 @@ import { ENV } from '@server/constants/env';
 import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
 import { ICollection } from '@server/interfaces/collection';
 import { toQuery } from '@server/utils/to-query.util';
-import { getYoutube, processYoutubeErrorAsync } from '@server/youtube';
+import { getYoutube, processYoutubeErrorAsync } from '@server/utils/youtube';
 
 export interface IGetCommentsBody {
     videoId: string;

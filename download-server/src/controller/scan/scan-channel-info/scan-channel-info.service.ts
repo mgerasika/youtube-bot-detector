@@ -6,7 +6,7 @@ import { ENV } from '@server/constants/env';
 import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
 import { api, IChannelDto } from '@server/api.generated';
 import { toQuery } from '@server/utils/to-query.util';
-import { rabbitMQ_sendDataAsync } from '@server/rabbit-mq';
+import { rabbitMQ_sendDataAsync } from '@server/utils/rabbit-mq';
 import { IScanVideosBody } from '../scan-videos/scan-videos.service';
 import { nameOf } from '@server/utils/name-of';
 import { scan } from '../services';

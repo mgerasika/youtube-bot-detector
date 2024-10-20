@@ -4,7 +4,7 @@ import { toQuery } from '@server/utils/to-query.util';
 import { groupArray } from '@server/utils/group-array.util';
 import { IScanCommentsBody } from '../scan-comments/scan-comments.service';
 import { nameOf } from '@server/utils/name-of';
-import { rabbitMQ_sendDataAsync } from '@server/rabbit-mq';
+import { rabbitMQ_sendDataAsync } from '@server/utils/rabbit-mq';
 import { getVideosAsync } from '@server/controller/youtube/get-videos/get-videos.service';
 import { api } from '@server/api.generated';
 import { scan } from '../services';

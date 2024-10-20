@@ -7,8 +7,8 @@ import { ENV } from '@server/constants/env';
 import { allServices } from './controller/all-services';
 import { app } from './express-app';
 import './controller/all-controllers';
-import { rabbitMQ_subscribeAsync } from '@server/rabbit-mq';
-import { connectToRedisAsync } from '@server/redis';
+import { rabbitMQ_subscribeAsync } from '@server/utils/rabbit-mq';
+import { connectToRedisAsync } from '@server/utils/redis';
 
 console.log('ENV=', ENV);
 

@@ -7,7 +7,7 @@ import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.int
 import { allServices } from '@server/controller/all-services';
 import { ICollection } from '@server/interfaces/collection';
 import { toQuery } from '@server/utils/to-query.util';
-import { getYoutube, processYoutubeErrorAsync } from '@server/youtube';
+import { getYoutube, processYoutubeErrorAsync } from '@server/utils/youtube';
 
 export interface IGetVideosBody {
     channelId: string;

@@ -1,7 +1,7 @@
 import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
 import { api, IStatistic } from '@server/api.generated';
 import { toQuery } from '@server/utils/to-query.util';
-import { rabbitMQ_sendDataAsync } from '@server/rabbit-mq';
+import { rabbitMQ_sendDataAsync } from '@server/utils/rabbit-mq';
 import { nameOf } from '@server/utils/name-of';
 import { IScanChannelInfoBody } from '../scan-channel-info/scan-channel-info.service';
 import { scan } from '../services';
