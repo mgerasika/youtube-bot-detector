@@ -12,7 +12,7 @@ import {
     formatUrl,
     requestService,
 } from 'swagger-to-typescript2';
-import { ENV } from './constants/env';
+import { ENV } from './env';
 
 const API_SERVER_URL = ENV.api_server_url;
 

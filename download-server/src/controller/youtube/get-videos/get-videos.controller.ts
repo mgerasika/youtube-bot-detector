@@ -1,10 +1,7 @@
 import { IExpressRequest, IExpressResponse, app } from '@server/express-app';
-import { API_URL } from '@server/constants/api-url.constant';
-import { getVideosAsync, IGetVideosBody } from './get-videos.service';
-import { api } from '@server/api.generated';
-import { toQuery } from '@server/utils/to-query.util';
-import { oneByOneAsync } from '@server/utils/one-by-one-async.util';
+import { IGetVideosBody } from './get-videos.service';
 import { allServices } from '@server/controller/all-services';
+import { API_URL } from '@server/api-url.constant';
 
 interface IRequest extends IExpressRequest {
     body: IGetVideosBody;

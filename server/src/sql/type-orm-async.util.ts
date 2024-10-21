@@ -1,10 +1,10 @@
-import { ENV } from '@server/constants/env';
+import { ENV } from '@server/env';
 import { DataSource } from 'typeorm';
 import { VideoDto } from '@server/dto/video.dto';
 import { ChannelDto } from '@server/dto/channel.dto';
 import { ApiKeyDto } from '@server/dto/api-key.dto';
 import { CommentDto } from '@server/dto/comment.dto';
-import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
+import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
 
 const IS_DEBUG = ENV.node_env === 'development';
 

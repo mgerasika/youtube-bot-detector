@@ -1,17 +1,11 @@
-import { IExpressRequest, IExpressResponse, app } from '@server/express-app';
-import { API_URL } from '@server/constants/api-url.constant';
-import { google, youtube_v3 } from 'googleapis';
-import { AxiosResponse } from 'axios';
-import { ENV } from '@server/constants/env';
-import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
-import { ICollection } from '@server/interfaces/collection';
+import { ENV } from '@server/env';
+import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
 import { api } from '@server/api.generated';
-import { rabbitMQ_sendDataAsync } from '@server/utils/rabbit-mq';
-import { groupArray } from '@server/utils/group-array.util';
-import { nameOf } from '@server/utils/name-of';
-import { oneByOneAsync } from '@server/utils/one-by-one-async.util';
-import { toQuery } from '@server/utils/to-query.util';
-import { IScanChannelInfoBody } from '../scan-channel-info/scan-channel-info.service';
+import { rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
+import { groupArray } from '@common/utils/group-array.util';
+import { nameOf } from '@common/utils/name-of';
+import { oneByOneAsync } from '@common/utils/one-by-one-async.util';
+import { toQuery } from '@common/utils/to-query.util';
 import { IScanAuthorsBody } from '../scan-auhors/scan-authors.service';
 import { getCommentsAsync } from '@server/controller/youtube/get-comments/get-comments.service';
 import { scan } from '../services';
@@ -59,7 +53,11 @@ export const scanCommentsAsync = async (body: IScanCommentsBody): IAsyncPromiseR
             videoId: body.videoId
         }
         
-        rabbitMQ_sendDataAsync({msg:{methodName:  nameOf<typeof scan>('scanAuthorsAsync'), methodArgumentsJson: arg}})
+        rabbitMQ_sendDataAsync({
+            channelName: ENV.rabbit_mq_channel_name,
+            rabbit_mq_url: ENV.rabbit_mq_url,
+            redis_url: ENV.redis_url
+        }, {msg:{methodName:  nameOf<typeof scan>('scanAuthorsAsync'), methodArgumentsJson: arg}})
 
      
         return [`post to db comments ${comments.length}`];

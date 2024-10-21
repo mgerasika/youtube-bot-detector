@@ -1,9 +1,9 @@
-import { API_URL } from "@server/constants/api-url.constant";
+import { API_URL } from "@server/api-url.constant";
 import { app, IExpressRequest, IExpressResponse } from "@server/express-app";
 import { allServices } from "../all-services";
 import { IApiKeyDto } from "@server/dto/api-key.dto";
 import { IStatistic, IStatisticInfo } from "./statistic.service";
-import { memoryCache } from "@server/utils/memory-cache";
+import { memoryCache } from "@common/utils/memory-cache";
 
 interface IStatisticInfoRequest extends IExpressRequest {
 }

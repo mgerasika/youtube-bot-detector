@@ -1,5 +1,5 @@
 import { IExpressRequest, IExpressResponse, app } from '@server/express-app';
-import { API_URL } from '@server/constants/api-url.constant';
+import { API_URL } from '@server/api-url.constant';
 import { IGetChannelIdBody } from './get-channel-id.service';
 import { allServices } from '@server/controller/all-services';
 

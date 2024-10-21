@@ -1,8 +1,8 @@
 import { ApiKeyDto, IApiKeyDto } from '@server/dto/api-key.dto';
-import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
-import { sqlAsync } from '@server/utils/sql-async.util';
-import { sql_escape } from '@server/utils/sql.util';
-import { typeOrmAsync } from '@server/utils/type-orm-async.util';
+import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
+import { sqlAsync } from '@server/sql/sql-async.util';
+import { sql_escape } from '@server/sql/sql.util';
+import { typeOrmAsync } from '@server/sql/type-orm-async.util';
 
 const getActiveApiKeyAsync = async (old_key: string | undefined): IAsyncPromiseResult<IApiKeyDto> => {
     console.log('OLD_KEY', old_key)

@@ -1,14 +1,10 @@
-import { IExpressRequest, IExpressResponse, app } from '@server/express-app';
-import { API_URL } from '@server/constants/api-url.constant';
-import { google, youtube_v3 } from 'googleapis';
-import { AxiosResponse } from 'axios';
-import { ENV } from '@server/constants/env';
-import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
-import { api, IChannelDto } from '@server/api.generated';
-import { toQuery } from '@server/utils/to-query.util';
-import { rabbitMQ_sendDataAsync } from '@server/utils/rabbit-mq';
+import { ENV } from '@server/env';
+import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
+import { api } from '@server/api.generated';
+import { toQuery } from '@common/utils/to-query.util';
+import { rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
 import { IScanVideosBody } from '../scan-videos/scan-videos.service';
-import { nameOf } from '@server/utils/name-of';
+import { nameOf } from '@common/utils/name-of';
 import { scan } from '../services';
 import { getChannelInfoAsync } from '@server/controller/youtube/get-channel-info/get-channel-info.service';
 
@@ -40,7 +36,11 @@ export const scanChannelInfoAsync = async (body: IScanChannelInfoBody): IAsyncPr
             const arg: IScanVideosBody = {
                 channelId: body.channelId
             }
-            rabbitMQ_sendDataAsync({msg:{methodName:  nameOf<typeof scan>('scanVideosAsync'), methodArgumentsJson: arg}})
+            rabbitMQ_sendDataAsync({
+                channelName: ENV.rabbit_mq_channel_name,
+                rabbit_mq_url: ENV.rabbit_mq_url,
+                redis_url: ENV.redis_url
+            }, {msg:{methodName:  nameOf<typeof scan>('scanVideosAsync'), methodArgumentsJson: arg}})
         }
     }
 

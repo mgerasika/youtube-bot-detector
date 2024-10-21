@@ -1,8 +1,8 @@
 import { ICommentDto, CommentDto } from "@server/dto/comment.dto";
-import { IAsyncPromiseResult } from "@server/interfaces/async-promise-result.interface";
-import { sqlAsync } from "@server/utils/sql-async.util";
-import { sql_where } from "@server/utils/sql.util";
-import { typeOrmAsync } from "@server/utils/type-orm-async.util";
+import { IAsyncPromiseResult } from "@common/interfaces/async-promise-result.interface";
+import { sqlAsync } from "@server/sql/sql-async.util";
+import { sql_where } from "@server/sql/sql.util";
+import { typeOrmAsync } from "@server/sql/type-orm-async.util";
 
 const getLastCommentDateAsync = async ({video_id}: {video_id?:string}) : IAsyncPromiseResult<Date>=> {
     return await sqlAsync<Date>(async (client) => {

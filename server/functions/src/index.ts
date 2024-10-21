@@ -4,7 +4,7 @@ import * as admin from 'firebase-admin';
 import { allServices } from '../../src/controller/all-services';
 import { app as expressApp } from '../../src/express-app';
 // import { rabbitMQ_connectQueueAsync } from '../../src/rabbit-mq';
-import { API_URL } from '@server/constants/api-url.constant';
+import { API_URL } from '@server/api-url.constant';
 
 admin.initializeApp();
 expressApp.get('/echo', (req, res) => {

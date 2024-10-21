@@ -1,8 +1,9 @@
 import { ApiKeyDto, IApiKeyDto } from '@server/dto/api-key.dto';
-import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
-import { rabbit_mq_getConnectionInfoAsync, rabbitMQ_createChannelAsync, rabbitMQ_createConnectionAsync } from '@server/utils/rabbit-mq';
-import { sqlAsync } from '@server/utils/sql-async.util';
-import { sql_escape } from '@server/utils/sql.util';
+import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
+import { rabbit_mq_getConnectionInfoAsync, rabbitMQ_createChannelAsync, rabbitMQ_createConnectionAsync } from '@common/utils/rabbit-mq';
+import { sqlAsync } from '@server/sql/sql-async.util';
+import { sql_escape } from '@server/sql/sql.util';
+import { ENV } from '@server/env';
 
 export interface IStatisticInfo {
     video_count: number;
@@ -14,7 +15,7 @@ export interface IStatisticInfo {
 }
 
 const getStatisticInfoAsync = async (): IAsyncPromiseResult<IStatisticInfo> => {
-    const {consumerCount, messageCount} = await rabbit_mq_getConnectionInfoAsync();
+    const {consumerCount, messageCount} = await rabbit_mq_getConnectionInfoAsync({channelName: ENV.rabbit_mq_channel_name, rabbit_mq_url:ENV.rabbit_mq_url });
     const [data, error] = await sqlAsync<any>(async (client) => {
         const { rows } = await client.query(`SELECT (SELECT COUNT(*) from video) AS video_count,
             (SELECT COUNT(*) from comment) AS comment_count,

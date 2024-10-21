@@ -1,12 +1,7 @@
-import { IExpressRequest, IExpressResponse, app } from '@server/express-app';
-import { API_URL } from '@server/constants/api-url.constant';
-import { google, youtube_v3 } from 'googleapis';
-import { AxiosError, AxiosResponse } from 'axios';
-import { ENV } from '@server/constants/env';
-import { allServices } from '@server/controller/all-services';
-import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
-import { toQuery } from '@server/utils/to-query.util';
-import { getYoutube, processYoutubeErrorAsync } from '@server/utils/youtube';
+import { AxiosError } from 'axios';
+import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
+import { toQuery } from '@common/utils/to-query.util';
+import { getYoutube, processYoutubeErrorAsync } from '@server/youtube';
 
 export interface IGetChannelInfoBody {
     channelId: string;

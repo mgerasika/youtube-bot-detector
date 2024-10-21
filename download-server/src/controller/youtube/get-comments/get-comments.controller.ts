@@ -1,5 +1,5 @@
 import { IExpressRequest, IExpressResponse, app } from '@server/express-app';
-import { API_URL } from '@server/constants/api-url.constant';
+import { API_URL } from '@server/api-url.constant';
 import { getCommentsAsync, IGetCommentsBody } from './get-comments.service';
 import { allServices } from '@server/controller/all-services';
 

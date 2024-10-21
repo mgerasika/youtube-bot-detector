@@ -1,6 +1,6 @@
 const { Pool } = require('pg');
-import { ENV } from '@server/constants/env';
-import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
+import { ENV } from '@server/env';
+import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
 // create a new PostgreSQL pool with your database configuration
 let _pool: typeof Pool | undefined = undefined;
 

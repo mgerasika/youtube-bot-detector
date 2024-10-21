@@ -2,12 +2,12 @@ require('module-alias/register');
 import dotenv from 'dotenv';
 dotenv.config(); // Load environment variables from .env
 
-import { ENV } from '@server/constants/env';
-import { rabbitMQ_createConnectionAsync, rabbitMQ_subscribeAsync } from '@server/utils/rabbit-mq';
+import { ENV } from '@server/env';
+import { rabbitMQ_createConnectionAsync, rabbitMQ_subscribeAsync } from '@common/utils/rabbit-mq';
 import { allServices } from './controller/all-services';
 import { app } from './express-app';
-import { typeOrmAsync } from './utils/type-orm-async.util';
-import { connectToRedisAsync } from './utils/redis';
+import { typeOrmAsync } from './sql/type-orm-async.util';
+import { connectToRedisAsync } from '@common/utils/redis';
 
 export * from './controller/all-controllers';
 
@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 const port = process.env.PORT || 8007;
-if (ENV.rabbit_mq) {
+if (ENV.rabbit_mq_url) {
     // rabbitMQ_subscribeAsync((data) => {
     //     if (data.setupBody) {
     //         console.log('Recived here')
@@ -32,7 +32,7 @@ if (ENV.rabbit_mq) {
     // });
 
     
-    rabbitMQ_createConnectionAsync(); 
+    rabbitMQ_createConnectionAsync({channelName: ENV.rabbit_mq_channel_name, rabbit_mq_url: ENV.rabbit_mq_url}); 
     connectToRedisAsync(ENV.redis_url || '').then(async redis => {
         console.log('Connected to Redis');
     });

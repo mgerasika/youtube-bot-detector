@@ -1,4 +1,4 @@
-import { API_URL } from "@server/constants/api-url.constant";
+import { API_URL } from "@server/api-url.constant";
 import { IChannelDto } from "@server/dto/channel.dto";
 import { app, IExpressRequest, IExpressResponse } from "@server/express-app";
 import {  getChannelListAllAsync } from "./channel.service";

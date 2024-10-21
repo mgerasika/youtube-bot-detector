@@ -1,10 +1,8 @@
 import { IExpressRequest, IExpressResponse, app } from '@server/express-app';
-import { API_URL } from '@server/constants/api-url.constant';
-import { IScanChannelInfoBody, scanChannelInfoAsync } from './scan-channel-info.service';
-import { requestService } from 'swagger-to-typescript2';
-import { api } from '@server/api.generated';
-import { toQuery } from '@server/utils/to-query.util';
+
+import { IScanChannelInfoBody } from './scan-channel-info.service';
 import { allServices } from '@server/controller/all-services';
+import { API_URL } from '@server/api-url.constant';
 
 interface IRequest extends IExpressRequest {
     body: IScanChannelInfoBody;

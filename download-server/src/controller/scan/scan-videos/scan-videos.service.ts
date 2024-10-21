@@ -1,13 +1,14 @@
-import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
-import { oneByOneAsync } from '@server/utils/one-by-one-async.util';
-import { toQuery } from '@server/utils/to-query.util';
-import { groupArray } from '@server/utils/group-array.util';
+import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
+import { oneByOneAsync } from '@common/utils/one-by-one-async.util';
+import { toQuery } from '@common/utils/to-query.util';
+import { groupArray } from '@common/utils/group-array.util';
 import { IScanCommentsBody } from '../scan-comments/scan-comments.service';
-import { nameOf } from '@server/utils/name-of';
-import { rabbitMQ_sendDataAsync } from '@server/utils/rabbit-mq';
+import { nameOf } from '@common/utils/name-of';
+import { rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
 import { getVideosAsync } from '@server/controller/youtube/get-videos/get-videos.service';
 import { api } from '@server/api.generated';
 import { scan } from '../services';
+import { ENV } from '@server/env';
 
 export interface IScanVideosBody {
     channelId: string;
@@ -53,7 +54,11 @@ export const scanVideosAsync = async (body: IScanVideosBody): IAsyncPromiseResul
             const arg: IScanCommentsBody = {
                 videoId: video.videoId
             }
-            rabbitMQ_sendDataAsync({msg:{methodName:  nameOf<typeof scan>('scanCommentsAsync'), methodArgumentsJson: arg}})
+            rabbitMQ_sendDataAsync({
+                channelName: ENV.rabbit_mq_channel_name,
+                rabbit_mq_url: ENV.rabbit_mq_url,
+                redis_url: ENV.redis_url
+            }, {msg:{methodName:  nameOf<typeof scan>('scanCommentsAsync'), methodArgumentsJson: arg}})
         })
         return [`post to videos db ${videos.length}`];
     }

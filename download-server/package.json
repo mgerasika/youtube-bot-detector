@@ -33,8 +33,7 @@
         "swagger-to-typescript2": "^0.1.28"
     },
     "_moduleAliases": {
-        "@server": "dist/src/",
-        "@common": "../common/dist/src/"
+        "@server": "dist/src/"
     },
     "devDependencies": {
         "@types/amqplib": "^0.10.1",

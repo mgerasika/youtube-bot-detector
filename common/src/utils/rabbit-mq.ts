@@ -6,8 +6,8 @@ import { connectToRedisAsync } from './redis';
 let _connection: Connection | undefined;
 let _channel: Channel;
 
-export async function rabbitMQ_createChannelAsync() {
-    await rabbitMQ_createConnectionAsync()
+export async function rabbitMQ_createChannelAsync({channelName,  rabbit_mq_url}:{channelName:string, rabbit_mq_url: string}) {
+    await rabbitMQ_createConnectionAsync({channelName, rabbit_mq_url})
      return _channel;
  }
  
@@ -15,10 +15,10 @@ export async function rabbitMQ_createChannelAsync() {
      messageCount: number;
      consumerCount: number;
  }
- export const rabbit_mq_getConnectionInfoAsync = async (): Promise<IConnectionInfo> => {
-     const channel = await rabbitMQ_createChannelAsync();
+ export const rabbit_mq_getConnectionInfoAsync = async ({channelName,  rabbit_mq_url}:{channelName:string, rabbit_mq_url: string}): Promise<IConnectionInfo> => {
+     const channel = await rabbitMQ_createChannelAsync({channelName, rabbit_mq_url});
      try {
-       const { messageCount, consumerCount } = await channel.checkQueue(CONST.RABBIT_MQ_CHANNEL_NAME);
+       const { messageCount, consumerCount } = await channel.checkQueue(channelName);
        return {messageCount, consumerCount};
      } catch (error) {
        throw new Error(`Error fetching message count: ${error}`);

@@ -1,10 +1,7 @@
 import { IExpressRequest, IExpressResponse, app } from '@server/express-app';
-import { API_URL } from '@server/constants/api-url.constant';
-import { requestService } from 'swagger-to-typescript2';
-import { api } from '@server/api.generated';
-import { toQuery } from '@server/utils/to-query.util';
 import { allServices } from '@server/controller/all-services';
 import { IScanAuthorsBody } from './scan-authors.service';
+import { API_URL } from '@server/api-url.constant';
 
 interface IRequest extends IExpressRequest {
     body: IScanAuthorsBody;

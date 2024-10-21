@@ -1,8 +1,6 @@
-import { IExpressRequest, IExpressResponse, app } from '@server/express-app';
-import { API_URL } from '@server/constants/api-url.constant';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { IAsyncPromiseResult } from '@server/interfaces/async-promise-result.interface';
+import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
 
 export interface IGetChannelIdBody {
     channelName: string;

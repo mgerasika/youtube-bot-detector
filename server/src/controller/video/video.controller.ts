@@ -1,4 +1,4 @@
-import { API_URL } from "@server/constants/api-url.constant";
+import { API_URL } from "@server/api-url.constant";
 import { app, IExpressRequest, IExpressResponse } from "@server/express-app";
 import { allServices } from "../all-services";
 import { IVideoDto } from "@server/dto/video.dto";
