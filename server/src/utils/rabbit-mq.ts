@@ -106,7 +106,7 @@ const getMessageId = (msg: IRabbitMqBody) => {
 }
 export const rabbitMQ_sendDataAsync = async (data: IRabbitMqMessage): Promise<IQueryReturn<boolean>> => {
     await rabbitMQ_createConnectionAsync();
-    const redisClient = await connectToRedisAsync();
+    const redisClient = await connectToRedisAsync(ENV.redis_url || '');
 
     if (_channel) {
         const messageId = getMessageId(data.msg);

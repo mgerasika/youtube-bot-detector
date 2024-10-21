@@ -34,6 +34,19 @@ if(container) {
 }
 return undefined
 }
+
+function getChannelId() {
+  const container = document.querySelector("div[id='social-links']")
+  if(container) {
+    const link  = container.querySelector("a")
+    if(link) {
+      const href = link.href.replace('/videos', '')
+      return href.split('/').pop();
+    }
+  
+  }
+  return undefined
+}
 function getRootElements() {
   const rootElements: any[] = document.body.getElementsByTagName(
     "ytd-comment-thread-renderer"
@@ -120,16 +133,19 @@ function load() {
     const channelUrl = getChannelUrl();
       console.log('channelUrl',channelUrl)
 
+      const channelId = getChannelId();
+      console.log('channelId',channelId)
+
     axios.get(`${ENV.next_server_url}api/statistic/by-video?video_id=${videoId}`).then(statistic => {
       _statisticByVideo = statistic.data;
-      console.log('statistic', _statisticByVideo)
+      console.log('statistic by video', _statisticByVideo)
 
       render()
     })
 
-    axios.get(`${ENV.next_server_url}api/statistic/by-channel?channel_url=${channelUrl}`).then(statistic => {
+    axios.get(`${ENV.next_server_url}api/statistic/by-channel?channel_id=${channelId}`).then(statistic => {
       _statisticByChannel = statistic.data;
-      console.log('statistic', _statisticByChannel)
+      console.log('statistic by channel', _statisticByChannel)
 
       render()
     })

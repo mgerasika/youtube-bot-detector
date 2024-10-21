@@ -1,11 +1,10 @@
 import { myCors } from "@lib/my-cors";
 import { api } from "src/api.generated";
 
-// Handle GET requests
 export async function GET(request) {
-  const corsErrorResponse = myCors(request);
-  if (corsErrorResponse) {
-    return corsErrorResponse; // Return the CORS error response if not allowed
+  const error = myCors(request);
+  if (error) {
+    return error; 
   }
 
   const data = await api.statisticInfoGet();

@@ -21,7 +21,10 @@ export async function connectToRedisAsync(redis_url: string): Promise<TRedisClie
             });
         } catch (err) {
             console.error('Error connecting to Redis:', err);
-            throw err;
+
+            setTimeout(() => {
+                connectToRedisAsync(redis_url)
+            }, 30*1000);
         }
         return _client;
     }

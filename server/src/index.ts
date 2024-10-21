@@ -7,6 +7,7 @@ import { rabbitMQ_createConnectionAsync, rabbitMQ_subscribeAsync } from '@server
 import { allServices } from './controller/all-services';
 import { app } from './express-app';
 import { typeOrmAsync } from './utils/type-orm-async.util';
+import { connectToRedisAsync } from './utils/redis';
 
 export * from './controller/all-controllers';
 
@@ -32,6 +33,9 @@ if (ENV.rabbit_mq) {
 
     
     rabbitMQ_createConnectionAsync(); 
+    connectToRedisAsync(ENV.redis_url || '').then(async redis => {
+        console.log('Connected to Redis');
+    });
 }
 // console.log('ENV = ', ENV);
 console.log('port',  port)

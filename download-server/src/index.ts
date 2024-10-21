@@ -29,9 +29,11 @@ if (ENV.rabbit_mq) {
     });
 }
 
-connectToRedisAsync().then(async redis => {
-    console.log('Connected to Redis');
-});
+if(ENV.redis_url) {
+    connectToRedisAsync(ENV.redis_url).then(async redis => {
+        console.log('Connected to Redis');
+    });
+}
 
 // console.log('ENV = ', ENV);
 const server = app.listen(port, function () {
