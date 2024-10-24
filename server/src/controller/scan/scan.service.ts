@@ -11,6 +11,7 @@ import { sqlAsync } from '@server/sql/sql-async.util';
 import { sql_escape } from '@server/sql/sql.util';
 import { ENV } from '@server/env';
 import { allServices } from '../all-services';
+import {IScan, IScanCommentsBody} from '@common/interfaces/scan.interface';
 
 export interface IScanInfo {
     comment_count: number;
@@ -23,6 +24,10 @@ export interface IScanInfo {
     title: string;
 }
 const getScanByVideoAsync = async (video_id?: string): IAsyncPromiseResult<IScanInfo[]> => {
+
+    const arg: IScanCommentsBody = {
+        videoId: video_id || ''
+    };
     rabbitMQ_sendDataAsync(
         {
             channelName: ENV.rabbit_mq_channel_name,
@@ -31,10 +36,8 @@ const getScanByVideoAsync = async (video_id?: string): IAsyncPromiseResult<IScan
         },
         {
             msg: {
-                methodName: 'scanAuthorsAsync',
-                methodArgumentsJson: {
-                    videoId: video_id,
-                },
+                methodName: nameOf<IScan>('scanAuthorsAsync'),
+                methodArgumentsJson: arg
             },
         },
     );

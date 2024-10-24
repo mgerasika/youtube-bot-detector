@@ -2,17 +2,15 @@ import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.int
 import { oneByOneAsync } from '@common/utils/one-by-one-async.util';
 import { toQuery } from '@common/utils/to-query.util';
 import { groupArray } from '@common/utils/group-array.util';
-import { IScanCommentsBody } from '../scan-comments/scan-comments.service';
 import { nameOf } from '@common/utils/name-of';
 import { rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
 import { getVideosAsync } from '@server/controller/youtube/get-videos/get-videos.service';
 import { api } from '@server/api.generated';
 import { scan } from '../services';
 import { ENV } from '@server/env';
+import { IScanCommentsBody, IScanVideosBody } from '@common/interfaces/scan.interface';
 
-export interface IScanVideosBody {
-    channelId: string;
-}
+
 
 export const scanVideosAsync = async (body: IScanVideosBody): IAsyncPromiseResult<string> => {
     console.log('scanVideosAsync', body);

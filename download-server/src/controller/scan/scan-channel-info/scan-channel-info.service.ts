@@ -3,15 +3,12 @@ import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.int
 import { api } from '@server/api.generated';
 import { toQuery } from '@common/utils/to-query.util';
 import { rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
-import { IScanVideosBody } from '../scan-videos/scan-videos.service';
 import { nameOf } from '@common/utils/name-of';
 import { scan } from '../services';
 import { getChannelInfoAsync } from '@server/controller/youtube/get-channel-info/get-channel-info.service';
+import { IScanChannelInfoBody, IScanVideosBody } from '@common/interfaces/scan.interface';
 
-export interface IScanChannelInfoBody {
-    channelId: string;
-    scan_videos: boolean;
-}
+
 
 
 export const scanChannelInfoAsync = async (body: IScanChannelInfoBody): IAsyncPromiseResult<void> => {
@@ -27,7 +24,7 @@ export const scanChannelInfoAsync = async (body: IScanChannelInfoBody): IAsyncPr
                 subscriber_count: +(data.subscriberCount || 0),
                 video_count: +(data.videoCount || 0),
                 viewCount: +(data.viewCount || 0),
-                
+
             }),
         );
         if(apiError) {

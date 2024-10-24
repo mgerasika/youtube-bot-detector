@@ -6,13 +6,11 @@ import { groupArray } from '@common/utils/group-array.util';
 import { nameOf } from '@common/utils/name-of';
 import { oneByOneAsync } from '@common/utils/one-by-one-async.util';
 import { toQuery } from '@common/utils/to-query.util';
-import { IScanAuthorsBody } from '../scan-auhors/scan-authors.service';
 import { getCommentsAsync } from '@server/controller/youtube/get-comments/get-comments.service';
 import { scan } from '../services';
+import { IScanCommentsBody, IScanAuthorsBody } from '@common/interfaces/scan.interface';
 
-export interface IScanCommentsBody {
-    videoId: string;
-}
+
 
 export const scanCommentsAsync = async (body: IScanCommentsBody): IAsyncPromiseResult<string> => {
     const [lastDate, lastDateError] = await toQuery(() => api.commentLastDateGet({ video_id: body.videoId }));

@@ -3,14 +3,9 @@ import { api, IStatistic } from '@server/api.generated';
 import { toQuery } from '@common/utils/to-query.util';
 import { rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
 import { nameOf } from '@common/utils/name-of';
-import { IScanChannelInfoBody } from '../scan-channel-info/scan-channel-info.service';
 import { scan } from '../services';
 import { ENV } from '@server/env';
-
-export interface IScanAuthorsBody {
-    videoId?: string;
-    channelId?: string;
-}
+import { IScanAuthorsBody, IScanChannelInfoBody } from '@common/interfaces/scan.interface';
 
 
 export const scanAuthorsAsync = async (body: IScanAuthorsBody): IAsyncPromiseResult<void> => {
