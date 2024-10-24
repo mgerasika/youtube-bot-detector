@@ -27,6 +27,7 @@ export const scanChannelInfoAsync = async (body: IScanChannelInfoBody): IAsyncPr
                 subscriber_count: +(data.subscriberCount || 0),
                 video_count: +(data.videoCount || 0),
                 viewCount: +(data.viewCount || 0),
+                
             }),
         );
         if(apiError) {

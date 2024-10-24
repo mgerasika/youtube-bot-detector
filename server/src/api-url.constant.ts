@@ -23,6 +23,11 @@ interface IApiUrl {
                 byVideo: IUrlItem,
                 byChannel: IUrlItem,
             };
+
+            scan: {
+                byVideo: IUrlItem,
+                byChannel: IUrlItem,
+            };
     };
 }
 
@@ -45,6 +50,10 @@ export const API_URL = createUrls<IApiUrl>({
             },
             statistic: {
                 info: EMPTY_URL_ITEM,
+                byVideo: EMPTY_URL_ITEM,
+                byChannel: EMPTY_URL_ITEM,
+            },
+            scan: {
                 byVideo: EMPTY_URL_ITEM,
                 byChannel: EMPTY_URL_ITEM,
             },

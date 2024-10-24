@@ -10,36 +10,8 @@
       "get": {
         "operationId": "",
         "summary": "",
-        "parameters": [
-          {
-            "name": "old_key",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IApiKeyDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "parameters": [],
+        "responses": {}
       }
     },
     "api/api-key/": {
@@ -47,385 +19,99 @@
         "operationId": "",
         "summary": "",
         "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IApiKeyPostBody"
-              }
-            }
-          }
-        },
-        "responses": {
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "responses": {}
       }
     },
     "api/channel/": {
       "get": {
         "operationId": "",
         "summary": "",
-        "parameters": [
-          {
-            "name": "channel_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IChannelDto"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "parameters": [],
+        "responses": {}
       },
       "post": {
         "operationId": "",
         "summary": "",
         "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IChannelPostBody"
-              }
-            }
-          }
-        },
-        "responses": {
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "responses": {}
       }
     },
     "api/channel/{id}": {
       "get": {
         "operationId": "",
         "summary": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IChannelDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "parameters": [],
+        "responses": {}
       },
       "put": {
         "operationId": "",
         "summary": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IChannelDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "parameters": [],
+        "responses": {}
       },
       "delete": {
         "operationId": "",
         "summary": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "parameters": [],
+        "responses": {}
       }
     },
     "api/comment/last-date/": {
       "get": {
         "operationId": "",
         "summary": "",
-        "parameters": [
-          {
-            "name": "video_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "Date"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "parameters": [],
+        "responses": {}
       }
     },
     "api/comment/": {
       "get": {
         "operationId": "",
         "summary": "",
-        "parameters": [
-          {
-            "name": "comment_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ICommentDto"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "parameters": [],
+        "responses": {}
       },
       "post": {
         "operationId": "",
         "summary": "",
         "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ICommentPostBody"
-              }
-            }
-          }
-        },
-        "responses": {
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "responses": {}
       }
     },
     "api/comment/{id}": {
       "get": {
         "operationId": "",
         "summary": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ICommentDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "parameters": [],
+        "responses": {}
       },
       "put": {
         "operationId": "",
         "summary": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ICommentDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "parameters": [],
+        "responses": {}
       },
       "delete": {
         "operationId": "",
         "summary": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "api/scan/by-video/": {
+      "get": {
+        "operationId": "",
+        "summary": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "api/scan/by-channel/": {
+      "get": {
+        "operationId": "",
+        "summary": "",
+        "parameters": [],
+        "responses": {}
       }
     },
     "api/statistic/info/": {
@@ -433,524 +119,69 @@
         "operationId": "",
         "summary": "",
         "parameters": [],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IStatisticInfo"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "responses": {}
       }
     },
     "api/statistic/by-video/": {
       "get": {
         "operationId": "",
         "summary": "",
-        "parameters": [
-          {
-            "name": "video_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IStatistic"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "parameters": [],
+        "responses": {}
       }
     },
     "api/statistic/by-channel/": {
       "get": {
         "operationId": "",
         "summary": "",
-        "parameters": [
-          {
-            "name": "channel_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IStatistic"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "parameters": [],
+        "responses": {}
       }
     },
     "api/video/last-date/": {
       "get": {
         "operationId": "",
         "summary": "",
-        "parameters": [
-          {
-            "name": "channel_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "Date"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "parameters": [],
+        "responses": {}
       }
     },
     "api/video/": {
       "get": {
         "operationId": "",
         "summary": "",
-        "parameters": [
-          {
-            "name": "video_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IVideoDto"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "parameters": [],
+        "responses": {}
       },
       "post": {
         "operationId": "",
         "summary": "",
         "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IVideoPostBody"
-              }
-            }
-          }
-        },
-        "responses": {
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "responses": {}
       }
     },
     "api/video/{id}": {
       "get": {
         "operationId": "",
         "summary": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IVideoDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "parameters": [],
+        "responses": {}
       },
       "put": {
         "operationId": "",
         "summary": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IVideoDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "parameters": [],
+        "responses": {}
       },
       "delete": {
         "operationId": "",
         "summary": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
+        "parameters": [],
+        "responses": {}
       }
     }
   },
   "components": {
-    "schemas": {
-      "IApiKeyDto": {
-        "type": "object",
-        "required": [
-          "email",
-          "youtube_key",
-          "expired"
-        ],
-        "properties": {
-          "email": {
-            "type": "string"
-          },
-          "youtube_key": {
-            "type": "string"
-          },
-          "expired": {
-            "type": "Date"
-          }
-        }
-      },
-      "IApiKeyPostBody": {
-        "type": "object",
-        "required": [
-          "email",
-          "youtube_key",
-          "expired"
-        ],
-        "properties": {
-          "email": {
-            "type": "string"
-          },
-          "youtube_key": {
-            "type": "string"
-          },
-          "expired": {
-            "type": "Date"
-          }
-        }
-      },
-      "IChannelDto": {
-        "type": "object",
-        "required": [
-          "id",
-          "published_at",
-          "video_count",
-          "viewCount",
-          "subscriber_count",
-          "title",
-          "author_url"
-        ],
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "published_at": {
-            "type": "Date"
-          },
-          "video_count": {
-            "type": "integer"
-          },
-          "viewCount": {
-            "type": "integer"
-          },
-          "subscriber_count": {
-            "type": "integer"
-          },
-          "title": {
-            "type": "string"
-          },
-          "author_url": {
-            "type": "string"
-          }
-        }
-      },
-      "IChannelPostBody": {
-        "type": "object",
-        "required": [
-          "id",
-          "published_at",
-          "video_count",
-          "viewCount",
-          "subscriber_count",
-          "title",
-          "author_url"
-        ],
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "published_at": {
-            "type": "Date"
-          },
-          "video_count": {
-            "type": "integer"
-          },
-          "viewCount": {
-            "type": "integer"
-          },
-          "subscriber_count": {
-            "type": "integer"
-          },
-          "title": {
-            "type": "string"
-          },
-          "author_url": {
-            "type": "string"
-          }
-        }
-      },
-      "ICommentDto": {
-        "type": "object",
-        "required": [
-          "id",
-          "published_at",
-          "author_id",
-          "video_id",
-          "text"
-        ],
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "published_at": {
-            "type": "Date"
-          },
-          "author_id": {
-            "type": "string"
-          },
-          "video_id": {
-            "type": "string"
-          },
-          "text": {
-            "type": "string"
-          }
-        }
-      },
-      "ICommentPostBody": {
-        "type": "object",
-        "required": [
-          "comments"
-        ],
-        "properties": {
-          "comments": {
-            "type": "ICommentDto[]"
-          }
-        }
-      },
-      "IStatisticInfo": {
-        "type": "object",
-        "required": [
-          "comment_count",
-          "author_id",
-          "author_url"
-        ],
-        "properties": {
-          "comment_count": {
-            "type": "integer"
-          },
-          "author_id": {
-            "type": "string"
-          },
-          "author_url": {
-            "type": "string"
-          }
-        }
-      },
-      "IStatistic": {
-        "type": "object",
-        "required": [
-          "comment_count",
-          "author_id",
-          "author_url"
-        ],
-        "properties": {
-          "comment_count": {
-            "type": "integer"
-          },
-          "author_id": {
-            "type": "string"
-          },
-          "author_url": {
-            "type": "string"
-          }
-        }
-      },
-      "IVideoDto": {
-        "type": "object",
-        "required": [
-          "id",
-          "published_at",
-          "channel_id",
-          "title"
-        ],
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "published_at": {
-            "type": "Date"
-          },
-          "channel_id": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          }
-        }
-      },
-      "IVideoPostBody": {
-        "type": "object",
-        "required": [
-          "videos"
-        ],
-        "properties": {
-          "videos": {
-            "type": "IVideoDto[]"
-          }
-        }
-      }
-    }
+    "schemas": {}
   }
 }

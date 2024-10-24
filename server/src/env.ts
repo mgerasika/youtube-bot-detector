@@ -8,6 +8,6 @@ export const ENV = {
     node_env: process.env.NODE_ENV,
     port: 5432,
     rabbit_mq_url: process.env.RABBIT_MQ || '',
-    redis_url: process.env.REDIS_URL,
+    redis_url: process.env.REDIS_URL || '',
     rabbit_mq_channel_name: 'youtube-bot-filter-queue-v2'
 };

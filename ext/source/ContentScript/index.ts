@@ -136,14 +136,14 @@ function load() {
       const channelId = getChannelId();
       console.log('channelId',channelId)
 
-    axios.get(`${ENV.next_server_url}api/statistic/by-video?video_id=${videoId}`).then(statistic => {
+    axios.get(`${ENV.next_server_url}api/scan/by-video?video_id=${videoId}`).then(statistic => {
       _statisticByVideo = statistic.data;
       console.log('statistic by video', _statisticByVideo)
 
       render()
     })
 
-    axios.get(`${ENV.next_server_url}api/statistic/by-channel?channel_id=${channelId}`).then(statistic => {
+    axios.get(`${ENV.next_server_url}api/scan/by-channel?channel_id=${channelId}`).then(statistic => {
       _statisticByChannel = statistic.data;
       console.log('statistic by channel', _statisticByChannel)
 

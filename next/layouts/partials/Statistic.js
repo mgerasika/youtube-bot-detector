@@ -12,13 +12,13 @@ const Statistic = () => {
       setStatistic(data);
     };
 
-    const postStatistic = async() =>{
+    const postScan = async() =>{
       const video_id = 'nN5awumyZMw'
-      const response = await fetch(`/api/statistic/by-video?video_id=${video_id}`);
+      const response = await fetch(`/api/scan/by-video?video_id=${video_id}`);
       const data = await response.json();
     }
 
-    postStatistic();
+    postScan();
     fetchStatistic();
   }, []);
 

@@ -185,8 +185,15 @@ export const createApiRequest = (rs: IRequestService) => ({
 	statisticByVideoGet : (query: {video_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<IStatistic>,TStatisticByVideoGetError>,IBEError<TStatisticByVideoGetError>> =>
 		rs.get(formatUrl(API_SERVER_URL + `api/statistic/by-video/`, query) ),
 
+	scanByVideoGet : (query: {video_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<IStatistic>,TStatisticByVideoGetError>,IBEError<TStatisticByVideoGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `api/scan/by-video/`, query) ),
+
+
 	statisticByChannelGet : (query: {channel_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<IStatistic>,TStatisticByChannelGetError>,IBEError<TStatisticByChannelGetError>> =>
 		rs.get(formatUrl(API_SERVER_URL + `api/statistic/by-channel/`, query) ),
+
+	scanByChannelGet : (query: {channel_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<IStatistic>,TStatisticByChannelGetError>,IBEError<TStatisticByChannelGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `api/scan/by-channel/`, query) ),
 
 	videoLastDateGet : (query: {channel_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Date,TVideoLastDateGetError>,IBEError<TVideoLastDateGetError>> =>
 		rs.get(formatUrl(API_SERVER_URL + `api/video/last-date/`, query) ),

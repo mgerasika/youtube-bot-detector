@@ -5,7 +5,7 @@
     "main": "dist/src/index.js",
     "scripts": {
         "build": "npx tsc",
-        "start": "node dist/src/index.js",
+        "start": "node dist/server/src/index.js",
         "dev": "nodemon",
         "codegen": "npx ts-node scripts/codegen-spec.ts",
         "deploy": "firebase deploy"
@@ -34,7 +34,8 @@
         "typeorm": "^0.3.15"
     },
     "_moduleAliases": {
-        "@server": "dist/src/"
+        "@server": "dist/server/src/",
+        "@common": "dist/common/src/"
     },
     "devDependencies": {
         "@types/amqplib": "^0.10.1",
