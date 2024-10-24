@@ -42,7 +42,7 @@ const getScanByVideoAsync = async (video_id?: string): IAsyncPromiseResult<IScan
         },
     );
 
-    return await allServices.statistic.getStatisticByVideoAsync(video_id);
+    return await [[]];
 };
 
 const getScanByChannelAsync = async (channel_id?: string, channel_url?: string): IAsyncPromiseResult<IScanInfo[]> => {
