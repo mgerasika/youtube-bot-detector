@@ -25,6 +25,7 @@ interface IApiUrl {
             };
 
             scan: {
+                addYoutubeKey: IUrlItem,
                 byVideo: IUrlItem,
                 byChannel: IUrlItem,
             };
@@ -54,6 +55,7 @@ export const API_URL = createUrls<IApiUrl>({
                 byChannel: EMPTY_URL_ITEM,
             },
             scan: {
+                addYoutubeKey: EMPTY_URL_ITEM,
                 byVideo: EMPTY_URL_ITEM,
                 byChannel: EMPTY_URL_ITEM,
             },

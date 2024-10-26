@@ -1,8 +1,8 @@
 import { IExpressRequest, IExpressResponse, app } from '@server/express-app';
 
-import { IScanChannelInfoBody } from './scan-channel-info.service';
 import { allServices } from '@server/controller/all-services';
 import { API_URL } from '@server/api-url.constant';
+import { IScanChannelInfoBody } from '@common/interfaces/scan.interface';
 
 interface IRequest extends IExpressRequest {
     body: IScanChannelInfoBody;

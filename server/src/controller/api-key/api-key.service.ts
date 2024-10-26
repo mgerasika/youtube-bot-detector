@@ -22,7 +22,7 @@ const getActiveApiKeyAsync = async (old_key: string | undefined): IAsyncPromiseR
 
         const { rows } = await client.query(`SELECT * 
 FROM api_key 
-WHERE (expired < NOW() AND NOW() - expired > INTERVAL '60 minutes')
+WHERE (expired < NOW() AND NOW() - expired > INTERVAL '12 hours')
    OR expired IS NULL;`);
         return rows;
     });

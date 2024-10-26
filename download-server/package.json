@@ -5,7 +5,7 @@
     "main": "dist/download-server/src/index.js",
     "scripts": {
         "build": "npx tsc",
-        "start": "node dist/src/index.js",
+        "start": "node dist/download-server/src/index.js",
         "dev": "nodemon",
         "codegen": "npx ts-node scripts/codegen-spec.ts && npx ts-node scripts/codegen-ts.ts"
     },

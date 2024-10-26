@@ -11,10 +11,10 @@ export interface IApiKeyDto {
 
 @Entity('api_key')
 export class ApiKeyDto implements IApiKeyDto {
-    @PrimaryColumn('text')
-    email!: string;
-
     @Column({ nullable: false, type: 'text'})
+    email!: string;
+    
+    @PrimaryColumn('text')
     youtube_key!: string;
 
     @Column({ nullable: true, type: 'timestamptz'})

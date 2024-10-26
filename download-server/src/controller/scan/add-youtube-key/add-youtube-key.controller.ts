@@ -1,20 +1,21 @@
 import { IExpressRequest, IExpressResponse, app } from '@server/express-app';
-import { allServices } from '@server/controller/all-services';
+import { addYoutubeKeyAsync } from './add-youtube-key.service';
 import { API_URL } from '@server/api-url.constant';
-import { IScanAuthorsBody } from '@common/interfaces/scan.interface';
+import { IAddYoutubeKeyBody, IScanVideosBody } from '@common/interfaces/scan.interface';
 
 interface IRequest extends IExpressRequest {
-    body: IScanAuthorsBody;
+    body: IAddYoutubeKeyBody;
 }
 
 interface IResponse extends IExpressResponse<void, void> {}
 
-app.post(API_URL.api.scan.scanAuthors.toString(), async (req: IRequest, res: IResponse) => {
-    const [data, error] = await allServices.scan.scanAuthorsAsync(req.body);
+app.post(API_URL.api.scan.addYoutubeKey.toString(), async (req: IRequest, res: IResponse) => {
+    const [data, error] = await addYoutubeKeyAsync(req.body);
     if (error) {
         return res.status(400).send(error);
     }
     
-   
     return res.send(data);
 });
+
+

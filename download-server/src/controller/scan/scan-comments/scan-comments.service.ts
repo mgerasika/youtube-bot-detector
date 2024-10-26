@@ -1,14 +1,15 @@
-import { ENV } from '@server/env';
+import { ENV, RABBIT_MQ_ENV } from '@server/env';
 import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
 import { api } from '@server/api.generated';
-import { rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
+import { getRabbitMqMessageId, rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
 import { groupArray } from '@common/utils/group-array.util';
 import { nameOf } from '@common/utils/name-of';
 import { oneByOneAsync } from '@common/utils/one-by-one-async.util';
 import { toQuery } from '@common/utils/to-query.util';
 import { getCommentsAsync } from '@server/controller/youtube/get-comments/get-comments.service';
 import { scan } from '../services';
-import { IScanCommentsBody, IScanAuthorsBody } from '@common/interfaces/scan.interface';
+import { IScanCommentsBody, IScanAuthorsBody, IScanChannelInfoBody } from '@common/interfaces/scan.interface';
+import { connectToRedisAsync } from '@common/utils/redis';
 
 
 
@@ -32,6 +33,7 @@ export const scanCommentsAsync = async (body: IScanCommentsBody): IAsyncPromiseR
                     comments: group.map((item) => {
                         return {
                             published_at: item.publishedAt,
+                            published_at_time: item.publishedAt,
                             id: item.commentId,
                             channel_id: item.channelId,
                             text: item.text,
@@ -47,15 +49,20 @@ export const scanCommentsAsync = async (body: IScanCommentsBody): IAsyncPromiseR
             } 
         });
 
-        const arg: IScanAuthorsBody = {
+       
+        // remove comments from redis cache
+        const redisClient = await connectToRedisAsync(ENV.redis_url);
+        const messageId = getRabbitMqMessageId<IScanCommentsBody>('scanCommentsAsync',  {
             videoId: body.videoId
-        }
-        
-        rabbitMQ_sendDataAsync({
-            channelName: ENV.rabbit_mq_channel_name,
-            rabbit_mq_url: ENV.rabbit_mq_url,
-            redis_url: ENV.redis_url
-        }, {msg:{methodName:  nameOf<typeof scan>('scanAuthorsAsync'), methodArgumentsJson: arg}})
+        });
+        await redisClient.set(messageId, '', {
+            EX: 60
+        });
+
+       
+        rabbitMQ_sendDataAsync<IScanAuthorsBody>(RABBIT_MQ_ENV, 'scanAuthorsAsync', {
+            videoId: body.videoId
+        })
 
      
         return [`post to db comments ${comments.length}`];

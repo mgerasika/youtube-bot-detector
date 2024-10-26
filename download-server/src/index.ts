@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
     res.send(JSON.stringify(allServices, null, 2));
 });
 
-const port = process.env.PORT || 8006;
+const port = process.env.PORT || 8009;
 if (ENV.rabbit_mq_url) {
     rabbitMQ_subscribeAsync({channelName: ENV.rabbit_mq_channel_name, rabbit_mq_url: ENV.rabbit_mq_url},(data) => {
         if (data.msg) {

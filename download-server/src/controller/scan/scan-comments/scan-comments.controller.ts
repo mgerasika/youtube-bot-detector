@@ -1,6 +1,7 @@
 import { IExpressRequest, IExpressResponse, app } from '@server/express-app';
-import { scanCommentsAsync, IScanCommentsBody } from './scan-comments.service';
+import { scanCommentsAsync } from './scan-comments.service';
 import { API_URL } from '@server/api-url.constant';
+import { IScanCommentsBody } from '@common/interfaces/scan.interface';
 
 interface IRequest extends IExpressRequest {
     body: IScanCommentsBody;

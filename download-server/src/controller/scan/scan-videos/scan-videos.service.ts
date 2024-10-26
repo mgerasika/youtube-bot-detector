@@ -3,14 +3,13 @@ import { oneByOneAsync } from '@common/utils/one-by-one-async.util';
 import { toQuery } from '@common/utils/to-query.util';
 import { groupArray } from '@common/utils/group-array.util';
 import { nameOf } from '@common/utils/name-of';
-import { rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
+import { getRabbitMqMessageId, rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
 import { getVideosAsync } from '@server/controller/youtube/get-videos/get-videos.service';
 import { api } from '@server/api.generated';
 import { scan } from '../services';
-import { ENV } from '@server/env';
+import { ENV, RABBIT_MQ_ENV } from '@server/env';
 import { IScanCommentsBody, IScanVideosBody } from '@common/interfaces/scan.interface';
-
-
+import { connectToRedisAsync } from '@common/utils/redis';
 
 export const scanVideosAsync = async (body: IScanVideosBody): IAsyncPromiseResult<string> => {
     console.log('scanVideosAsync', body);
@@ -49,15 +48,20 @@ export const scanVideosAsync = async (body: IScanVideosBody): IAsyncPromiseResul
         });
 
         videos.map(video => {
-            const arg: IScanCommentsBody = {
+            rabbitMQ_sendDataAsync<IScanCommentsBody>(RABBIT_MQ_ENV, 'scanCommentsAsync', {
                 videoId: video.videoId
-            }
-            rabbitMQ_sendDataAsync({
-                channelName: ENV.rabbit_mq_channel_name,
-                rabbit_mq_url: ENV.rabbit_mq_url,
-                redis_url: ENV.redis_url
-            }, {msg:{methodName:  nameOf<typeof scan>('scanCommentsAsync'), methodArgumentsJson: arg}})
+            })
         })
+
+        // // remove videos from redis cache
+        // const redisClient = await connectToRedisAsync(ENV.redis_url);
+        // const messageId = getRabbitMqMessageId<IScanVideosBody>('scanVideosAsync',  {
+        //     channelId: body.channelId
+        // });
+        // await redisClient.set(messageId, '', {
+        //     EX: 60 // one minute
+        // });
+
         return [`post to videos db ${videos.length}`];
     }
 

@@ -1,17 +1,9 @@
-import { ApiKeyDto, IApiKeyDto } from '@server/dto/api-key.dto';
 import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
 import { nameOf } from '@common/utils/name-of';
-import {
-    rabbit_mq_getConnectionInfoAsync,
-    rabbitMQ_createChannelAsync,
-    rabbitMQ_createConnectionAsync,
-    rabbitMQ_sendDataAsync,
-} from '@common/utils/rabbit-mq';
-import { sqlAsync } from '@server/sql/sql-async.util';
-import { sql_escape } from '@server/sql/sql.util';
-import { ENV } from '@server/env';
+import { rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
+import { ENV, RABBIT_MQ_ENV } from '@server/env';
 import { allServices } from '../all-services';
-import {IScan, IScanCommentsBody} from '@common/interfaces/scan.interface';
+import { IAddYoutubeKeyBody, IScan, IScanCommentsBody } from '@common/interfaces/scan.interface';
 
 export interface IScanInfo {
     comment_count: number;
@@ -24,22 +16,12 @@ export interface IScanInfo {
     title: string;
 }
 const getScanByVideoAsync = async (video_id?: string): IAsyncPromiseResult<IScanInfo[]> => {
-
-    const arg: IScanCommentsBody = {
-        videoId: video_id || ''
-    };
-    rabbitMQ_sendDataAsync(
-        {
-            channelName: ENV.rabbit_mq_channel_name,
-            rabbit_mq_url: ENV.rabbit_mq_url,
-            redis_url: ENV.redis_url,
-        },
-        {
-            msg: {
-                methodName: nameOf<IScan>('scanAuthorsAsync'),
-                methodArgumentsJson: arg
-            },
-        },
+    rabbitMQ_sendDataAsync<IScanCommentsBody>(
+        RABBIT_MQ_ENV,
+           'scanCommentsAsync',
+                {
+                    videoId: video_id || '',
+                }
     );
 
     return await [[]];
@@ -49,7 +31,23 @@ const getScanByChannelAsync = async (channel_id?: string, channel_url?: string):
     return await allServices.statistic.getStatisticByChannelAsync(channel_id, channel_url);
 };
 
+const addYoutubeKey = async (email: string, key: string): IAsyncPromiseResult<void> => {
+    const arg: IAddYoutubeKeyBody = {
+        email,
+        key,
+    };
+    rabbitMQ_sendDataAsync<IAddYoutubeKeyBody>(
+        RABBIT_MQ_ENV,
+        'addYoutubeKeyAsync',{
+            email,
+            key,
+        }
+    );
+    return [,];
+};
+
 export const scan = {
     getScanByVideoAsync,
     getScanByChannelAsync,
+    addYoutubeKey,
 };

@@ -8,7 +8,7 @@ export interface IGetChannelInfoBody {
 }
 
 // TODO add support string | null in code generator.
-export interface IShortChennelInfo {
+export interface IChannelInfo {
     channelId: string;
     publishedAt: string;
     photo?: string;
@@ -16,11 +16,11 @@ export interface IShortChennelInfo {
     authorUrl?: string;
     viewCount?: string;
     subscriberCount?: string;
-    hiddenSubscriberCount?: boolean;
+    hasHiddenSubscriberCount?: boolean;
     videoCount?: string;
 }
 
-export const getChannelInfoAsync = async (body: IGetChannelInfoBody): IAsyncPromiseResult<IShortChennelInfo> => {
+export const getChannelInfoAsync = async (body: IGetChannelInfoBody): IAsyncPromiseResult<IChannelInfo> => {
     const [youtube, youtubeError] = await getYoutube();
     if(!youtube || youtubeError) {
         return [, youtubeError];
@@ -56,7 +56,7 @@ export const getChannelInfoAsync = async (body: IGetChannelInfoBody): IAsyncProm
             authorUrl: channel.snippet?.customUrl || '',
             viewCount: channel.statistics?.videoCount || undefined,
             subscriberCount: channel.statistics?.subscriberCount || undefined,
-            hiddenSubscriberCount: channel.statistics?.hiddenSubscriberCount || undefined,
+            hasHiddenSubscriberCount: channel.statistics?.hiddenSubscriberCount || undefined,
             videoCount: channel.statistics?.videoCount || undefined,
             photo: channel.snippet?.thumbnails?.medium?.url || undefined,
         }];

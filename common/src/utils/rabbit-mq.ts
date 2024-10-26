@@ -2,6 +2,7 @@ import amqp, { Channel, Connection, ConsumeMessage } from 'amqplib';
 import { IQueryReturn } from './to-query.util';
 import { IRabbitMqBody, IRabbitMqMessage } from '../interfaces/rabbit-mq-message.interface';
 import { connectToRedisAsync } from './redis';
+import { IScan } from '@common/interfaces/scan.interface';
 
 let _connection: Connection | undefined;
 let _channel: Channel;
@@ -99,19 +100,30 @@ function sendAgain(channelName: string, body: Buffer) {
     }, 1000);
 }
 
-const getMessageId = (msg: IRabbitMqBody) => {
-    return `rabbitMQ:-${JSON.stringify(msg)}`;
+export const getRabbitMqMessageId = <T = any,>(methodName: keyof IScan, methodArgumentsJson: T) => {
+    const json: IRabbitMqBody = {
+        methodName: methodName,
+        methodArgumentsJson: methodArgumentsJson,
+    }
+    return `rabbitMQ:-${JSON.stringify(json)}`;
 }
-export const rabbitMQ_sendDataAsync = async ({ channelName, rabbit_mq_url, redis_url}:{channelName:string, rabbit_mq_url: string, redis_url:string}, data: IRabbitMqMessage): Promise<IQueryReturn<boolean>> => {
+export const rabbitMQ_sendDataAsync = async <T = any, >({ channelName, rabbit_mq_url, redis_url}:{channelName:string, rabbit_mq_url: string, redis_url:string}, methodName: keyof IScan, methodArgumentsJson: T): Promise<IQueryReturn<boolean>> => {
     await rabbitMQ_createConnectionAsync({channelName,  rabbit_mq_url});
     const redisClient = await connectToRedisAsync(redis_url);
 
+    const data : IRabbitMqMessage = {
+        msg: {
+            methodName,
+            methodArgumentsJson
+        }
+    }
     if (_channel) {
-        const messageId = getMessageId(data.msg);
+        const messageId = getRabbitMqMessageId(methodName, methodArgumentsJson);
         const exist = await redisClient.exists(messageId);
         if (!exist) {
+            const oneWeek = 7*24*3600;
             await redisClient.set(messageId, '', {
-                EX: 7*24*3600,//one week
+                EX: 12*30*oneWeek,//one year
             });
 
             console.log('Rabbit MQ Data send and add to Redis:', data);

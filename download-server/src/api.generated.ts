@@ -26,7 +26,7 @@ export interface IApiKeyDto {
 export interface IApiKeyPostBody {
     email: string;
     youtube_key: string;
-    expired: Date;
+    expired?: Date;
 }
 export interface IChannelDto {
     id: string;

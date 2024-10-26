@@ -5,10 +5,10 @@ dotenv.config(); // Load environment variables from .env
 import { ENV } from '@server/env';
 import { rabbitMQ_createConnectionAsync, rabbitMQ_subscribeAsync } from '@common/utils/rabbit-mq';
 import { allServices } from './controller/all-services';
-import { app } from './express-app';
+import { app, httpOptions } from './express-app';
 import { typeOrmAsync } from './sql/type-orm-async.util';
 import { connectToRedisAsync } from '@common/utils/redis';
-
+import https from 'https';
 export * from './controller/all-controllers';
 
 console.log('ENV=', ENV);
@@ -23,6 +23,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 const port = process.env.PORT || 8007;
+const ports = process.env.PORTS || 8008;
 if (ENV.rabbit_mq_url) {
     // rabbitMQ_subscribeAsync((data) => {
     //     if (data.setupBody) {
@@ -37,8 +38,10 @@ if (ENV.rabbit_mq_url) {
         console.log('Connected to Redis');
     });
 }
-// console.log('ENV = ', ENV);
-console.log('port',  port)
-const server = app.listen(port, function () {
+app.listen(port, function () {
     console.log('Server started on port ' + port);
+});
+
+https.createServer(httpOptions, app).listen(ports, () => {
+    console.log('Https server started on port ' + ports);
 });

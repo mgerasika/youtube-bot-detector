@@ -4,28 +4,22 @@ import { toQuery } from '@common/utils/to-query.util';
 import { rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
 import { nameOf } from '@common/utils/name-of';
 import { scan } from '../services';
-import { ENV } from '@server/env';
+import { ENV, RABBIT_MQ_ENV } from '@server/env';
 import { IScanAuthorsBody, IScanChannelInfoBody } from '@common/interfaces/scan.interface';
 
 
-export const scanAuthorsAsync = async (body: IScanAuthorsBody): IAsyncPromiseResult<void> => {
+export const scanAuthorsAsync = async (body: IScanAuthorsBody): IAsyncPromiseResult<string> => {
     const [items, error] = await getItemsAsync(body);
     if (error) {
         return [, error]
     }
     items?.map(statistic => {
-        const arg: IScanChannelInfoBody = {
-            channelId: statistic.author_id,
-            scan_videos: false
-
-        }
-        rabbitMQ_sendDataAsync(
-            {
-                channelName: ENV.rabbit_mq_channel_name,
-                rabbit_mq_url: ENV.rabbit_mq_url,
-                redis_url: ENV.redis_url
-            },
-            { msg: { methodName: nameOf<typeof scan>('scanChannelInfoAsync'), methodArgumentsJson: arg } })
+        rabbitMQ_sendDataAsync<IScanChannelInfoBody>(
+            RABBIT_MQ_ENV,
+            'scanChannelInfoAsync',{
+                channelId: statistic.author_id,
+                scan_videos: false
+            })
     })
 
     return [, error];

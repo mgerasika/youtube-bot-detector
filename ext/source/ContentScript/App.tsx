@@ -1,72 +1,29 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import ReactDOM from 'react-dom';
-import { getCommentElements } from './utils/get-comment-elements.util';
-import axios from 'axios';
-import { ENV } from '../env';
 import { getChannelId } from './utils/get-channel-id.util';
 import { getChannelUrl } from './utils/get-channel-url.util';
 import { getVideoId } from './utils/get-video-id.util';
-import { IStatisticInfo } from '../api.generated';
-import { getAuthorUrl } from './utils/get-authour-url.util';
-import { Comment } from './Comment';
 import ErrorBoundary from './ErrorBoundary';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { CommentsList } from './CommentList';
+import { useGetComments } from './hooks/use-get-comments.hook';
 
 const App: React.FC = () => {
-    console.log('hello from app 7')
+    const videoId = useMemo(getVideoId, []);
+    const channelUrl = useMemo( getChannelUrl, []);
+    const channelId = useMemo( getChannelId, []);
+    const {comments, rescan} = useGetComments();
 
-    const comments = useMemo(() => getCommentElements(), []);
-    const [byVideo, setByVideo] = useState<IStatisticInfo[]>([]);
-    useEffect(() => {
-
-        if (comments.length) {
-
-            const videoId = getVideoId();
-            console.log('videoId', videoId)
-
-            const channelUrl = getChannelUrl();
-            console.log('channelUrl', channelUrl)
-
-            const channelId = getChannelId();
-            console.log('channelId', channelId)
-
-            axios.get(`${ENV.next_server_url}api/scan/by-video?video_id=${videoId}`).then(scan => {
-                console.log('scan by video = ', scan.data)
-
-            })
-
-            axios.get(`${ENV.next_server_url}api/statistic/by-video?video_id=${videoId}`).then(statistic => {
-                console.log('statistic by video = ', statistic.data)
-                setByVideo(statistic.data);
-
-            })
-
-            axios.get(`${ENV.next_server_url}api/statistic/by-channel?channel_id=${channelId}`).then(statistic => {
-                console.log('statistic by channel = ', statistic.data)
-
-            })
-
-
-        }
-    }, [comments])
+    const handleReployClick = useCallback((parentEl) => {
+        rescan(parentEl)
+    },[rescan])
 
     return (
-        <>
-            {comments.map((parentEl, index) => {
-                const authourUrl = getAuthorUrl(parentEl);
-                const statByVideo = byVideo.find(f => f.author_url === authourUrl);
-                parentEl.style.position = "relative";
-                return <React.Fragment key={parentEl.id || index}>
-                    {ReactDOM.createPortal(
-                        <Comment statistic={statByVideo} parentEl={parentEl} />,
-                        parentEl
-                    )}
-                </React.Fragment>
-            })}
-        </>
+        <CommentsList onReplyClick={handleReployClick} comments={comments} channelId={channelId || ''} videoId={videoId || ''} channelUrl={channelUrl || ''}/>
     );
 }
 
-
+const queryClient = new QueryClient();
 export function renderReactApp() {
     const appDiv = document.body;
     const divForReact = document.createElement('div');
@@ -75,9 +32,12 @@ export function renderReactApp() {
     ReactDOM.render(
         <React.StrictMode>
             <ErrorBoundary>
-                <App />
+                <QueryClientProvider client={queryClient}>
+                    <App />
+                </QueryClientProvider>
             </ErrorBoundary>
-        </React.StrictMode>,
+        
+        </React.StrictMode >,
         divForReact
     );
 }
