@@ -4,7 +4,7 @@ export function getAuthorUrl(el: HTMLElement): string | undefined {
       const id = linkElement?.getAttribute("href")?.replace("/channel/", "");
       if(id) {
         let tmp = decodeURIComponent(id.replace('/@','@')).toLowerCase();
-        return tmp.replaceAll('й', 'и');
+        return tmp.replaceAll('й', 'и').replaceAll('ї','і');
       }
     }
     return undefined;

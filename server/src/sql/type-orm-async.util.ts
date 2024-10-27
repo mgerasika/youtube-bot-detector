@@ -1,11 +1,11 @@
 import { ENV } from '@server/env';
 import { DataSource } from 'typeorm';
-import { VideoDto } from '@server/dto/video.dto';
-import { ChannelDto } from '@server/dto/channel.dto';
 import { ApiKeyDto } from '@server/dto/api-key.dto';
-import { CommentDto } from '@server/dto/comment.dto';
 import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
 import { ILogger } from '@common/utils/create-logger.utils';
+import { ChannelDto } from '@server/dto/channel.dto';
+import { VideoDto } from '@server/dto/video.dto';
+import { CommentDto } from '@server/dto/comment.dto';
 
 const IS_DEBUG = ENV.node_env === 'development';
 
@@ -21,7 +21,7 @@ const getDataSource = (): DataSource => {
         database: ENV.database,
         password: IS_DEBUG ? ENV.owner_password : ENV.password,
         port: ENV.port,
-        entities: [VideoDto,ChannelDto,CommentDto, ApiKeyDto],
+        entities: [ApiKeyDto, ChannelDto, VideoDto, CommentDto],
         synchronize: true,
         poolSize: 10,
         logging: false,

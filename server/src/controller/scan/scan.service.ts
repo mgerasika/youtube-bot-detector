@@ -3,7 +3,7 @@ import { nameOf } from '@common/utils/name-of';
 import { rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
 import { ENV, RABBIT_MQ_ENV } from '@server/env';
 import { allServices } from '../all-services';
-import { IAddYoutubeKeyBody, IScan, IScanChannelInfoBody, IScanCommentsBody } from '@common/interfaces/scan.interface';
+import { IAddYoutubeKeyBody, IScan, IScanChannelInfoBody, IScanCommentsBody, IScanVideoInfoBody } from '@common/interfaces/scan.interface';
 import { oneByOneAsync } from '@common/utils/one-by-one-async.util'
 import { ILogger } from '@common/utils/create-logger.utils';
 export interface IScanInfo {
@@ -25,10 +25,26 @@ const getScanByVideoAsync = async (video_id: string, logger: ILogger): IAsyncPro
         }, logger
     );
 
+    rabbitMQ_sendDataAsync<IScanVideoInfoBody>(
+        RABBIT_MQ_ENV,
+        'scanVideoInfoAsync',
+        {
+            videoId: video_id || '',
+        }, logger
+    );
+
     return await [[]];
 };
 
 const getScanByChannelAsync = async (channel_id: string,   logger: ILogger): IAsyncPromiseResult<IScanInfo[]> => {
+    rabbitMQ_sendDataAsync<IScanChannelInfoBody>(
+        RABBIT_MQ_ENV,
+        'scanChannelInfoAsync',
+        {
+            channelId: channel_id
+        }, logger
+    );
+
     return await allServices.statistic.getStatisticByChannelAsync(channel_id, logger);
 };
 
@@ -42,6 +58,7 @@ const addYoutubeKey = async (email: string, key: string, logger: ILogger): IAsyn
     );
     return [,];
 };
+  
 
 const fixAsync = async ( logger: ILogger): IAsyncPromiseResult<string> => {
     const [data, error] = await allServices.comment.getAutorsIds(logger)

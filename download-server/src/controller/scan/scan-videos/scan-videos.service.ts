@@ -53,7 +53,7 @@ export const scanVideosAsync = async (body: IScanVideosBody, logger: ILogger): I
         })
 
         // // remove videos from redis cache
-        // const redisClient = await connectToRedisAsync(ENV.redis_url);
+        // const redisClient = await connectToRedisAsync(ENV.redis_url, logger);
         // const messageId = getRabbitMqMessageId<IScanVideosBody>('scanVideosAsync',  {
         //     channelId: body.channelId
         // });

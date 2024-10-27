@@ -1,9 +1,9 @@
-import { ICommentDto, CommentDto } from "@server/dto/comment.dto";
 import { IAsyncPromiseResult } from "@common/interfaces/async-promise-result.interface";
 import { sqlAsync } from "@server/sql/sql-async.util";
 import { sql_where } from "@server/sql/sql.util";
 import { typeOrmAsync } from "@server/sql/type-orm-async.util";
 import { ILogger } from "@common/utils/create-logger.utils";
+import { CommentDto, ICommentDto } from "@server/dto/comment.dto";
 
 const getLastCommentDateAsync = async ({video_id}: {video_id?:string}, logger: ILogger) : IAsyncPromiseResult<Date>=> {
     return await sqlAsync<Date>(async (client) => {
@@ -20,7 +20,15 @@ const getLastCommentDateAsync = async ({video_id}: {video_id?:string}, logger: I
 
  const getAutorsIds = async (logger: ILogger) : IAsyncPromiseResult<string[]>=> {
     return await sqlAsync<string[]>(async (client) => {
-        const { rows } = await client.query(`select distinct(author_id) from comment`);
+        const { rows } = await client.query(`SELECT DISTINCT author_id
+FROM comment
+WHERE author_id IS NOT NULL
+AND NOT EXISTS (
+    SELECT 1
+    FROM channel
+    WHERE channel.id = comment.author_id
+);
+`);
         return rows.map((i:ICommentDto)=>i.author_id);
     }, logger);
 };

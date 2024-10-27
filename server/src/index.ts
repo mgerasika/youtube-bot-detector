@@ -36,7 +36,7 @@ if (ENV.rabbit_mq_url) {
 
     
     rabbitMQ_createConnectionAsync({channelName: ENV.rabbit_mq_channel_name, rabbit_mq_url: ENV.rabbit_mq_url}, logger); 
-    connectToRedisAsync(ENV.redis_url || '').then(async redis => {
+    connectToRedisAsync(ENV.redis_url || '', logger).then(async redis => {
         logger.log('Connected to Redis');
     });
 }

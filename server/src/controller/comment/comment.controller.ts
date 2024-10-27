@@ -1,8 +1,8 @@
 import { API_URL } from "@server/api-url.constant";
 import { app, IExpressRequest, IExpressResponse } from "@server/express-app";
 import { allServices } from "../all-services";
-import { ICommentDto } from "@server/dto/comment.dto";
 import { createLogger } from "@common/utils/create-logger.utils";
+import { ICommentDto } from "@server/dto/comment.dto";
 
 
 interface IGetLastCommentDateRequest extends IExpressRequest {

@@ -98,7 +98,7 @@ function sendAgain(channelName: string, body: Buffer, logger: ILogger) {
         _channel.sendToQueue(channelName, body, {
             persistent: true, // Ensure the message is durable
         });
-    }, 1000);
+    }, 5000);
 }
 
 export const getRabbitMqMessageId = <T = any,>(methodName: keyof IScan, methodArgumentsJson: T) => {
@@ -110,7 +110,7 @@ export const getRabbitMqMessageId = <T = any,>(methodName: keyof IScan, methodAr
 }
 export const rabbitMQ_sendDataAsync = async <T = any, >({ channelName, rabbit_mq_url, redis_url}:{channelName:string, rabbit_mq_url: string, redis_url:string}, methodName: keyof IScan, methodArgumentsJson: T, logger: ILogger): Promise<IQueryReturn<boolean>> => {
     await rabbitMQ_createConnectionAsync({channelName,  rabbit_mq_url}, logger);
-    const redisClient = await connectToRedisAsync(redis_url);
+    const redisClient = await connectToRedisAsync(redis_url, logger);
 
     const data : IRabbitMqMessage = {
         msg: {

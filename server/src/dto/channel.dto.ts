@@ -1,4 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, OneToMany } from 'typeorm';
+import { CommentDto } from './comment.dto';
+import { VideoDto } from './video.dto';
 
 export interface IChannelDto {
     id: string;
@@ -7,7 +9,7 @@ export interface IChannelDto {
 
     video_count: number;
 
-    viewCount: number;
+    view_count: number;
 
     subscriber_count: number;
 
@@ -18,7 +20,7 @@ export interface IChannelDto {
 
 @Entity('channel')
 export class ChannelDto implements IChannelDto {
-    @PrimaryColumn('text')
+    @PrimaryColumn({ type: 'varchar', length: 255 })
     id!: string;
 
     @Column({ nullable: false, type: 'text'})
@@ -34,10 +36,18 @@ export class ChannelDto implements IChannelDto {
     video_count!: number;
 
     @Column({ nullable: false, type: 'numeric'})
-    viewCount!: number;
+    view_count!: number;
 
     @Column({ nullable: false, type: 'numeric'})
     subscriber_count!: number;
+
+    // One Channel can have many Videos
+    @OneToMany(() => VideoDto, (video) => video.channelDto)
+    videosDto: VideoDto[] | undefined;
+
+    // One Channel can have many Comments
+    // @OneToMany(() => CommentDto, (comment) => comment.authorDto)
+    // commentsDto: CommentDto[] | undefined;
 
     constructor(id: string) {
         this.id = id;

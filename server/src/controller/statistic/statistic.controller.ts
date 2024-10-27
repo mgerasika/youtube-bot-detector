@@ -11,7 +11,7 @@ interface IStatisticInfoRequest extends IExpressRequest {
 
 interface IStatisticInfoResponse extends IExpressResponse<IStatisticInfo, void> {}
 
-app.get(API_URL.api.statistic.info.toString(), memoryCache(10), async (req: IStatisticInfoRequest, res: IStatisticInfoResponse) => {
+app.get(API_URL.api.statistic.info.toString(), memoryCache(1), async (req: IStatisticInfoRequest, res: IStatisticInfoResponse) => {
     const logger = createLogger();
     const [data, error] = await allServices.statistic.getStatisticInfoAsync(logger);
     if (error) {
@@ -29,7 +29,7 @@ interface IByVideoRequest extends IExpressRequest {
 
 interface IByVideoResponse extends IExpressResponse<IStatistic[], void> {}
 
-app.get(API_URL.api.statistic.byVideo.toString(), memoryCache(10), async (req: IByVideoRequest, res: IByVideoResponse) => {
+app.get(API_URL.api.statistic.byVideo.toString(), memoryCache(1), async (req: IByVideoRequest, res: IByVideoResponse) => {
     const logger = createLogger();
     const [data, error] = await allServices.statistic.getStatisticByVideoAsync(req.query.video_id || '', logger);
     if (error) {
@@ -46,7 +46,7 @@ interface IByChannelRequest extends IExpressRequest {
 }
 
 interface IByChannelResponse extends IExpressResponse<IStatistic[], void> {}
-app.get(API_URL.api.statistic.byChannel.toString(),memoryCache(1*60), async (req: IByChannelRequest, res: IByChannelResponse) => {
+app.get(API_URL.api.statistic.byChannel.toString(),memoryCache(1), async (req: IByChannelRequest, res: IByChannelResponse) => {
     const logger = createLogger();
     const [data, error] = await allServices.statistic.getStatisticByChannelAsync(req.query.channel_id || '', logger);
     if (error) {

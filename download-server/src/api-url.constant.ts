@@ -9,6 +9,7 @@ interface IApiUrl {
             scanVideos: IUrlItem;
             scanComments: IUrlItem;
             scanChannelInfo: IUrlItem;
+            scanVideoInfo: IUrlItem;
             scanAuthors: IUrlItem;
             addYoutubeKey: IUrlItem;
         };
@@ -18,6 +19,7 @@ interface IApiUrl {
             getComments: IUrlItem;
             getChannelId: IUrlItem;
             getChannelInfo: IUrlItem;
+            getVideoInfo: IUrlItem;
             getShortChannelInfo: IUrlItem;
         };
         
@@ -32,6 +34,7 @@ export const API_URL = createUrls<IApiUrl>({
             scanVideos: EMPTY_URL_ITEM,
             scanComments: EMPTY_URL_ITEM,
             scanChannelInfo: EMPTY_URL_ITEM,
+            scanVideoInfo: EMPTY_URL_ITEM,
             scanAuthors: EMPTY_URL_ITEM,
             addYoutubeKey: EMPTY_URL_ITEM
         },
@@ -40,6 +43,7 @@ export const API_URL = createUrls<IApiUrl>({
             getComments: EMPTY_URL_ITEM,
             getChannelId: EMPTY_URL_ITEM,
             getChannelInfo: EMPTY_URL_ITEM,
+            getVideoInfo: EMPTY_URL_ITEM,
             getShortChannelInfo: EMPTY_URL_ITEM
         },
     },

@@ -57,7 +57,7 @@ async function requestChannelInfoAsync(channelId: string, logger: ILogger): Prom
       authorUrl: getAuthorUrl(response.data),
     }
     } catch (error) {
-      console.error(`Error fetching page or parsing data: ${(error as Error).message}`);
+      logger.log(`Error fetching page or parsing data: ${(error as Error).message}`);
     }
   }
 

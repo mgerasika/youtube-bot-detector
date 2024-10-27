@@ -1,9 +1,9 @@
-import { IVideoDto, VideoDto } from "@server/dto/video.dto";
 import { IAsyncPromiseResult } from "@common/interfaces/async-promise-result.interface";
 import { sqlAsync } from "@server/sql/sql-async.util";
 import { sql_where } from "@server/sql/sql.util";
 import { typeOrmAsync } from "@server/sql/type-orm-async.util";
 import { ILogger } from "@common/utils/create-logger.utils";
+import { IVideoDto, VideoDto } from "@server/dto/video.dto";
 
 const getLastVideoDateAsync = async ({channel_id}: {channel_id?:string}, logger: ILogger) : IAsyncPromiseResult<Date>=> {
     return await sqlAsync<Date>(async (client) => {

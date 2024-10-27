@@ -32,11 +32,11 @@ if (ENV.rabbit_mq_url) {
 }
 
 if(ENV.redis_url) {
-    connectToRedisAsync(ENV.redis_url).then(async redis => {
+    connectToRedisAsync(ENV.redis_url, logger).then(async redis => {
         logger.log('Connected to Redis');
     });
 }
 
-const server = app.listen(port, function () {
+app.listen(port, function () {
     logger.log('Download Server Started on port ' + port);
 });

@@ -1,8 +1,8 @@
 import { API_URL } from "@server/api-url.constant";
 import { app, IExpressRequest, IExpressResponse } from "@server/express-app";
 import { allServices } from "../all-services";
-import { IVideoDto } from "@server/dto/video.dto";
 import { createLogger } from "@common/utils/create-logger.utils";
+import { IVideoDto } from "@server/dto/video.dto";
 
 interface IGetLastVideoDateRequest extends IExpressRequest {
     query: {

@@ -4,6 +4,7 @@ import { scanChannelInfoAsync } from './scan-channel-info/scan-channel-info.serv
 import { IScan } from '@common/interfaces/scan.interface';
 import { addYoutubeKeyAsync } from './add-youtube-key/add-youtube-key.service';
 import { fullScanChannelInfoAsync } from './full-scan-channel-info/full-scan-channel-info.service';
+import { scanVideoInfoAsync } from './scan-video-info/scan-video-info.service';
 
 export const scan: IScan = {
        scanVideosAsync,
@@ -11,6 +12,7 @@ export const scan: IScan = {
        scanChannelInfoAsync,
        addYoutubeKeyAsync,
        fullScanChannelInfoAsync,
+       scanVideoInfoAsync,
        scanAuthorsAsync: async () => {
               return ['',];
        },

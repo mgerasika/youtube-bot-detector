@@ -1,4 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, PrimaryColumn, OneToMany, ManyToOne, JoinColumn, Index } from 'typeorm';
+import { CommentDto } from './comment.dto';
+import { ChannelDto } from './channel.dto';
 
 export interface IVideoDto {
     id: string;
@@ -13,17 +15,28 @@ export interface IVideoDto {
 
 @Entity('video')
 export class VideoDto implements IVideoDto {
-    @PrimaryColumn('text')
+    @PrimaryColumn({ type: 'varchar', length: 255 })
     id!: string;
 
     @Column({ nullable: false, type: 'date'})
     published_at!: Date;
 
-    @Column({ nullable: false, type: 'text'})
+    @Column({ type: 'varchar', length: 255 })
     channel_id!: string;
 
     @Column({ nullable: false, type: 'text'})
+    @Index()
     title!: string;
+
+    // Specify the foreign key column name for the relationship
+    @ManyToOne(() => ChannelDto, (channel) => channel.videosDto, { nullable: false })
+    @JoinColumn({ name: 'channel_id', foreignKeyConstraintName: 'fk_channel_id_constrain' }) // Specify the column name
+    channelDto: ChannelDto | undefined;
+    
+    // One Video can have many Comments
+    @OneToMany(() => CommentDto, (comment) => comment.videoDto)
+    commentsDto: CommentDto[] | undefined;
+    
 
     constructor(id: string) {
         this.id = id;
