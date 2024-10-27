@@ -3,55 +3,37 @@ import { IAsyncPromiseResult } from "@common/interfaces/async-promise-result.int
 import { sqlAsync } from "@server/sql/sql-async.util";
 import { sql_where } from "@server/sql/sql.util";
 import { typeOrmAsync } from "@server/sql/type-orm-async.util";
+import { ILogger } from "@common/utils/create-logger.utils";
 
 
- export const getChannelListAllAsync = async ({channel_id}: {channel_id?:string}) : IAsyncPromiseResult<IChannelDto[]>=> {
+ export const getChannelListAllAsync = async ({channel_id}: {channel_id?:string}, logger: ILogger) : IAsyncPromiseResult<IChannelDto[]>=> {
     return await sqlAsync<IChannelDto[]>(async (client) => {
         const { rows } = await client.query(`select * from channel ${sql_where('id', channel_id)} `);
         return rows;
-    });
+    }, logger);
 };
 
- const getChannelDetailsAsync = async (id: string): IAsyncPromiseResult<IChannelDto> => {
+ const getChannelDetailsAsync = async (id: string, logger: ILogger): IAsyncPromiseResult<IChannelDto> => {
     return typeOrmAsync<ChannelDto>(async (client) => {
         const entity = await client.getRepository(ChannelDto).findOne({ where: { id } });
         if (!entity) {
             return [, 'entity not found'];
         }
         return [entity];
-    });
+    }, logger);
 };
 
- const deleteChannelAsync = async (id: string): IAsyncPromiseResult<ChannelDto> => {
-    return typeOrmAsync<ChannelDto>(async (client) => {
-        const entityToDelete = await client.getRepository(ChannelDto).findOne({ where: { id } });
-        if (!entityToDelete) {
-            return [undefined, 'entity not found'];
-        }
-        return [await client.getRepository(ChannelDto).remove(entityToDelete)];
-    });
-};
 
- const postChannelAsync = async (data: Omit<IChannelDto, 'id' >) : IAsyncPromiseResult<IChannelDto> => {
+ const postChannelAsync = async (data: Omit<IChannelDto, 'id' >, logger: ILogger) : IAsyncPromiseResult<IChannelDto> => {
     return typeOrmAsync<ChannelDto>(async (client) => {
         return [await client.getRepository(ChannelDto).save(data)];
-    });
+    }, logger);
 };
 
- const putChannelAsync = async (id: string, data: Omit<Partial<ChannelDto>, 'id'>) : IAsyncPromiseResult<IChannelDto>=> {
-    return typeOrmAsync<ChannelDto>(async (client) => {
-        const entityToUpdate = await client.getRepository(ChannelDto).findOne({ where: { id } });
-        if (!entityToUpdate) {
-            return [, 'Entity not found'];
-        }
-        return [await client.getRepository(ChannelDto).save({ ...entityToUpdate, ...data })];
-    });
-};
+
 
 export const channel = {
     getChannelListAllAsync,
     getChannelDetailsAsync,
     postChannelAsync,
-    putChannelAsync,
-    deleteChannelAsync
 }

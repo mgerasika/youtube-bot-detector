@@ -5,6 +5,7 @@ import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.int
 import { ICollection } from '@common/interfaces/collection';
 import { toQuery } from '@common/utils/to-query.util';
 import { getYoutube, processYoutubeErrorAsync } from '@server/youtube';
+import { ILogger } from '@common/utils/create-logger.utils';
 
 export interface IGetVideosBody {
     channelId: string;
@@ -18,14 +19,14 @@ export interface IShortVideoInfo {
     privacyStatus: string;
 }
 
-export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody): IAsyncPromiseResult<ICollection<IShortVideoInfo>> => {
-    const [youtube, youtubeError] = await getYoutube();
+export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody, logger: ILogger): IAsyncPromiseResult<ICollection<IShortVideoInfo>> => {
+    const [youtube, youtubeError] = await getYoutube(undefined, logger);
     if(!youtube || youtubeError) {
         return [, youtubeError];
     }
     
     const publishedAtDate = publishedAt ? new Date(publishedAt) : new Date(1970);
-    console.log('publishedAtDate', publishedAtDate, publishedAt)
+    logger.log('publishedAtDate', publishedAtDate, publishedAt)
 
     // Get the channel's uploads playlist ID
     const [channelResponse, channelError] = await toQuery(() => youtube.channels.list({
@@ -35,7 +36,7 @@ export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody): 
 
     
     if (channelError) {
-        return await processYoutubeErrorAsync(channelError as AxiosError);
+        return await processYoutubeErrorAsync(channelError as AxiosError, logger);
     }
 
     if (!channelResponse?.data.items || channelResponse.data.items.length === 0) {
@@ -61,7 +62,7 @@ export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody): 
         }));
 
         if (playListError) {
-            return await processYoutubeErrorAsync(playListError as AxiosError);
+            return await processYoutubeErrorAsync(playListError as AxiosError, logger);
         }
 
         if (!playlistItemsResponse?.data.items || playlistItemsResponse.data.items.length === 0) {
@@ -73,7 +74,7 @@ export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody): 
         // if(statError) {
         //     return [,statError];
         // }
-        const videos = playlistItemsResponse.data.items.map((item: youtube_v3.Schema$PlaylistItem): IShortVideoInfo => {
+        let videos = playlistItemsResponse.data.items.map((item: youtube_v3.Schema$PlaylistItem): IShortVideoInfo => {
             // const videoStatistic = videoStatisticItems?.find(v => v.id === item.snippet?.resourceId?.videoId)
             return {
                 title: item.snippet?.title || '',
@@ -84,13 +85,13 @@ export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody): 
             };
         }).filter(item => item.privacyStatus === 'public');
 
-        if (true || videos.some(item => item.publishedAt > publishedAtDate)) {
+        if ( videos.some(item => item.publishedAt > publishedAtDate)) {
             nextPageToken = playlistItemsResponse.data.nextPageToken;
         }
         else {
             nextPageToken = undefined;
         }
-        // videos = videos.filter(item => item.publishedAt > publishedAtDate);
+        videos = videos.filter(item => item.publishedAt > publishedAtDate);
         groupVideos.push(videos);
 
 
@@ -102,8 +103,8 @@ export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody): 
     }]
 }
 
-async function getVideoStatsisticItems(videoIds:string[]): IAsyncPromiseResult<youtube_v3.Schema$Video[]> {
-    const [youtube, youtubeError] = await getYoutube();
+async function getVideoStatsisticItems(videoIds:string[], logger: ILogger): IAsyncPromiseResult<youtube_v3.Schema$Video[]> {
+    const [youtube, youtubeError] = await getYoutube(undefined, logger);
     if(!youtube || youtubeError) {
         return [, youtubeError];
     }
@@ -114,7 +115,7 @@ async function getVideoStatsisticItems(videoIds:string[]): IAsyncPromiseResult<y
     }));
 
     if (error) {
-        return await processYoutubeErrorAsync(error as AxiosError);
+        return await processYoutubeErrorAsync(error as AxiosError, logger);
     }
 
     return [res?.data?.items || []]

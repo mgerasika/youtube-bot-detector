@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
+import { ILogger } from '@common/utils/create-logger.utils';
 
 export interface IGetShortChannelInfoBody {
     channelId: string;
@@ -16,8 +17,8 @@ export interface IShortChannelInfo {
   authorUrl?: string;
 }
 
-export const getShortChannelInfoAsync = async (channelId: string): IAsyncPromiseResult<IShortChannelInfo> => {
-    const channelInfo = await requestChannelInfoAsync(channelId);
+export const getShortChannelInfoAsync = async (channelId: string, logger: ILogger): IAsyncPromiseResult<IShortChannelInfo> => {
+    const channelInfo = await requestChannelInfoAsync(channelId, logger);
     if(!channelInfo) {
         return [,'channel id not found']
     }
@@ -25,7 +26,7 @@ export const getShortChannelInfoAsync = async (channelId: string): IAsyncPromise
 };
 
 
-async function requestChannelInfoAsync(channelId: string): Promise<IShortChannelInfo | undefined> {
+async function requestChannelInfoAsync(channelId: string, logger: ILogger): Promise<IShortChannelInfo | undefined> {
     try {
       // Make a request to the YouTube page of the handle
       const url = `https://www.youtube.com/channel/${channelId}`;

@@ -3,10 +3,11 @@ import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.int
 import { AxiosError } from 'axios';
 import { api } from './api.generated';
 import { toQuery } from '@common/utils/to-query.util';
+import { ILogger } from '@common/utils/create-logger.utils';
 
 let _youtubeInstance: youtube_v3.Youtube | undefined;
 
-export async function getYoutube(oldKey?:string): IAsyncPromiseResult<youtube_v3.Youtube > {
+export async function getYoutube(oldKey:string | undefined, logger: ILogger): IAsyncPromiseResult<youtube_v3.Youtube > {
     if (oldKey || !_youtubeInstance) {
         _youtubeInstance = undefined;        
         const [key, keyError] = await toQuery(() => api.keyActiveGet({old_key: oldKey}));
@@ -14,7 +15,7 @@ export async function getYoutube(oldKey?:string): IAsyncPromiseResult<youtube_v3
             return [,keyError]
 
         }
-        console.log('youtube key', key?.data)
+        logger.log('youtube key', key?.data)
         _youtubeInstance = google.youtube({
             version: 'v3',
             auth: key?.data.youtube_key || '',
@@ -24,11 +25,11 @@ export async function getYoutube(oldKey?:string): IAsyncPromiseResult<youtube_v3
 
 }
 
-export async function processYoutubeErrorAsync(youtubeError: AxiosError  ): IAsyncPromiseResult<any> {
+export async function processYoutubeErrorAsync(youtubeError: AxiosError , logger: ILogger ): IAsyncPromiseResult<any> {
     if(youtubeError && !youtubeError?.message?.includes('has disabled comments') ) {
-        console.log('youtube quota error', youtubeError.message)
+        logger.log('youtube quota error', youtubeError.message)
         const oldKey = _youtubeInstance?.youtube.context._options.auth
-        await getYoutube(oldKey as string);
+        await getYoutube(oldKey as string, logger);
         return [, 'youtube quota oldKey = ' + oldKey]
     }
     return [, youtubeError?.message]

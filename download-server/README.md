@@ -1,18 +1,18 @@
 For deploy new image:
 sh build.sh
-sudo docker tag youtube-bot-filter-downloader mgerasika/youtube-bot-filter-downloader:v5
+sudo docker tag youtube-bot-filter-downloader mgerasika/youtube-bot-filter-downloader:v6
 sudo docker login
-sudo docker push mgerasika/youtube-bot-filter-downloader:v5
+sudo docker push mgerasika/youtube-bot-filter-downloader:v6
 
 # on another pc
-docker pull mgerasika/youtube-bot-filter-downloader:v5
+docker pull mgerasika/youtube-bot-filter-downloader:v6
 docker run --network=host --restart=always --env PORT=8008 -v /home:/home -d \
   -p $port:8008 \
   --env RABBIT_MQ=amqp://test:test@178.210.131.101:5672 \
   --env API_SERVER_URL=http://178.210.131.101:8007/ \
-  --env REDIS_URL=redis://192.168.0.16:6379 \
+  --env REDIS_URL=redis://178.210.131.101:6379 \
   --name youtube-bot-filter-downloader \
-  mgerasika/youtube-bot-filter-downloader:v5
+  mgerasika/youtube-bot-filter-downloader:v6
 
 mgerasika@gmail.com
 AIzaSyCXuMpc8Ci70dELX9m4tCDHbveG1XjIUbg
@@ -42,6 +42,17 @@ AIzaSyBQEx9McZ82-bshI2jTw2IuU47VJH0gszs
 
 horodechnajulia@gmail.com
 AIzaSyBQn6hna3tyPc6SvG2WQ_KAw6LvGpDFMms
+AIzaSyBO6vlCE12m5Cfm-V8VLF421b_BdXFh3Sw
+AIzaSyAEMs5_ty0bOkSSKMt5n6FXv_1-oVdvGio
+AIzaSyAy0AATqkBKKOxR8nSlPXn-vLF3MpV7T50
+AIzaSyDkoT-DP1Me8FmoDGhCbcOd_Wx95rw0om8
+AIzaSyC-C7av0qoflIh8EHi_a2LTRYKnNqF3tr0
+AIzaSyCH4BXGdFQCwcyzfEJFu6YuqCM30rAvET4
+AIzaSyBna04ZluQo-_5nxORY2r6Rd-aRovEchgE
+AIzaSyDrp5PJgbAXTC_PUcnPdsWd_ofDGuBq444
+AIzaSyB_mx_PAQ6jED9XGXzxn1kagXRoiot3dUU
+AIzaSyDc6ygGiqEHY2Wp4z9JutK9Msk7mK2sCXw
+
 
 mgerasika3@gmail.com
 AIzaSyCszefmn92_1or2Wat7DNupqLuC6ZaJJXo

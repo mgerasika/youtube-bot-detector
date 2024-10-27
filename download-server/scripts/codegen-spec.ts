@@ -4,7 +4,6 @@ import prettier from 'prettier';
 import { generateSpecAsync, getSpecInfoAsync } from 'typescript-to-swagger';
 
 getSpecInfoAsync({ dir: ['./src/controller', './src/enum',  './src/interfaces'] }).then((res) => {
-    // console.log('MODEL', JSON.stringify(res, null, 2));
 });
 
 generateSpecAsync({ dir: ['./src/controller', './src/enum', './src/interfaces'] }).then((res) => {

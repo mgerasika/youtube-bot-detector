@@ -2,17 +2,16 @@ import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.int
 import { oneByOneAsync } from '@common/utils/one-by-one-async.util';
 import { toQuery } from '@common/utils/to-query.util';
 import { groupArray } from '@common/utils/group-array.util';
-import { nameOf } from '@common/utils/name-of';
-import { getRabbitMqMessageId, rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
+import { rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
 import { getVideosAsync } from '@server/controller/youtube/get-videos/get-videos.service';
 import { api } from '@server/api.generated';
-import { scan } from '../services';
-import { ENV, RABBIT_MQ_ENV } from '@server/env';
+import { RABBIT_MQ_ENV } from '@server/env';
 import { IScanCommentsBody, IScanVideosBody } from '@common/interfaces/scan.interface';
-import { connectToRedisAsync } from '@common/utils/redis';
+import { createLogger, ILogger } from '@common/utils/create-logger.utils';
 
-export const scanVideosAsync = async (body: IScanVideosBody): IAsyncPromiseResult<string> => {
-    console.log('scanVideosAsync', body);
+// scan all videos by channel id. Need to use Date cache
+export const scanVideosAsync = async (body: IScanVideosBody, logger: ILogger): IAsyncPromiseResult<string> => {
+    logger.log('scanVideosAsync', body);
    
     const channel_id = body.channelId;
 
@@ -20,10 +19,10 @@ export const scanVideosAsync = async (body: IScanVideosBody): IAsyncPromiseResul
     if (lastDateError) {
         return [, lastDateError];
     }
-    console.log('last_date = ', lastDate?.data);
+    logger.log('last_date = ', lastDate?.data);
 
-    const [data, error] = await getVideosAsync({channelId:body.channelId, publishedAt: lastDate?.data?.toString() || ''});
-    console.log('recieved videos count = ', data?.items.length);
+    const [data, error] = await getVideosAsync({channelId:body.channelId, publishedAt: lastDate?.data?.toString() || ''}, logger);
+    logger.log('recieved videos count = ', data?.items.length);
 
     if (data) {
         const videos = data.items.reverse();
@@ -50,7 +49,7 @@ export const scanVideosAsync = async (body: IScanVideosBody): IAsyncPromiseResul
         videos.map(video => {
             rabbitMQ_sendDataAsync<IScanCommentsBody>(RABBIT_MQ_ENV, 'scanCommentsAsync', {
                 videoId: video.videoId
-            })
+            }, logger)
         })
 
         // // remove videos from redis cache

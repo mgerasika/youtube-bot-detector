@@ -1,14 +1,15 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
+import { ILogger } from '@common/utils/create-logger.utils';
 
 export interface IGetChannelIdBody {
     channelName: string;
 }
 
 
-export const getChannelIdAsync = async (channelName: string): IAsyncPromiseResult<string> => {
-    const channelId = await requestChannelIdAsync(channelName);
+export const getChannelIdAsync = async (channelName: string, logger: ILogger): IAsyncPromiseResult<string> => {
+    const channelId = await requestChannelIdAsync(channelName, logger);
     if(!channelId) {
         return [,'channel id not found']
     }
@@ -16,7 +17,7 @@ export const getChannelIdAsync = async (channelName: string): IAsyncPromiseResul
 };
 
 
-async function requestChannelIdAsync(channelName: string): Promise<string | undefined> {
+async function requestChannelIdAsync(channelName: string, logger: ILogger): Promise<string | undefined> {
     try {
       // Make a request to the YouTube page of the handle
       const url = `https://www.youtube.com/${channelName}`;
@@ -35,13 +36,13 @@ async function requestChannelIdAsync(channelName: string): Promise<string | unde
     const match = pageSource.match(canonicalLinkRegex);
       if (match && match[1]) {
         const channelId = match[1];
-        console.log(`Channel ID: ${channelId}`);
+        logger.log(`Channel ID: ${channelId}`);
         return channelId;
       } else {
-        console.log('Channel ID not found.');
+        logger.log('Channel ID not found.');
       }
     } catch (error) {
-      console.error(`Error fetching page or parsing data: ${(error as Error).message}`);
+      logger.log(`Error fetching page or parsing data: ${(error as Error).message}`);
     }
   }
 

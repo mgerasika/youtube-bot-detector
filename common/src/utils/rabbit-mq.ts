@@ -3,12 +3,13 @@ import { IQueryReturn } from './to-query.util';
 import { IRabbitMqBody, IRabbitMqMessage } from '../interfaces/rabbit-mq-message.interface';
 import { connectToRedisAsync } from './redis';
 import { IScan } from '@common/interfaces/scan.interface';
+import { ILogger } from './create-logger.utils';
 
 let _connection: Connection | undefined;
 let _channel: Channel;
 
-export async function rabbitMQ_createChannelAsync({channelName,  rabbit_mq_url}:{channelName:string, rabbit_mq_url: string}) {
-    await rabbitMQ_createConnectionAsync({channelName, rabbit_mq_url})
+export async function rabbitMQ_createChannelAsync({channelName,  rabbit_mq_url}:{channelName:string, rabbit_mq_url: string}, logger: ILogger) {
+    await rabbitMQ_createConnectionAsync({channelName, rabbit_mq_url}, logger)
      return _channel;
  }
  
@@ -16,8 +17,8 @@ export async function rabbitMQ_createChannelAsync({channelName,  rabbit_mq_url}:
      messageCount: number;
      consumerCount: number;
  }
- export const rabbit_mq_getConnectionInfoAsync = async ({channelName,  rabbit_mq_url}:{channelName:string, rabbit_mq_url: string}): Promise<IConnectionInfo> => {
-     const channel = await rabbitMQ_createChannelAsync({channelName, rabbit_mq_url});
+ export const rabbit_mq_getConnectionInfoAsync = async ({channelName,  rabbit_mq_url}:{channelName:string, rabbit_mq_url: string}, logger: ILogger): Promise<IConnectionInfo> => {
+     const channel = await rabbitMQ_createChannelAsync({channelName, rabbit_mq_url}, logger);
      try {
        const { messageCount, consumerCount } = await channel.checkQueue(channelName);
        return {messageCount, consumerCount};
@@ -26,12 +27,12 @@ export async function rabbitMQ_createChannelAsync({channelName,  rabbit_mq_url}:
      }
    };
    
-export async function rabbitMQ_createConnectionAsync({channelName,  rabbit_mq_url}:{channelName:string, rabbit_mq_url: string}) {
+export async function rabbitMQ_createConnectionAsync({channelName,  rabbit_mq_url}:{channelName:string, rabbit_mq_url: string}, logger: ILogger) {
     if (!_connection || !_channel) {
         try {
             _connection = await amqp.connect(rabbit_mq_url || '');
             if (_connection) {
-                console.log('Connected to Rabbit MQ');
+                logger.log('Connected to Rabbit MQ');
                 _channel = await _connection.createChannel();
 
                 await _channel.assertQueue(channelName, {});
@@ -39,7 +40,7 @@ export async function rabbitMQ_createConnectionAsync({channelName,  rabbit_mq_ur
                 _channel.prefetch(1);
             }
         } catch (error) {
-            console.log('createConnection rabbitMQ error', error);
+            logger.log('createConnection rabbitMQ error', error);
             _connection = undefined;
             setTimeout(rabbitMQ_createConnectionAsync, 30 * 1000);
         }
@@ -47,33 +48,33 @@ export async function rabbitMQ_createConnectionAsync({channelName,  rabbit_mq_ur
     return _connection;
 }
 
-export async function rabbitMQ_subscribeAsync({ channelName, rabbit_mq_url}:{channelName:string, rabbit_mq_url: string}, callback: (data: IRabbitMqMessage) => Promise<any>) {
+export async function rabbitMQ_subscribeAsync({ channelName, rabbit_mq_url}:{channelName:string, rabbit_mq_url: string}, callback: (data: IRabbitMqMessage) => Promise<any>, logger: ILogger) {
     try {
-        const connection = await rabbitMQ_createConnectionAsync({rabbit_mq_url, channelName: channelName});
+        const connection = await rabbitMQ_createConnectionAsync({rabbit_mq_url, channelName: channelName}, logger);
         if (connection) {
             _channel.consume(
                 channelName,
                 (msg: ConsumeMessage | null) => {
                     if (msg) {
                         const body = Buffer.from(msg.content);
-                        console.log('Rabbit MQ Data received on download server:', `${body}`);
+                        logger.log('Rabbit MQ Data received on download server:', `${body}`);
                         let obj;
                         try {
                             obj = JSON.parse(body.toString());
                         } catch (ex) {
-                            console.log('error parse rabbit mq message', ex);
+                            logger.log('error parse rabbit mq message', ex);
                         }
                         if (obj) {
                             callback(obj)
                                 .then((res: any[]) => {
-                                    console.log('Rabbit MQ response = ', res);
+                                    logger.log('Rabbit MQ response = ', res);
                                     if (res.length > 1 && res[1]) {
-                                        sendAgain(channelName, body);
+                                        sendAgain(channelName, body, logger);
                                     }
                                     _channel.ack(msg);
                                 })
                                 .catch(() => {
-                                    sendAgain(channelName, body);
+                                    sendAgain(channelName, body, logger);
                                     _channel.ack(msg);
                                 });
                         } else {
@@ -85,14 +86,14 @@ export async function rabbitMQ_subscribeAsync({ channelName, rabbit_mq_url}:{cha
             );
         }
     } catch (error) {
-        console.log('known error', error);
+        logger.log('known error', error);
 
         setTimeout(rabbitMQ_subscribeAsync, 30 * 1000);
     }
 }
 
-function sendAgain(channelName: string, body: Buffer) {
-    console.log('Rabbit MQ send again = ', `${body}`);
+function sendAgain(channelName: string, body: Buffer, logger: ILogger) {
+    logger.log('Rabbit MQ send again = ', `${body}`);
     setTimeout(() => {
         _channel.sendToQueue(channelName, body, {
             persistent: true, // Ensure the message is durable
@@ -105,10 +106,10 @@ export const getRabbitMqMessageId = <T = any,>(methodName: keyof IScan, methodAr
         methodName: methodName,
         methodArgumentsJson: methodArgumentsJson,
     }
-    return `rabbitMQ:-${JSON.stringify(json)}`;
+    return `rabbit-mq-${JSON.stringify(json)}`;
 }
-export const rabbitMQ_sendDataAsync = async <T = any, >({ channelName, rabbit_mq_url, redis_url}:{channelName:string, rabbit_mq_url: string, redis_url:string}, methodName: keyof IScan, methodArgumentsJson: T): Promise<IQueryReturn<boolean>> => {
-    await rabbitMQ_createConnectionAsync({channelName,  rabbit_mq_url});
+export const rabbitMQ_sendDataAsync = async <T = any, >({ channelName, rabbit_mq_url, redis_url}:{channelName:string, rabbit_mq_url: string, redis_url:string}, methodName: keyof IScan, methodArgumentsJson: T, logger: ILogger): Promise<IQueryReturn<boolean>> => {
+    await rabbitMQ_createConnectionAsync({channelName,  rabbit_mq_url}, logger);
     const redisClient = await connectToRedisAsync(redis_url);
 
     const data : IRabbitMqMessage = {
@@ -121,19 +122,20 @@ export const rabbitMQ_sendDataAsync = async <T = any, >({ channelName, rabbit_mq
         const messageId = getRabbitMqMessageId(methodName, methodArgumentsJson);
         const exist = await redisClient.exists(messageId);
         if (!exist) {
-            const oneWeek = 7*24*3600;
+            const oneDay = 24*60*60;
+            const oneYear = 12*30*oneDay;
             await redisClient.set(messageId, '', {
-                EX: 12*30*oneWeek,//one year
+                EX: oneYear
             });
 
-            console.log('Rabbit MQ Data send and add to Redis:', data);
+            logger.log('Rabbit MQ Data send and add to Redis:', data);
             await _channel.sendToQueue(channelName, Buffer.from(JSON.stringify(data)));
         } else {
-            console.log('Rabbit MQ - already exist in Redis, skip');
+            logger.log('Rabbit MQ - already exist in Redis, skip', messageId);
         }
         return [true];
     } else {
-        console.log('channel is null');
+        logger.log('channel is null');
         return [, 'channel is null'];
     }
 };

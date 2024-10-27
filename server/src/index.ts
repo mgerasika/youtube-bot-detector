@@ -9,9 +9,11 @@ import { app, httpOptions } from './express-app';
 import { typeOrmAsync } from './sql/type-orm-async.util';
 import { connectToRedisAsync } from '@common/utils/redis';
 import https from 'https';
+import { createLogger } from '@common/utils/create-logger.utils';
 export * from './controller/all-controllers';
 
-console.log('ENV=', ENV);
+const logger = createLogger();
+logger.log('ENV=', ENV);
 
 app.get('/', (req: any, res: { send: (arg0: string) => void; }) => {
     res.send(JSON.stringify(allServices, null, 2));
@@ -19,7 +21,7 @@ app.get('/', (req: any, res: { send: (arg0: string) => void; }) => {
 
 if (process.env.NODE_ENV === 'development') {
     // sync database
-    typeOrmAsync(() => Promise.resolve(['']));
+    typeOrmAsync(() => Promise.resolve(['']), logger);
 }
 
 const port = process.env.PORT || 8007;
@@ -27,21 +29,21 @@ const ports = process.env.PORTS || 8008;
 if (ENV.rabbit_mq_url) {
     // rabbitMQ_subscribeAsync((data) => {
     //     if (data.setupBody) {
-    //         console.log('Recived here')
+    //         logger.log('Recived here')
     //     }
     //     return Promise.resolve('empty');
     // });
 
     
-    rabbitMQ_createConnectionAsync({channelName: ENV.rabbit_mq_channel_name, rabbit_mq_url: ENV.rabbit_mq_url}); 
+    rabbitMQ_createConnectionAsync({channelName: ENV.rabbit_mq_channel_name, rabbit_mq_url: ENV.rabbit_mq_url}, logger); 
     connectToRedisAsync(ENV.redis_url || '').then(async redis => {
-        console.log('Connected to Redis');
+        logger.log('Connected to Redis');
     });
 }
 app.listen(port, function () {
-    console.log('Server started on port ' + port);
+    logger.log('Server started on port ' + port);
 });
 
 https.createServer(httpOptions, app).listen(ports, () => {
-    console.log('Https server started on port ' + ports);
+    logger.log('Https server started on port ' + ports);
 });

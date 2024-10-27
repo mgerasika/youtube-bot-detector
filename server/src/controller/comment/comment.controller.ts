@@ -1,8 +1,8 @@
 import { API_URL } from "@server/api-url.constant";
 import { app, IExpressRequest, IExpressResponse } from "@server/express-app";
-import {  getCommentListAllAsync } from "./comment.service";
 import { allServices } from "../all-services";
 import { ICommentDto } from "@server/dto/comment.dto";
+import { createLogger } from "@common/utils/create-logger.utils";
 
 
 interface IGetLastCommentDateRequest extends IExpressRequest {
@@ -14,7 +14,23 @@ interface IGetLastCommentDateRequest extends IExpressRequest {
 interface IGetLastCommentDateResponse extends IExpressResponse<Date, void> {}
 
 app.get(API_URL.api.comment.lastDate.toString(), async (req: IGetLastCommentDateRequest, res: IGetLastCommentDateResponse) => {
-    const [data, error] = await allServices.comment.getLastCommentDateAsync(req.query);
+    const logger = createLogger();
+    const [data, error] = await allServices.comment.getLastCommentDateAsync(req.query, logger);
+    if (error) {
+        return res.status(400).send('error' + error);
+    }
+    return res.send(data);
+});
+
+interface IAuthorIdsRequest extends IExpressRequest {
+  
+}
+
+interface IAuthorIdsResponse extends IExpressResponse<Date, void> {}
+
+app.get(API_URL.api.comment.authorIds.toString(), async (req: IAuthorIdsRequest, res: IAuthorIdsResponse) => {
+    const logger = createLogger();
+    const [data, error] = await allServices.comment.getAutorsIds(logger);
     if (error) {
         return res.status(400).send('error' + error);
     }
@@ -31,7 +47,8 @@ interface IListRequest extends IExpressRequest {
 interface IListResponse extends IExpressResponse<ICommentDto[], void> {}
 
 app.get(API_URL.api.comment.toString(), async (req: IListRequest, res: IListResponse) => {
-    const [data, error] = await getCommentListAllAsync(req.query);
+    const logger = createLogger();
+    const [data, error] = await allServices.comment.getCommentListAllAsync(req.query, logger);
     if (error) {
         return res.status(400).send('error' + error);
     }
@@ -48,7 +65,8 @@ interface IGetRequest extends IExpressRequest {
 interface IGetResponse extends IExpressResponse<ICommentDto, void> {}
 
 app.get(API_URL.api.comment.id().toString(), async (req: IGetRequest, res: IGetResponse) => {
-    const [data, error] = await allServices.comment.getCommentDetailsAsync(req.params.id);
+    const logger = createLogger();
+    const [data, error] = await allServices.comment.getCommentDetailsAsync(req.params.id, logger);
     if (error) {
         return res.status(400).send( error);
     }
@@ -66,43 +84,11 @@ interface IPostRequest extends IExpressRequest {
 interface IPostResponse extends IExpressResponse<void, void> {}
 
 app.post(API_URL.api.comment.toString(), async (req: IPostRequest, res: IPostResponse) => {
-    const [, error] = await allServices.comment.postCommentAsync(req.body.comments);
+    const logger = createLogger();
+    const [, error] = await allServices.comment.postCommentAsync(req.body.comments, logger);
     if (error) {
         return res.status(400).send( error);
     }
     return res.send();
 });
 
-interface IPutRequest extends IExpressRequest {
-    body: ICommentDto;
-    params: {
-        id: string;
-    };
-}
-
-interface IPutResponse extends IExpressResponse<void, void> {}
-
-app.put(API_URL.api.comment.id().toString(), async (req: IPutRequest, res: IPutResponse) => {
-    const [, error] = await allServices.comment.putCommentAsync(req.params.id, req.body);
-    if (error) {
-        return res.status(400).send(error);
-    }
-
-    return res.send();
-});
-
-interface IDeleteRequest extends IExpressRequest {
-    params: {
-        id: string;
-    };
-}
-
-interface IDeleteResponse extends IExpressResponse<void, void> {}
-
-app.delete(API_URL.api.comment.id().toString(), async (req: IDeleteRequest, res: IDeleteResponse) => {
-    const [, error] = await allServices.comment.deleteCommentAsync(req.params.id);
-    if (error) {
-        return res.status(400).send( error);
-    }
-    return res.send();
-});

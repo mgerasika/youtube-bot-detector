@@ -9,8 +9,10 @@ import { app } from './express-app';
 import './controller/all-controllers';
 import { rabbitMQ_subscribeAsync } from '@common/utils/rabbit-mq';
 import { connectToRedisAsync } from '@common/utils/redis';
+import { createLogger } from '@common/utils/create-logger.utils';
 
-console.log('ENV=', ENV);
+const logger = createLogger();
+logger.log('ENV=', ENV);
 
 app.get('/', (req, res) => {
     res.send(JSON.stringify(allServices, null, 2));
@@ -22,20 +24,19 @@ if (ENV.rabbit_mq_url) {
         if (data.msg) {
             const method = (allServices.scan as any)[data.msg.methodName] as Function;
             if(method) {
-                return  method.call(allServices.scan, data.msg.methodArgumentsJson);
+                return  method.call(allServices.scan, data.msg.methodArgumentsJson, createLogger());
             }
         }
         return Promise.resolve();
-    });
+    }, logger);
 }
 
 if(ENV.redis_url) {
     connectToRedisAsync(ENV.redis_url).then(async redis => {
-        console.log('Connected to Redis');
+        logger.log('Connected to Redis');
     });
 }
 
-// console.log('ENV = ', ENV);
 const server = app.listen(port, function () {
-    console.log('Download Server Started on port ' + port);
+    logger.log('Download Server Started on port ' + port);
 });

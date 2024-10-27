@@ -8,7 +8,6 @@ export const useGetStatisticByVideo = (videoId: string) => {
         queryKey: `statistic-by-video-${videoId}`,
         refetchInterval: 10 * 1000,
         queryFn: () => axios.get(`${ENV.api_server_url}api/statistic/by-video?video_id=${videoId}`).then(response => {
-            console.log('statistic by video = ', response.data)
             return response.data;
 
         })

@@ -8,6 +8,7 @@ interface IApiUrl {
             };
             comment: {
                 lastDate: IUrlItem;
+                authorIds: IUrlItem;
                 id: (id?: string) => IUrlItem;
             };
             video: {
@@ -25,6 +26,7 @@ interface IApiUrl {
             };
 
             scan: {
+                fix: IUrlItem;
                 addYoutubeKey: IUrlItem,
                 byVideo: IUrlItem,
                 byChannel: IUrlItem,
@@ -40,6 +42,7 @@ export const API_URL = createUrls<IApiUrl>({
             },
             comment: {
                 lastDate: EMPTY_URL_ITEM,
+                authorIds: EMPTY_URL_ITEM,
                 id: (id?: string) => EMPTY_URL_ITEM,
             },
             video: {
@@ -55,6 +58,7 @@ export const API_URL = createUrls<IApiUrl>({
                 byChannel: EMPTY_URL_ITEM,
             },
             scan: {
+                fix: EMPTY_URL_ITEM,
                 addYoutubeKey: EMPTY_URL_ITEM,
                 byVideo: EMPTY_URL_ITEM,
                 byChannel: EMPTY_URL_ITEM,

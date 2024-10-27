@@ -2,6 +2,7 @@ import { AxiosError } from 'axios';
 import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
 import { toQuery } from '@common/utils/to-query.util';
 import { getYoutube, processYoutubeErrorAsync } from '@server/youtube';
+import { ILogger } from '@common/utils/create-logger.utils';
 
 export interface IGetChannelInfoBody {
     channelId: string;
@@ -20,8 +21,8 @@ export interface IChannelInfo {
     videoCount?: string;
 }
 
-export const getChannelInfoAsync = async (body: IGetChannelInfoBody): IAsyncPromiseResult<IChannelInfo> => {
-    const [youtube, youtubeError] = await getYoutube();
+export const getChannelInfoAsync = async (body: IGetChannelInfoBody, logger: ILogger): IAsyncPromiseResult<IChannelInfo | undefined> => {
+    const [youtube, youtubeError] = await getYoutube(undefined, logger);
     if(!youtube || youtubeError) {
         return [, youtubeError];
     }
@@ -44,7 +45,7 @@ export const getChannelInfoAsync = async (body: IGetChannelInfoBody): IAsyncProm
     }));
 
     if (responseError) {
-       return await processYoutubeErrorAsync(responseError as AxiosError);
+       return await processYoutubeErrorAsync(responseError as AxiosError, logger);
     }
 
     if (response?.data.items && response.data.items.length > 0) {
@@ -61,8 +62,9 @@ export const getChannelInfoAsync = async (body: IGetChannelInfoBody): IAsyncProm
             photo: channel.snippet?.thumbnails?.medium?.url || undefined,
         }];
     } else {
-        console.log('No channel found for the provided name');
+        logger.log('No channel found for the provided name');
+        // implement this https://www.youtube.com/channel/UC-gIX2RdnTumzuxmMWPo0uw
     }
 
-    return [, 'error in getChannelInfoAsync']
+    return [undefined]
 }

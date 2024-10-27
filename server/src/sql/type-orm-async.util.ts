@@ -5,6 +5,7 @@ import { ChannelDto } from '@server/dto/channel.dto';
 import { ApiKeyDto } from '@server/dto/api-key.dto';
 import { CommentDto } from '@server/dto/comment.dto';
 import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
+import { ILogger } from '@common/utils/create-logger.utils';
 
 const IS_DEBUG = ENV.node_env === 'development';
 
@@ -28,7 +29,7 @@ const getDataSource = (): DataSource => {
     return _dataSource;
 };
 
-export async function typeOrmAsync<T>(callback: (client: DataSource) => IAsyncPromiseResult<T>): IAsyncPromiseResult<T> {
+export async function typeOrmAsync<T>(callback: (client: DataSource) => IAsyncPromiseResult<T>, logger: ILogger): IAsyncPromiseResult<T> {
     let client = getDataSource();
     try {
         if (!client.isInitialized) {
@@ -40,7 +41,7 @@ export async function typeOrmAsync<T>(callback: (client: DataSource) => IAsyncPr
         const data = (await callback(client));
         return data;
     } catch (error) {
-        console.log('typeOrm error ', error);
+        logger.log('typeOrm error ', error);
         return [, error as Error];
     }
 }

@@ -1,3 +1,4 @@
+import { ILogger } from "@common/utils/create-logger.utils";
 import { IAsyncPromiseResult } from "./async-promise-result.interface";
 
 export interface IFullScanChannelInfoBody {
@@ -6,8 +7,6 @@ export interface IFullScanChannelInfoBody {
 
 export interface IScanChannelInfoBody {
     channelId: string;
-    // deprecated
-    scan_videos?: boolean;
 }
 
 export interface IScanVideosBody {
@@ -21,7 +20,6 @@ export interface IScanCommentsBody {
 
 export interface IScanAuthorsBody {
     videoId?: string;
-    channelId?: string;
 }
 export interface IAddYoutubeKeyBody {
     email:string;
@@ -29,10 +27,10 @@ export interface IAddYoutubeKeyBody {
 }
 
 export interface IScan {
-    fullScanChannelInfoAsync:(body: IFullScanChannelInfoBody) => IAsyncPromiseResult<string>;
-    scanChannelInfoAsync:(body: IScanChannelInfoBody) => IAsyncPromiseResult<string>;
-    scanVideosAsync: (body: IScanVideosBody) => IAsyncPromiseResult<string>;
-    scanCommentsAsync : (body: IScanCommentsBody) => IAsyncPromiseResult<string>;
-    scanAuthorsAsync: (body: IScanAuthorsBody) => IAsyncPromiseResult<string>;
-    addYoutubeKeyAsync: (body: IAddYoutubeKeyBody) => IAsyncPromiseResult<string>;
+    fullScanChannelInfoAsync:(body: IFullScanChannelInfoBody, logger: ILogger) => IAsyncPromiseResult<string>;
+    scanChannelInfoAsync:(body: IScanChannelInfoBody, logger: ILogger) => IAsyncPromiseResult<string>;
+    scanVideosAsync: (body: IScanVideosBody, logger: ILogger) => IAsyncPromiseResult<string>;
+    scanCommentsAsync : (body: IScanCommentsBody, logger: ILogger) => IAsyncPromiseResult<string>;
+    scanAuthorsAsync: (body: IScanAuthorsBody, logger: ILogger) => IAsyncPromiseResult<string>;
+    addYoutubeKeyAsync: (body: IAddYoutubeKeyBody, logger: ILogger) => IAsyncPromiseResult<string>;
 };

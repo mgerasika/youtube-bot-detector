@@ -5,8 +5,9 @@ import { IAddYoutubeKeyBody } from '@common/interfaces/scan.interface';
 import { processYoutubeErrorAsync } from '@server/youtube';
 import { AxiosError } from 'axios';
 import { google } from 'googleapis';
+import { ILogger } from '@common/utils/create-logger.utils';
 
-export const addYoutubeKeyAsync = async (body: IAddYoutubeKeyBody): IAsyncPromiseResult< string> => {
+export const addYoutubeKeyAsync = async (body: IAddYoutubeKeyBody, logger: ILogger): IAsyncPromiseResult< string> => {
     try {
         const youtubeInstance = google.youtube({
             version: 'v3',

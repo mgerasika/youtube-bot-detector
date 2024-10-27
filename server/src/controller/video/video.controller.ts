@@ -2,6 +2,7 @@ import { API_URL } from "@server/api-url.constant";
 import { app, IExpressRequest, IExpressResponse } from "@server/express-app";
 import { allServices } from "../all-services";
 import { IVideoDto } from "@server/dto/video.dto";
+import { createLogger } from "@common/utils/create-logger.utils";
 
 interface IGetLastVideoDateRequest extends IExpressRequest {
     query: {
@@ -12,7 +13,8 @@ interface IGetLastVideoDateRequest extends IExpressRequest {
 interface IGetLastVideoDateResponse extends IExpressResponse<Date, void> {}
 
 app.get(API_URL.api.video.lastDate.toString(), async (req: IGetLastVideoDateRequest, res: IGetLastVideoDateResponse) => {
-    const [data, error] = await allServices.video.getLastVideoDateAsync(req.query);
+    const logger = createLogger();
+    const [data, error] = await allServices.video.getLastVideoDateAsync(req.query, logger);
     if (error) {
         return res.status(400).send('error' + error);
     }
@@ -27,8 +29,9 @@ interface IListRequest extends IExpressRequest {
 
 interface IListResponse extends IExpressResponse<IVideoDto[], void> {}
 
-app.get(API_URL.api.video.toString(), async (req: IListRequest, res: IListResponse) => {
-    const [data, error] = await allServices.video.getVideoListAllAsync(req.query);
+app.get(API_URL.api.video.toString(), async(req: IListRequest, res: IListResponse) => {
+    const logger = createLogger();
+    const [data, error] = await allServices.video.getVideoListAllAsync(req.query, logger);
     if (error) {
         return res.status(400).send('error' + error);
     }
@@ -45,7 +48,8 @@ interface IGetRequest extends IExpressRequest {
 interface IGetResponse extends IExpressResponse<IVideoDto, void> {}
 
 app.get(API_URL.api.video.id().toString(), async (req: IGetRequest, res: IGetResponse) => {
-    const [data, error] = await allServices.video.getVideoDetailsAsync(req.params.id);
+    const logger = createLogger();
+    const [data, error] = await allServices.video.getVideoDetailsAsync(req.params.id, logger);
     if (error) {
         return res.status(400).send( error);
     }
@@ -63,43 +67,11 @@ interface IPostRequest extends IExpressRequest {
 interface IPostResponse extends IExpressResponse<void, void> {}
 
 app.post(API_URL.api.video.toString(), async (req: IPostRequest, res: IPostResponse) => {
-    const [, error] = await allServices.video.postVideoAsync(req.body.videos);
+    const logger = createLogger();
+    const [, error] = await allServices.video.postVideoAsync(req.body.videos, logger);
     if (error) {
         return res.status(400).send( error);
     }
     return res.send();
 });
 
-interface IPutRequest extends IExpressRequest {
-    body: IVideoDto;
-    params: {
-        id: string;
-    };
-}
-
-interface IPutResponse extends IExpressResponse<void, void> {}
-
-app.put(API_URL.api.video.id().toString(), async (req: IPutRequest, res: IPutResponse) => {
-    const [, error] = await allServices.video.putVideoAsync(req.params.id, req.body);
-    if (error) {
-        return res.status(400).send(error);
-    }
-
-    return res.send();
-});
-
-interface IDeleteRequest extends IExpressRequest {
-    params: {
-        id: string;
-    };
-}
-
-interface IDeleteResponse extends IExpressResponse<void, void> {}
-
-app.delete(API_URL.api.video.id().toString(), async (req: IDeleteRequest, res: IDeleteResponse) => {
-    const [, error] = await allServices.video.deleteVideoAsync(req.params.id);
-    if (error) {
-        return res.status(400).send( error);
-    }
-    return res.send();
-});

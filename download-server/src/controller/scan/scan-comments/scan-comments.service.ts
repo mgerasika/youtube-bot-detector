@@ -3,25 +3,26 @@ import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.int
 import { api } from '@server/api.generated';
 import { getRabbitMqMessageId, rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
 import { groupArray } from '@common/utils/group-array.util';
-import { nameOf } from '@common/utils/name-of';
 import { oneByOneAsync } from '@common/utils/one-by-one-async.util';
 import { toQuery } from '@common/utils/to-query.util';
 import { getCommentsAsync } from '@server/controller/youtube/get-comments/get-comments.service';
-import { scan } from '../services';
 import { IScanCommentsBody, IScanAuthorsBody, IScanChannelInfoBody } from '@common/interfaces/scan.interface';
 import { connectToRedisAsync } from '@common/utils/redis';
+import { getUniqueKeys } from '@common/utils/get-unique-keys.util';
+import {createLogger, ILogger} from '@common/utils/create-logger.utils';
 
-
-
-export const scanCommentsAsync = async (body: IScanCommentsBody): IAsyncPromiseResult<string> => {
+// scan all comments by videoId
+// possible to use lastDate, but problem with reply comments
+// remove from redis cache for rescan
+export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger): IAsyncPromiseResult<string> => {
     const [lastDate, lastDateError] = await toQuery(() => api.commentLastDateGet({ video_id: body.videoId }));
     if (lastDateError) {
         return [, lastDateError];
     }
-    console.log('last_date = ', lastDate?.data);
+    logger.log('last_date = ', lastDate?.data);
 
-    const [data, error] = await getCommentsAsync({videoId:body.videoId, publishedAt: lastDate?.data?.toString() || '' });
-    console.log('recieved comments count = ', data?.items.length);
+    const [data, error] = await getCommentsAsync({videoId:body.videoId, publishedAt: lastDate?.data?.toString() || '' }, logger);
+    logger.log('recieved comments count = ', data?.items.length);
 
     if (data) {
         const comments = data.items.reverse();
@@ -36,7 +37,7 @@ export const scanCommentsAsync = async (body: IScanCommentsBody): IAsyncPromiseR
                             published_at_time: item.publishedAt,
                             id: item.commentId,
                             channel_id: item.channelId,
-                            text: item.text,
+                            text: (item.text || '').replace(/[\u0000]/g,''),
                             author_id: item.authorChannelId,
                             video_id: body.videoId
                             
@@ -45,6 +46,7 @@ export const scanCommentsAsync = async (body: IScanCommentsBody): IAsyncPromiseR
                 }),
             );
             if (apiError) {
+                logger.log('some error in forEach', apiError)
                 throw apiError;
             } 
         });
@@ -59,10 +61,19 @@ export const scanCommentsAsync = async (body: IScanCommentsBody): IAsyncPromiseR
             EX: 60
         });
 
-       
-        rabbitMQ_sendDataAsync<IScanAuthorsBody>(RABBIT_MQ_ENV, 'scanAuthorsAsync', {
-            videoId: body.videoId
+        const uniqueAuthorIds = getUniqueKeys(comments,'authorChannelId');
+        uniqueAuthorIds?.map(authorId => {
+            rabbitMQ_sendDataAsync<IScanChannelInfoBody>(
+                RABBIT_MQ_ENV,
+                'scanChannelInfoAsync',{
+                    channelId: authorId,
+                }, logger)
         })
+
+        // scan old authors only - for new no need, probadly need remove this in future.
+        // rabbitMQ_sendDataAsync<IScanAuthorsBody>(RABBIT_MQ_ENV, 'scanAuthorsAsync', {
+        //     videoId: body.videoId
+        // })
 
      
         return [`post to db comments ${comments.length}`];

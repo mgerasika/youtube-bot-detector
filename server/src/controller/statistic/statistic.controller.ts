@@ -4,6 +4,7 @@ import { allServices } from "../all-services";
 import { IApiKeyDto } from "@server/dto/api-key.dto";
 import { IStatistic, IStatisticInfo } from "./statistic.service";
 import { memoryCache } from "@common/utils/memory-cache";
+import { createLogger } from "@common/utils/create-logger.utils";
 
 interface IStatisticInfoRequest extends IExpressRequest {
 }
@@ -11,7 +12,8 @@ interface IStatisticInfoRequest extends IExpressRequest {
 interface IStatisticInfoResponse extends IExpressResponse<IStatisticInfo, void> {}
 
 app.get(API_URL.api.statistic.info.toString(), memoryCache(10), async (req: IStatisticInfoRequest, res: IStatisticInfoResponse) => {
-    const [data, error] = await allServices.statistic.getStatisticInfoAsync();
+    const logger = createLogger();
+    const [data, error] = await allServices.statistic.getStatisticInfoAsync(logger);
     if (error) {
         return res.status(400).send( error);
     }
@@ -28,7 +30,8 @@ interface IByVideoRequest extends IExpressRequest {
 interface IByVideoResponse extends IExpressResponse<IStatistic[], void> {}
 
 app.get(API_URL.api.statistic.byVideo.toString(), memoryCache(10), async (req: IByVideoRequest, res: IByVideoResponse) => {
-    const [data, error] = await allServices.statistic.getStatisticByVideoAsync(req.query.video_id);
+    const logger = createLogger();
+    const [data, error] = await allServices.statistic.getStatisticByVideoAsync(req.query.video_id || '', logger);
     if (error) {
         return res.status(400).send( error);
     }
@@ -44,7 +47,8 @@ interface IByChannelRequest extends IExpressRequest {
 
 interface IByChannelResponse extends IExpressResponse<IStatistic[], void> {}
 app.get(API_URL.api.statistic.byChannel.toString(),memoryCache(1*60), async (req: IByChannelRequest, res: IByChannelResponse) => {
-    const [data, error] = await allServices.statistic.getStatisticByChannelAsync(req.query.channel_id, req.query.channel_url);
+    const logger = createLogger();
+    const [data, error] = await allServices.statistic.getStatisticByChannelAsync(req.query.channel_id || '', logger);
     if (error) {
         return res.status(400).send( error);
     }

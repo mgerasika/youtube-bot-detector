@@ -2,6 +2,7 @@ import { API_URL } from "@server/api-url.constant";
 import { app, IExpressRequest, IExpressResponse } from "@server/express-app";
 import { allServices } from "../all-services";
 import { IApiKeyDto } from "@server/dto/api-key.dto";
+import { createLogger } from "@common/utils/create-logger.utils";
 
 
 interface IGetRequest extends IExpressRequest {
@@ -13,7 +14,8 @@ interface IGetRequest extends IExpressRequest {
 interface IGetResponse extends IExpressResponse<IApiKeyDto, void> {}
 
 app.get(API_URL.api.apiKey.active.toString(), async (req: IGetRequest, res: IGetResponse) => {
-    const [data, error] = await allServices.apiKey.getActiveApiKeyAsync(req.query.old_key as string);
+    const logger = createLogger();
+    const [data, error] = await allServices.apiKey.getActiveApiKeyAsync(req.query.old_key as string, logger);
     if (error) {
         return res.status(400).send( error);
     }
@@ -29,7 +31,8 @@ interface IPostRequest extends IExpressRequest {
 interface IPostResponse extends IExpressResponse<void, void> {}
 
 app.post(API_URL.api.apiKey.toString(), async (req: IPostRequest, res: IPostResponse) => {
-    const [, error] = await allServices.apiKey.postApiKey(req.body);
+    const logger = createLogger();
+    const [, error] = await allServices.apiKey.postApiKey(req.body, logger);
     if (error) {
         return res.status(400).send( error);
     }

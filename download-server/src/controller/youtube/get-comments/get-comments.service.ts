@@ -4,6 +4,7 @@ import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.int
 import { ICollection } from '@common/interfaces/collection';
 import { toQuery } from '@common/utils/to-query.util';
 import { getYoutube, processYoutubeErrorAsync } from '@server/youtube';
+import { ILogger } from '@common/utils/create-logger.utils';
 
 export interface IGetCommentsBody {
     videoId: string;
@@ -20,8 +21,8 @@ export interface IShortCommentInfo {
 }
 
 
-export const getCommentsAsync = async ({videoId, publishedAt}: IGetCommentsBody): IAsyncPromiseResult<ICollection<IShortCommentInfo>> => {
-    const [youtube, youtubeError] = await getYoutube();
+export const getCommentsAsync = async ({videoId, publishedAt}: IGetCommentsBody, logger: ILogger): IAsyncPromiseResult<ICollection<IShortCommentInfo>> => {
+    const [youtube, youtubeError] = await getYoutube(undefined, logger);
     if(!youtube || youtubeError) {
         return [, youtubeError];
     }
@@ -30,7 +31,7 @@ export const getCommentsAsync = async ({videoId, publishedAt}: IGetCommentsBody)
     let nextPageToken: string | null | undefined = '';
 
     const publishedAtDate = publishedAt ? new Date(publishedAt) : new Date(1970);
-    console.log('publishedAtDate', publishedAtDate, publishedAt)
+    logger.log('publishedAtDate', publishedAtDate, publishedAt)
     do {
         const [commentResponse, commentsError] = await toQuery(() => youtube.commentThreads.list({
             part: ['snippet', 'id', 'replies'],
@@ -45,7 +46,7 @@ export const getCommentsAsync = async ({videoId, publishedAt}: IGetCommentsBody)
         }
 
         if(commentsError) {
-           return await processYoutubeErrorAsync(commentsError as AxiosError);
+           return await processYoutubeErrorAsync(commentsError as AxiosError, logger);
         }
 
         if (commentResponse?.data.items) {
@@ -74,21 +75,19 @@ export const getCommentsAsync = async ({videoId, publishedAt}: IGetCommentsBody)
                 },
             ).flat();
 
-
-            //   allComments = allComments.concat(comments);
-            allComments = [...allComments, ...comments];
+               allComments = allComments.concat(comments);
         }
-        if (true || allComments.some(item => item.publishedAt > publishedAtDate)) {
+        if (allComments.some(item => item.publishedAt > publishedAtDate)) {
             nextPageToken = commentResponse?.data.nextPageToken;
         }
         else {
             nextPageToken = undefined;
         }
-        // allComments = allComments.filter(item => item.publishedAt > publishedAtDate);
+        allComments = allComments.filter(item => item.publishedAt > publishedAtDate);
 
     } while (nextPageToken);
 
-    console.log(`Total comments retrieved: ${allComments.length}`);
+    logger.log(`Total comments retrieved: ${allComments.length}`);
     return [{
         total: allComments.length,
         items: allComments

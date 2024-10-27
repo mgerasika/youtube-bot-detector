@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { IStatisticInfo } from '../api.generated';
 import { getReplyCommentElement } from './utils/get-reply-comment-element.util';
+import { getAuthorUrl } from './utils/get-authour-url.util';
 
 interface IProps {
   byVideo?: IStatisticInfo
@@ -11,6 +12,7 @@ interface IProps {
 export const Comment: React.FC<IProps> = ({ byVideo, byChannel, parentEl, onReplyClick }: IProps) => {
 
   const [flagsState, setFlagsState] = useState<IFlagsState>();
+  const authourUrl = useMemo(() => getAuthorUrl(parentEl),[])
 
   const handleParentClick = useCallback(() =>{
     setFlagsState(getFlagsState(parentEl))
@@ -35,7 +37,7 @@ export const Comment: React.FC<IProps> = ({ byVideo, byChannel, parentEl, onRepl
   useEffect(() =>{
     setFlagsState(getFlagsState(parentEl))
   },[parentEl]);
-  return <div className="botDiv">
+  return <div className="botDiv" id={authourUrl}>
     <div className='iconDiv'>
     {byChannel?.comment_count || '-'}/{byVideo?.comment_count || '-'}
 
