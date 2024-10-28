@@ -43,9 +43,9 @@ AND NOT EXISTS (
     }, logger);
 };
 
- const postCommentAsync = async (data: ICommentDto[], logger: ILogger) : IAsyncPromiseResult<ICommentDto[]> => {
+ const postCommentAsync = async (comments: ICommentDto[], logger: ILogger) : IAsyncPromiseResult<ICommentDto[]> => {
     return typeOrmAsync<CommentDto[]>(async (client) => {
-        return [await client.getRepository(CommentDto).save(data)];
+        return [await client.getRepository(CommentDto).save(comments)];
     }, logger);
 };
 

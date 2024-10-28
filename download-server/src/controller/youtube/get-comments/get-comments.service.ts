@@ -3,8 +3,8 @@ import { AxiosError } from 'axios';
 import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
 import { ICollection } from '@common/interfaces/collection';
 import { toQuery } from '@common/utils/to-query.util';
-import { getYoutube, processYoutubeErrorAsync } from '@server/youtube';
 import { ILogger } from '@common/utils/create-logger.utils';
+import { getYoutube, processYoutubeErrorAsync } from '@server/youtube';
 
 export interface IGetCommentsBody {
     videoId: string;

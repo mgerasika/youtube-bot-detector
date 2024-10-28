@@ -4,6 +4,9 @@ import { sqlAsync } from '@server/sql/sql-async.util';
 import { sql_escape } from '@server/sql/sql.util';
 import { typeOrmAsync } from '@server/sql/type-orm-async.util';
 import { ILogger } from '@common/utils/create-logger.utils';
+import { RABBIT_MQ_ENV } from '@server/env';
+import { IAddYoutubeKeyBody } from '@common/interfaces/scan.interface';
+import { rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
 
 const getActiveApiKeyAsync = async (old_key: string | undefined, logger: ILogger): IAsyncPromiseResult<IApiKeyDto> => {
     logger.log('OLD_KEY', old_key)
@@ -46,6 +49,19 @@ WHERE (expired < NOW() AND NOW() - expired > INTERVAL '60 minutes')
     return [, 'no valid api key ' ];
 };
 
+const addYoutubeKey = async (email: string, key: string, logger: ILogger): IAsyncPromiseResult<void> => {
+    rabbitMQ_sendDataAsync<IAddYoutubeKeyBody>(
+        RABBIT_MQ_ENV,
+        'addYoutubeKeyAsync',
+        {
+            email,
+            key,
+        },
+        logger,
+    );
+    return [,];
+};
+
 const postApiKey = async (data: IApiKeyDto, logger: ILogger): IAsyncPromiseResult<IApiKeyDto> => {
     return typeOrmAsync<ApiKeyDto>(async (client) => {
         return [await client.getRepository(ApiKeyDto).save(data)];
@@ -60,4 +76,5 @@ function getRandomElement(arr: IApiKeyDto[]) {
 export const apiKey = {
     getActiveApiKeyAsync,
     postApiKey,
+    addYoutubeKey
 };

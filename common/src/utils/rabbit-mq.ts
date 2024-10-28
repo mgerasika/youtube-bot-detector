@@ -1,7 +1,7 @@
 import amqp, { Channel, Connection, ConsumeMessage } from 'amqplib';
 import { IQueryReturn } from './to-query.util';
 import { IRabbitMqBody, IRabbitMqMessage } from '../interfaces/rabbit-mq-message.interface';
-import { connectToRedisAsync } from './redis';
+import { connectToRedisAsync , redis_setAsync} from './redis';
 import { IScan } from '@common/interfaces/scan.interface';
 import { ILogger } from './create-logger.utils';
 
@@ -122,11 +122,7 @@ export const rabbitMQ_sendDataAsync = async <T = any, >({ channelName, rabbit_mq
         const messageId = getRabbitMqMessageId(methodName, methodArgumentsJson);
         const exist = await redisClient.exists(messageId);
         if (!exist) {
-            const oneDay = 24*60*60;
-            const oneYear = 12*30*oneDay;
-            await redisClient.set(messageId, '', {
-                EX: oneYear
-            });
+            await redis_setAsync(redisClient, messageId);
 
             logger.log('Rabbit MQ Data send and add to Redis:', data);
             await _channel.sendToQueue(channelName, Buffer.from(JSON.stringify(data)));

@@ -40,7 +40,9 @@ app.get(API_URL.api.channel.id().toString(), async (req: IGetRequest, res: IGetR
     return res.send(data);
 });
 
-export interface IChannelPostBody extends IChannelDto{}
+export interface IChannelPostBody {
+    channels: IChannelDto[];
+}
 
 interface IPostRequest extends IExpressRequest {
     body: IChannelPostBody;
@@ -50,7 +52,7 @@ interface IPostResponse extends IExpressResponse<void, void> {}
 
 app.post(API_URL.api.channel.toString(), async (req: IPostRequest, res: IPostResponse) => {
     const logger = createLogger();
-    const [, error] = await allServices.channel.postChannelAsync(req.body, logger );
+    const [, error] = await allServices.channel.postChannelAsync(req.body.channels, logger );
     if (error) {
         return res.status(400).send( error);
     }

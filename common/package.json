@@ -28,8 +28,7 @@
         "memory-cache": "^0.2.0",
         "morgan": "^1.10.0",
         "react-create-url": "0.1.2",
-        "redis": "^4.7.0",
-        "swagger-to-typescript2": "^0.1.28"
+        "redis": "^4.7.0"
     },
     "devDependencies": {
         "@types/memory-cache": "^0.2.6",
@@ -53,7 +52,6 @@
         "nodemon": "^2.0.15",
         "prettier": "^2.8.7",
         "ts-node": "^10.9.2",
-        "typescript": "^5.6.3",
-        "typescript-to-swagger": "^0.1.30"
+        "typescript": "^5.6.3"
     }
 }

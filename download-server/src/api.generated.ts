@@ -32,19 +32,13 @@ export interface IChannelDto {
     id: string;
     published_at: Date;
     video_count: number;
-    viewCount: number;
+    view_count: number;
     subscriber_count: number;
     title: string;
     author_url: string;
 }
 export interface IChannelPostBody {
-    id: string;
-    published_at: Date;
-    video_count: number;
-    viewCount: number;
-    subscriber_count: number;
-    title: string;
-    author_url: string;
+    channels: IChannelDto[];
 }
 export interface ICommentDto {
     id: string;

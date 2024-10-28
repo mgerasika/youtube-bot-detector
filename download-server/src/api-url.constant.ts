@@ -5,6 +5,7 @@ interface IApiUrl {
     api: {
        
         scan: {
+            fix: IUrlItem;
             fullScanChannelInfo: IUrlItem;
             scanVideos: IUrlItem;
             scanComments: IUrlItem;
@@ -30,6 +31,7 @@ export const API_URL = createUrls<IApiUrl>({
     swagger: EMPTY_URL_ITEM,
     api: {
         scan: {
+            fix: EMPTY_URL_ITEM,
             fullScanChannelInfo: EMPTY_URL_ITEM,
             scanVideos: EMPTY_URL_ITEM,
             scanComments: EMPTY_URL_ITEM,

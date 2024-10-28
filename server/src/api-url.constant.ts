@@ -17,6 +17,7 @@ interface IApiUrl {
             };
             apiKey: {
                 active: IUrlItem,
+                addYoutubeKey: IUrlItem,
             };
 
             statistic: {
@@ -24,10 +25,9 @@ interface IApiUrl {
                 byVideo: IUrlItem,
                 byChannel: IUrlItem,
             };
-
+            fix: IUrlItem;
             scan: {
-                fix: IUrlItem;
-                addYoutubeKey: IUrlItem,
+                
                 byVideo: IUrlItem,
                 byChannel: IUrlItem,
             };
@@ -50,16 +50,17 @@ export const API_URL = createUrls<IApiUrl>({
                 id: (id?: string) => EMPTY_URL_ITEM,
             },
             apiKey: {
-                active: EMPTY_URL_ITEM,
+                active: EMPTY_URL_ITEM,  
+                addYoutubeKey: EMPTY_URL_ITEM,
             },
             statistic: {
                 info: EMPTY_URL_ITEM,
                 byVideo: EMPTY_URL_ITEM,
                 byChannel: EMPTY_URL_ITEM,
             },
+            fix: EMPTY_URL_ITEM,
             scan: {
-                fix: EMPTY_URL_ITEM,
-                addYoutubeKey: EMPTY_URL_ITEM,
+              
                 byVideo: EMPTY_URL_ITEM,
                 byChannel: EMPTY_URL_ITEM,
             },

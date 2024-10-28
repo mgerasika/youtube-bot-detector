@@ -3,6 +3,8 @@ import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.int
 import { toQuery } from '@common/utils/to-query.util';
 import { getYoutube, processYoutubeErrorAsync } from '@server/youtube';
 import { ILogger } from '@common/utils/create-logger.utils';
+import { groupArray } from '@common/utils/group-array.util';
+import { oneByOneAsync } from '@common/utils/one-by-one-async.util';
 
 export interface IGetChannelInfoBody {
     channelId: string;
@@ -21,50 +23,56 @@ export interface IChannelInfo {
     videoCount?: string;
 }
 
-export const getChannelInfoAsync = async (body: IGetChannelInfoBody, logger: ILogger): IAsyncPromiseResult<IChannelInfo | undefined> => {
+export const getChannelInfoAsync = async (
+    body: IGetChannelInfoBody,
+    logger: ILogger,
+): IAsyncPromiseResult<IChannelInfo[] | undefined> => {
     const [youtube, youtubeError] = await getYoutube(undefined, logger);
-    if(!youtube || youtubeError) {
+    if (!youtube || youtubeError) {
         return [, youtubeError];
     }
-    
-    // Search for the channel based on the custom name or username
-    const [response, responseError] = await toQuery(() => youtube.channels.list({
-        part: [
-            //  'auditDetails', DONT HAVE PERMISSION
-            // 'brandingSettings',
-            // 'contentDetails',
-            // 'contentOwnerDetails',
-            'id',
-            // 'localizations',
-            'snippet',
-            'statistics',
-            'status',
-            // 'topicDetails',
-        ],
-        id: [body.channelId || ''],
-    }));
+
+    const [response, responseError] = await toQuery(() =>
+        youtube.channels.list({
+            part: [
+                //  'auditDetails', DONT HAVE PERMISSION
+                // 'brandingSettings',
+                // 'contentDetails',
+                // 'contentOwnerDetails',
+                'id',
+                // 'localizations',
+                'snippet',
+                'statistics',
+                'status',
+                // 'topicDetails',
+            ],
+            id: body.channelId.includes(',') ? body.channelId.split(',') : [body.channelId || ''],
+        }),
+    );
 
     if (responseError) {
-       return await processYoutubeErrorAsync(responseError as AxiosError, logger);
+        return await processYoutubeErrorAsync(responseError as AxiosError, logger);
     }
 
     if (response?.data.items && response.data.items.length > 0) {
-        const channel = response.data.items[0];
-        return [{
-            title: channel.snippet?.title || '',
-            channelId: channel.id || '',
-            publishedAt: channel.snippet?.publishedAt || '',
-            authorUrl: channel.snippet?.customUrl || '',
-            viewCount: channel.statistics?.videoCount || undefined,
-            subscriberCount: channel.statistics?.subscriberCount || undefined,
-            hasHiddenSubscriberCount: channel.statistics?.hiddenSubscriberCount || undefined,
-            videoCount: channel.statistics?.videoCount || undefined,
-            photo: channel.snippet?.thumbnails?.medium?.url || undefined,
-        }];
+        const res = response.data.items.map((channel): IChannelInfo => {
+            return {
+                title: channel.snippet?.title || '',
+                channelId: channel.id || '',
+                publishedAt: channel.snippet?.publishedAt || '',
+                authorUrl: channel.snippet?.customUrl || '',
+                viewCount: channel.statistics?.videoCount || undefined,
+                subscriberCount: channel.statistics?.subscriberCount || undefined,
+                hasHiddenSubscriberCount: channel.statistics?.hiddenSubscriberCount || undefined,
+                videoCount: channel.statistics?.videoCount || undefined,
+                photo: channel.snippet?.thumbnails?.medium?.url || undefined,
+            };
+        });
+        return [res];
     } else {
-        logger.log('No channel found for the provided name');
+        logger.log('No channel found for the provided name, probadly deleted');
         // implement this https://www.youtube.com/channel/UC-gIX2RdnTumzuxmMWPo0uw
     }
 
-    return [undefined]
-}
+    return [,];
+};

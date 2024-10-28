@@ -22,8 +22,8 @@ export interface IScanVideoInfoBody {
     videoId: string;
 }
 
-export interface IScanAuthorsBody {
-    videoId?: string;
+export interface IFixBoxy {
+    authorIds?: string[];
 }
 export interface IAddYoutubeKeyBody {
     email:string;
@@ -36,6 +36,6 @@ export interface IScan {
     scanVideosAsync: (body: IScanVideosBody, logger: ILogger) => IAsyncPromiseResult<string>;
     scanCommentsAsync : (body: IScanCommentsBody, logger: ILogger) => IAsyncPromiseResult<string>;
     scanVideoInfoAsync : (body: IScanVideoInfoBody, logger: ILogger) => IAsyncPromiseResult<string>;
-    scanAuthorsAsync: (body: IScanAuthorsBody, logger: ILogger) => IAsyncPromiseResult<string>;
     addYoutubeKeyAsync: (body: IAddYoutubeKeyBody, logger: ILogger) => IAsyncPromiseResult<string>;
+    fixAsync: (body: IFixBoxy, logger: ILogger) => IAsyncPromiseResult<string>;
 };

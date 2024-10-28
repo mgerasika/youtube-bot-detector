@@ -38,3 +38,21 @@ app.post(API_URL.api.apiKey.toString(), async (req: IPostRequest, res: IPostResp
     }
     return res.send();
 });
+
+
+interface IAddYoutubeKeyRequest extends IExpressRequest {
+    body: {
+        email: string;
+        key: string;
+    }
+}
+
+interface IAddYoutubeKeyResponse extends IExpressResponse<void, void> {}
+app.post(API_URL.api.apiKey.addYoutubeKey.toString(), async (req: IAddYoutubeKeyRequest, res: IAddYoutubeKeyResponse) => {
+    const logger = createLogger();
+    const [data, error] = await allServices.apiKey.addYoutubeKey(req.body.email, req.body.key, logger);
+    if (error) {
+        return res.status(400).send( error);
+    }
+    return res.send(data);
+});

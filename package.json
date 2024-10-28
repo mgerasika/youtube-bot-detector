@@ -15,5 +15,9 @@
   },
   "devDependencies": {
     "concurrently": "^8.0.1"
+  },
+  "dependencies": {
+    "swagger-to-typescript2": "^0.1.28",
+    "typescript-to-swagger": "^0.1.31"
   }
 }

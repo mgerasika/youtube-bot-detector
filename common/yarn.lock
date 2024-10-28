@@ -4753,11 +4753,6 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.npmjs.org/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
-swagger-to-typescript2@^0.1.28:
-  version "0.1.28"
-  resolved "https://registry.yarnpkg.com/swagger-to-typescript2/-/swagger-to-typescript2-0.1.28.tgz#fc7063fa8374a819b009f93c6aced14bff0076c8"
-  integrity sha512-jE8Ifg0cesMMkQj/G0FmUzBKuVe/GemsqMHER5w6z4Io78OP/WqIr+UBU5vp7GSD+wkV/ToDqQbX4pC7U9SyFQ==
-
 table@^6.0.9:
   version "6.8.1"
   resolved "https://registry.npmjs.org/table/-/table-6.8.1.tgz"
@@ -4906,11 +4901,6 @@ typed-array-length@^1.0.4:
     call-bind "^1.0.2"
     for-each "^0.3.3"
     is-typed-array "^1.1.9"
-
-typescript-to-swagger@^0.1.30:
-  version "0.1.30"
-  resolved "https://registry.npmjs.org/typescript-to-swagger/-/typescript-to-swagger-0.1.30.tgz"
-  integrity sha512-abp+Zg4EHS7aM0qP94ZIaPAoDzF88NnTFVXKnPbBr+1aG3UWBPit11kie9QlbdMOOffOXEsifYZ8xCfEt/mGUg==
 
 typescript@^5.6.3:
   version "5.6.3"

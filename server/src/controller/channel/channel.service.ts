@@ -24,13 +24,11 @@ import { ILogger } from "@common/utils/create-logger.utils";
 };
 
 
- const postChannelAsync = async (data: Omit<IChannelDto, 'id' >, logger: ILogger) : IAsyncPromiseResult<IChannelDto> => {
-    return typeOrmAsync<ChannelDto>(async (client) => {
-        return [await client.getRepository(ChannelDto).save(data)];
+ const postChannelAsync = async (channels: IChannelDto[], logger: ILogger) : IAsyncPromiseResult<IChannelDto[]> => {
+    return typeOrmAsync<ChannelDto[]>(async (client) => {
+        return [await client.getRepository(ChannelDto).save(channels)];
     }, logger);
 };
-
-
 
 export const channel = {
     getChannelListAllAsync,

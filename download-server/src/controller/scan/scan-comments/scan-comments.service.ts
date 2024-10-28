@@ -6,10 +6,11 @@ import { groupArray } from '@common/utils/group-array.util';
 import { oneByOneAsync } from '@common/utils/one-by-one-async.util';
 import { toQuery } from '@common/utils/to-query.util';
 import { getCommentsAsync } from '@server/controller/youtube/get-comments/get-comments.service';
-import { IScanCommentsBody, IScanAuthorsBody, IScanChannelInfoBody } from '@common/interfaces/scan.interface';
-import { connectToRedisAsync } from '@common/utils/redis';
+import { IScanCommentsBody, IFixBoxy, IScanChannelInfoBody } from '@common/interfaces/scan.interface';
+import { connectToRedisAsync, redis_setAsync } from '@common/utils/redis';
 import { getUniqueKeys } from '@common/utils/get-unique-keys.util';
 import { createLogger, ILogger } from '@common/utils/create-logger.utils';
+import { allServices } from '@server/controller/all-services';
 
 // scan all comments by videoId
 // possible to use lastDate, but problem with reply comments
@@ -21,22 +22,48 @@ export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger
     }
     logger.log('last_date = ', lastDate?.data);
 
-    const [data, error] = await getCommentsAsync({ videoId: body.videoId, publishedAt: lastDate?.data?.toString() || '' }, logger);
+    const [data, error] = await allServices.youtube.getCommentsAsync(
+        { videoId: body.videoId, publishedAt: lastDate?.data?.toString() || '' },
+        logger,
+    );
     logger.log('recieved comments count = ', data?.items.length);
 
     if (data) {
         const comments = data.items.reverse();
 
+        // start submit authors
         const uniqueAuthorIds = getUniqueKeys(comments, 'authorChannelId');
-
+        const redis = await connectToRedisAsync(ENV.redis_url, logger);
+        const missedAuthorsIds: string[] = [];
         await oneByOneAsync(uniqueAuthorIds, async (authorId) => {
-            await rabbitMQ_sendDataAsync<IScanChannelInfoBody>(
-                RABBIT_MQ_ENV,
-                'scanChannelInfoAsync', {
-                channelId: authorId,
-            }, logger)
-        })
+            const messageId = getRabbitMqMessageId<IScanChannelInfoBody>('scanChannelInfoAsync', { channelId: authorId });
+            const available = await redis.exists(messageId);
+            if (!available) {
+                missedAuthorsIds.push(authorId);
+            }
+        });
 
+        if (missedAuthorsIds.length) {
+            const groups = groupArray(missedAuthorsIds, 50);
+            await oneByOneAsync(groups, async (group) => {
+                await rabbitMQ_sendDataAsync<IScanChannelInfoBody>(
+                    RABBIT_MQ_ENV,
+                    'scanChannelInfoAsync',
+                    {
+                        channelId: group.join(','),
+                    },
+                    logger,
+                );
+
+                await oneByOneAsync(group, async (missedAuthorId) => {
+                    const messageId = getRabbitMqMessageId<IScanChannelInfoBody>('scanChannelInfoAsync', { channelId: missedAuthorId });
+                    await redis_setAsync(redis, messageId);
+                })
+            });
+
+            
+        }
+        // end submit authors
 
         const groupedComments = groupArray(comments, 100);
         await oneByOneAsync(groupedComments, async (group) => {
@@ -50,35 +77,28 @@ export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger
                             channel_id: item.channelId,
                             text: (item.text || '').replace(/[\u0000]/g, ''),
                             author_id: item.authorChannelId,
-                            video_id: body.videoId
-
+                            video_id: body.videoId,
                         };
                     }),
                 }),
             );
             if (apiError) {
-                logger.log('some error in forEach', apiError)
+                logger.log('some error in forEach', apiError);
                 throw apiError;
             }
         });
 
-
         // remove comments from redis cache
         const redisClient = await connectToRedisAsync(ENV.redis_url, logger);
         const messageId = getRabbitMqMessageId<IScanCommentsBody>('scanCommentsAsync', {
-            videoId: body.videoId
+            videoId: body.videoId,
         });
         await redisClient.set(messageId, '', {
-            EX: 60
+            EX: 60,
         });
-
 
         return [`post to db comments ${comments.length}`];
     }
 
     return [, error];
 };
-
-
-
-

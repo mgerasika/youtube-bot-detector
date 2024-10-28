@@ -51,8 +51,7 @@
         "nodemon": "^2.0.15",
         "prettier": "^2.8.7",
         "ts-node": "^10.9.1",
-        "typescript": "^5.0.4",
-        "typescript-to-swagger": "^0.1.31"
+        "typescript": "^5.0.4"
     },
     "private": true
 }

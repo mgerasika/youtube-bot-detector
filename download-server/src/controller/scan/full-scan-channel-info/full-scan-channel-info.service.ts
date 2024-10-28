@@ -9,31 +9,39 @@ import { allServices } from '@server/controller/all-services';
 import { ILogger } from '@common/utils/create-logger.utils';
 
 // 1. scan channel by id. start rabbit mq queue with scanVideosByChannelId
-export const fullScanChannelInfoAsync = async (body: IFullScanChannelInfoBody,logger: ILogger): IAsyncPromiseResult<string> => {
-    const [data,error] = await allServices.youtube.getChannelInfoAsync({channelId: body.channelId}, logger);
+export const fullScanChannelInfoAsync = async (
+    body: IFullScanChannelInfoBody,
+    logger: ILogger,
+): IAsyncPromiseResult<string> => {
+    const [data, error] = await allServices.youtube.getChannelInfoAsync({ channelId: body.channelId }, logger);
 
     if (data) {
-        const [success, apiError] = await toQuery(() =>
-            api.channelPost({
-                published_at: new Date(data.publishedAt),
-                id: data.channelId,
-                title: data.title,
-                author_url: data.authorUrl || '',
-                subscriber_count: +(data.subscriberCount || 0),
-                video_count: +(data.videoCount || 0),
-                viewCount: +(data.viewCount || 0),
-            }),
-        );
-        if(apiError) {
-            return [, apiError]
+        const channels = data.map((channel) => {
+            return {
+                published_at: new Date(channel.publishedAt),
+                id: channel.channelId,
+                title: channel.title,
+                author_url: channel.authorUrl || '',
+                subscriber_count: +(channel.subscriberCount || 0),
+                video_count: +(channel.videoCount || 0),
+                view_count: +(channel.viewCount || 0),
+            };
+        });
+        const [success, apiError] = await toQuery(() => api.channelPost({ channels }));
+        if (apiError) {
+            return [, apiError];
         }
-        if(success) {
-            
-            rabbitMQ_sendDataAsync<IScanVideosBody>(RABBIT_MQ_ENV, 'scanVideosAsync',{
-                channelId: body.channelId
-            }, logger)
+        if (success) {
+            rabbitMQ_sendDataAsync<IScanVideosBody>(
+                RABBIT_MQ_ENV,
+                'scanVideosAsync',
+                {
+                    channelId: body.channelId,
+                },
+                logger,
+            );
         }
     }
 
-    return [,error];
+    return [, error];
 };
