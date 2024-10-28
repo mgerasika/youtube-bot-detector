@@ -6,8 +6,8 @@ import { rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
 import { getVideosAsync } from '@server/controller/youtube/get-videos/get-videos.service';
 import { api } from '@server/api.generated';
 import { RABBIT_MQ_ENV } from '@server/env';
-import { IScanCommentsBody, IScanVideosBody } from '@common/interfaces/scan.interface';
 import { createLogger, ILogger } from '@common/utils/create-logger.utils';
+import { IScanVideosBody, IScanCommentsBody } from '@common/model';
 
 // scan all videos by channel id. Need to use Date cache
 export const scanVideosAsync = async (body: IScanVideosBody, logger: ILogger): IAsyncPromiseResult<string> => {

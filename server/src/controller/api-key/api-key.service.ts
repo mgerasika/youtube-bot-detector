@@ -5,8 +5,8 @@ import { sql_escape } from '@server/sql/sql.util';
 import { typeOrmAsync } from '@server/sql/type-orm-async.util';
 import { ILogger } from '@common/utils/create-logger.utils';
 import { RABBIT_MQ_ENV } from '@server/env';
-import { IAddYoutubeKeyBody } from '@common/interfaces/scan.interface';
 import { rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
+import { IAddYoutubeKeyBody } from '@common/model';
 
 const getActiveApiKeyAsync = async (old_key: string | undefined, logger: ILogger): IAsyncPromiseResult<IApiKeyDto> => {
     logger.log('OLD_KEY', old_key)

@@ -3,7 +3,6 @@ import { createUrls, EMPTY_URL_ITEM, IUrlItem } from 'react-create-url';
 interface IApiUrl {
     swagger: IUrlItem;
     api: {
-       
         scan: {
             fix: IUrlItem;
             fullScanChannelInfo: IUrlItem;

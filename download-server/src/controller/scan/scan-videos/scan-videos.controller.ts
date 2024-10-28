@@ -1,9 +1,9 @@
 import { IExpressRequest, IExpressResponse, app } from '@server/express-app';
 import { scanVideosAsync } from './scan-videos.service';
 import { API_URL } from '@server/api-url.constant';
-import { IScanVideosBody } from '@common/interfaces/scan.interface';
 import { allServices } from '@server/controller/all-services';
 import { createLogger } from '@common/utils/create-logger.utils';
+import { IScanVideosBody } from '@common/model';
 
 interface IRequest extends IExpressRequest {
     body: IScanVideosBody;

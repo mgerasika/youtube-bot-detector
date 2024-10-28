@@ -37,12 +37,12 @@ export class CommentDto implements ICommentDto {
     // Specify the foreign key column name for the relationship
     @ManyToOne(() => VideoDto, (video) => video.commentsDto, { nullable: false })
     @JoinColumn({ name: 'video_id', foreignKeyConstraintName: 'fk_video_id_constrain' }) // Specify the column name
-    videoDto: VideoDto | undefined;
+    videoDto?: VideoDto;
 
     // Specify the foreign key column name for the relationship
     @ManyToOne(() => ChannelDto, (channel) => channel.commentsDto, { nullable: false })
     @JoinColumn({ name: 'author_id' ,foreignKeyConstraintName: 'fk_author_id_constrain'}) // Specify the column name
-    authorDto: ChannelDto | undefined;
+    authorDto?: ChannelDto ;
 
     constructor(id: string) {
         this.id = id;

@@ -7,7 +7,7 @@ export const useGetStatisticByChannel = (channelId: string) => {
     return useQuery<IStatisticInfo[]>({
         queryKey: `statistic-by-channel-${channelId}`,
         refetchInterval: 30 * 1000,
-        queryFn: () => axios.get(`${ENV.api_server_url}api/statistic/by-channel?channel_id=${channelId}`).then(response => {
+        queryFn: () => axios.get(`${ENV.api_server_url}/api/statistic/by-channel?channel_id=${channelId}`).then(response => {
             return response.data;
 
         })

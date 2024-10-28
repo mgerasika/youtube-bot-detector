@@ -1,34 +1,6 @@
 import { ILogger } from "@common/utils/create-logger.utils";
 import { IAsyncPromiseResult } from "./async-promise-result.interface";
-
-export interface IFullScanChannelInfoBody {
-    channelId: string;
-}
-
-export interface IScanChannelInfoBody {
-    channelId: string;
-}
-
-export interface IScanVideosBody {
-    channelId: string;
-}
-
-
-export interface IScanCommentsBody {
-    videoId: string;
-}
-
-export interface IScanVideoInfoBody {
-    videoId: string;
-}
-
-export interface IFixBoxy {
-    authorIds?: string[];
-}
-export interface IAddYoutubeKeyBody {
-    email:string;
-    key:string;
-}
+import { IFullScanChannelInfoBody, IScanChannelInfoBody, IScanVideosBody, IScanCommentsBody, IScanVideoInfoBody, IAddYoutubeKeyBody, IFixBoxy } from "@common/model";
 
 export interface IScan {
     fullScanChannelInfoAsync:(body: IFullScanChannelInfoBody, logger: ILogger) => IAsyncPromiseResult<string>;

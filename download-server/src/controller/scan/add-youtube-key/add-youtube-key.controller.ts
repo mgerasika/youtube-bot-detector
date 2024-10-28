@@ -1,8 +1,8 @@
 import { IExpressRequest, IExpressResponse, app } from '@server/express-app';
 import { addYoutubeKeyAsync } from './add-youtube-key.service';
 import { API_URL } from '@server/api-url.constant';
-import { IAddYoutubeKeyBody, IScanVideosBody } from '@common/interfaces/scan.interface';
 import { createLogger } from '@common/utils/create-logger.utils';
+import { IAddYoutubeKeyBody } from '@common/model';
 
 interface IRequest extends IExpressRequest {
     body: IAddYoutubeKeyBody;

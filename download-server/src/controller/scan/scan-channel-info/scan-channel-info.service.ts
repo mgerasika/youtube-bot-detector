@@ -1,12 +1,12 @@
 import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
 import { api } from '@server/api.generated';
 import { toQuery } from '@common/utils/to-query.util';
-import { IScanChannelInfoBody } from '@common/interfaces/scan.interface';
 import { allServices } from '@server/controller/all-services';
 import { ILogger } from '@common/utils/create-logger.utils';
 import { connectToRedisAsync, redis_setAsync } from '@common/utils/redis';
 import { ENV } from '@server/env';
 import { getRabbitMqMessageId } from '@common/utils/rabbit-mq';
+import { IScanChannelInfoBody } from '@common/model';
 
 // redis expiration should be max value (several years I think)
 export const scanChannelInfoAsync = async (body: IScanChannelInfoBody, logger: ILogger): IAsyncPromiseResult<string> => {

@@ -43,11 +43,11 @@ export class ChannelDto implements IChannelDto {
 
     // One Channel can have many Videos
     @OneToMany(() => VideoDto, (video) => video.channelDto)
-    videosDto: VideoDto[] | undefined;
+    videosDto?: VideoDto[] ;
 
     // One Channel can have many Comments
     @OneToMany(() => CommentDto, (comment) => comment.authorDto)
-    commentsDto: CommentDto[] | undefined;
+    commentsDto?: CommentDto[] ;
 
     constructor(id: string) {
         this.id = id;

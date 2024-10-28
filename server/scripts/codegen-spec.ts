@@ -3,10 +3,10 @@ const path = require('path');
 import prettier from 'prettier';
 import { generateSpecAsync, getSpecInfoAsync } from 'typescript-to-swagger';
 
-getSpecInfoAsync({ dir: ['./src/controller', './src/enum', './src/dto', './src/interfaces'] }).then((res) => {
+getSpecInfoAsync({ dir: ['./src/controller', './src/enum', './src/dto', './src/interfaces', '../common/src/model'] }).then((res) => {
 });
 
-generateSpecAsync({ dir: ['./src/controller', './src/enum', './src/dto', './src/interfaces'] }).then((res) => {
+generateSpecAsync({ dir: ['./src/controller', './src/enum', './src/dto', './src/interfaces', '../common/src/model'] }).then((res) => {
     const spec = JSON.stringify(
         {
             openapi: '3.0.1',

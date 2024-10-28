@@ -31,11 +31,11 @@ export class VideoDto implements IVideoDto {
     // Specify the foreign key column name for the relationship
     @ManyToOne(() => ChannelDto, (channel) => channel.videosDto, { nullable: false })
     @JoinColumn({ name: 'channel_id', foreignKeyConstraintName: 'fk_channel_id_constrain' }) // Specify the column name
-    channelDto: ChannelDto | undefined;
+    channelDto?: ChannelDto ;
     
     // One Video can have many Comments
     @OneToMany(() => CommentDto, (comment) => comment.videoDto)
-    commentsDto: CommentDto[] | undefined;
+    commentsDto?: CommentDto[];
     
 
     constructor(id: string) {

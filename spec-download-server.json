@@ -5,18 +5,32 @@
     "description": "download-server",
     "version": "0.0.1"
   },
+  "tags": [
+    {
+      "name": "scan",
+      "description": "scan"
+    },
+    {
+      "name": "youtube",
+      "description": "youtube"
+    }
+  ],
   "paths": {
-    "api/scan/scan-authors/": {
+    "/api/scan/add-youtube-key": {
       "post": {
+        "tags": [
+          "scan"
+        ],
+        "summary": "post add-youtube-key add-youtube-key.controller.ts",
+        "description": "post add-youtube-key add-youtube-key.controller.ts",
         "operationId": "",
-        "summary": "",
         "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/IScanAuthorsBody"
+                "$ref": "#/components/schemas/IAddYoutubeKeyBody"
               }
             }
           }
@@ -34,10 +48,46 @@
         }
       }
     },
-    "api/scan/scan-channel-info/": {
+    "/api/scan/fix": {
       "post": {
+        "tags": [
+          "scan"
+        ],
+        "summary": "post fix fix.controller.ts",
+        "description": "post fix fix.controller.ts",
         "operationId": "",
-        "summary": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IFixBoxy"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/scan/full-scan-channel-info": {
+      "post": {
+        "tags": [
+          "scan"
+        ],
+        "summary": "post full-scan-channel-info full-scan-channel-info.controller.ts",
+        "description": "post full-scan-channel-info full-scan-channel-info.controller.ts",
+        "operationId": "",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -62,10 +112,46 @@
         }
       }
     },
-    "api/scan/scan-comments/": {
+    "/api/scan/scan-channel-info": {
       "post": {
+        "tags": [
+          "scan"
+        ],
+        "summary": "post scan-channel-info scan-channel-info.controller.ts",
+        "description": "post scan-channel-info scan-channel-info.controller.ts",
         "operationId": "",
-        "summary": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IScanChannelInfoBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/scan/scan-comments": {
+      "post": {
+        "tags": [
+          "scan"
+        ],
+        "summary": "post scan-comments scan-comments.controller.ts",
+        "description": "post scan-comments scan-comments.controller.ts",
+        "operationId": "",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -90,10 +176,46 @@
         }
       }
     },
-    "api/scan/scan-videos/": {
+    "/api/scan/scan-video-info": {
       "post": {
+        "tags": [
+          "scan"
+        ],
+        "summary": "post scan-video-info scan-video-info.controller.ts",
+        "description": "post scan-video-info scan-video-info.controller.ts",
         "operationId": "",
-        "summary": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IScanVideoInfoBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/scan/scan-videos": {
+      "post": {
+        "tags": [
+          "scan"
+        ],
+        "summary": "post scan-videos scan-videos.controller.ts",
+        "description": "post scan-videos scan-videos.controller.ts",
+        "operationId": "",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -118,10 +240,14 @@
         }
       }
     },
-    "api/youtube/get-channel-id/": {
+    "/api/youtube/get-channel-id": {
       "post": {
+        "tags": [
+          "youtube"
+        ],
+        "summary": "post get-channel-id get-channel-id.controller.ts",
+        "description": "post get-channel-id get-channel-id.controller.ts",
         "operationId": "",
-        "summary": "",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -146,10 +272,14 @@
         }
       }
     },
-    "api/youtube/get-channel-info/": {
+    "/api/youtube/get-channel-info": {
       "post": {
+        "tags": [
+          "youtube"
+        ],
+        "summary": "post get-channel-info get-channel-info.controller.ts",
+        "description": "post get-channel-info get-channel-info.controller.ts",
         "operationId": "",
-        "summary": "",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -174,10 +304,14 @@
         }
       }
     },
-    "api/youtube/get-comments/": {
+    "/api/youtube/get-comments": {
       "post": {
+        "tags": [
+          "youtube"
+        ],
+        "summary": "post get-comments get-comments.controller.ts",
+        "description": "post get-comments get-comments.controller.ts",
         "operationId": "",
-        "summary": "",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -202,10 +336,78 @@
         }
       }
     },
-    "api/youtube/get-videos/": {
+    "/api/youtube/get-short-channel-info": {
       "post": {
+        "tags": [
+          "youtube"
+        ],
+        "summary": "post get-short-channel-info get-short-channel-info.controller.ts",
+        "description": "post get-short-channel-info get-short-channel-info.controller.ts",
         "operationId": "",
-        "summary": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IGetShortChannelInfoBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/youtube/get-video-info": {
+      "post": {
+        "tags": [
+          "youtube"
+        ],
+        "summary": "post get-video-info get-video-info.controller.ts",
+        "description": "post get-video-info get-video-info.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IGetVideoInfoBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/youtube/get-videos": {
+      "post": {
+        "tags": [
+          "youtube"
+        ],
+        "summary": "post get-videos get-videos.controller.ts",
+        "description": "post get-videos get-videos.controller.ts",
+        "operationId": "",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -233,34 +435,53 @@
   },
   "components": {
     "schemas": {
-      "IScanAuthorsBody": {
+      "IAddYoutubeKeyBody": {
+        "type": "object",
+        "required": [
+          "email",
+          "key"
+        ],
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          }
+        }
+      },
+      "IFixBoxy": {
         "type": "object",
         "required": [],
         "properties": {
-          "videoId": {
-            "type": "string"
-          },
-          "channelId": {
-            "type": "string"
+          "authorIds": {
+            "type": "string[]"
           }
         }
       },
       "IScanChannelInfoBody": {
         "type": "object",
         "required": [
-          "channelId",
-          "scan_videos"
+          "channelId"
         ],
         "properties": {
           "channelId": {
             "type": "string"
-          },
-          "scan_videos": {
-            "type": "boolean"
           }
         }
       },
       "IScanCommentsBody": {
+        "type": "object",
+        "required": [
+          "videoId"
+        ],
+        "properties": {
+          "videoId": {
+            "type": "string"
+          }
+        }
+      },
+      "IScanVideoInfoBody": {
         "type": "object",
         "required": [
           "videoId"
@@ -315,6 +536,28 @@
             "type": "string"
           },
           "publishedAt": {
+            "type": "string"
+          }
+        }
+      },
+      "IGetShortChannelInfoBody": {
+        "type": "object",
+        "required": [
+          "channelId"
+        ],
+        "properties": {
+          "channelId": {
+            "type": "string"
+          }
+        }
+      },
+      "IGetVideoInfoBody": {
+        "type": "object",
+        "required": [
+          "videoId"
+        ],
+        "properties": {
+          "videoId": {
             "type": "string"
           }
         }

@@ -6,11 +6,11 @@ import { groupArray } from '@common/utils/group-array.util';
 import { oneByOneAsync } from '@common/utils/one-by-one-async.util';
 import { toQuery } from '@common/utils/to-query.util';
 import { getCommentsAsync } from '@server/controller/youtube/get-comments/get-comments.service';
-import { IScanCommentsBody, IFixBoxy, IScanChannelInfoBody } from '@common/interfaces/scan.interface';
-import { connectToRedisAsync, redis_setAsync } from '@common/utils/redis';
 import { getUniqueKeys } from '@common/utils/get-unique-keys.util';
 import { createLogger, ILogger } from '@common/utils/create-logger.utils';
 import { allServices } from '@server/controller/all-services';
+import { IScanCommentsBody, IScanChannelInfoBody } from '@common/model';
+import { connectToRedisAsync, redis_setAsync } from '@common/utils/redis';
 
 // scan all comments by videoId
 // possible to use lastDate, but problem with reply comments

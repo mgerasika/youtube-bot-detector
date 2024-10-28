@@ -1,19 +1,12 @@
 import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
-import { nameOf } from '@common/utils/name-of';
 import { rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
-import { ENV, RABBIT_MQ_ENV } from '@server/env';
+import { RABBIT_MQ_ENV } from '@server/env';
 import { allServices } from '../all-services';
-import {
-    IAddYoutubeKeyBody,
-    IFixBoxy,
-    IScan,
-    IScanChannelInfoBody,
-    IScanCommentsBody,
-    IScanVideoInfoBody,
-} from '@common/interfaces/scan.interface';
+
 import { ILogger } from '@common/utils/create-logger.utils';
 import { groupArray } from '@common/utils/group-array.util';
 import { oneByOneAsync } from '@common/utils/one-by-one-async.util';
+import { IFixBoxy } from '@common/model';
 
 
 export const fixAsync = async (logger: ILogger): IAsyncPromiseResult<string> => {

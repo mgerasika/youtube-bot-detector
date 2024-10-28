@@ -5,7 +5,7 @@ export interface IApiKeyDto {
 
     youtube_key: string;
 
-    expired: Date;
+    expired?: Date;
    
 }
 

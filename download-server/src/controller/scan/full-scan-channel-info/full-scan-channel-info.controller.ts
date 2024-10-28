@@ -2,8 +2,8 @@ import { IExpressRequest, IExpressResponse, app } from '@server/express-app';
 
 import { allServices } from '@server/controller/all-services';
 import { API_URL } from '@server/api-url.constant';
-import { IScanChannelInfoBody } from '@common/interfaces/scan.interface';
 import { createLogger } from '@common/utils/create-logger.utils';
+import { IScanChannelInfoBody } from '@common/model';
 
 interface IRequest extends IExpressRequest {
     body: IScanChannelInfoBody;

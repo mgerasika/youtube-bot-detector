@@ -216,10 +216,10 @@ supports-color@^8.1.1:
   dependencies:
     has-flag "^4.0.0"
 
-swagger-to-typescript2@^0.1.29:
-  version "0.1.29"
-  resolved "https://registry.yarnpkg.com/swagger-to-typescript2/-/swagger-to-typescript2-0.1.29.tgz#827e5fef99e4f091665ac0368dc8dee6d98ad37e"
-  integrity sha512-P1X07gUpHnAe/ZpqypglptjjwmviQRF+tOmN0b20wv2gBzAXmPmnrGkoF66WxopN3KcyZ3UGex0dtYPBvzhvTg==
+swagger-to-typescript2@^0.1.30:
+  version "0.1.30"
+  resolved "https://registry.yarnpkg.com/swagger-to-typescript2/-/swagger-to-typescript2-0.1.30.tgz#a37cfd487bfaf2857b7aec3f121d45daef09f3ae"
+  integrity sha512-P3lA0I3K4zf/7AmDaku8e6EonbXULWev6hXUtMwZHXeaafWi6LKdI0ks9GE567ES5eSvJzkeQvbarKjp0L6NIA==
 
 tree-kill@^1.2.2:
   version "1.2.2"
@@ -231,10 +231,10 @@ tslib@^2.1.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.8.0.tgz#d124c86c3c05a40a91e6fdea4021bd31d377971b"
   integrity sha512-jWVzBLplnCmoaTr13V9dYbiQ99wvZRd0vNWaDRg+aVYRcjDF3nDksxFDE/+fkXnKhpnUUkmx5pK/v8mCtLVqZA==
 
-typescript-to-swagger@^0.1.31:
-  version "0.1.31"
-  resolved "https://registry.yarnpkg.com/typescript-to-swagger/-/typescript-to-swagger-0.1.31.tgz#78a26fc030e0d92ebd8923007a59569cb17ac084"
-  integrity sha512-cDLQIWQDaWJ0qaM9rSpnkndTrdWWJdE1CqGEhVg7QKCeXbSAjAsx/2X2k4E75daHGvmggWhCQKK5wk6nIahEqA==
+typescript-to-swagger@^0.1.37:
+  version "0.1.37"
+  resolved "https://registry.yarnpkg.com/typescript-to-swagger/-/typescript-to-swagger-0.1.37.tgz#918a6dad9b5f6024d20c56dc15686cabfb424814"
+  integrity sha512-poXyy+oYHlvRZrS5I80h07dYrSrFaBthqhjyavvvMKYKMrOOdZjbwO9ZEKCOlHg2KotxqOyTuvodWikN5A7GpQ==
 
 wrap-ansi@^7.0.0:
   version "7.0.0"

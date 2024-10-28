@@ -1,11 +1,11 @@
 import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
 import { toQuery } from '@common/utils/to-query.util';
 import { api } from '@server/api.generated';
-import { IAddYoutubeKeyBody } from '@common/interfaces/scan.interface';
 import { processYoutubeErrorAsync } from '@server/youtube';
 import { AxiosError } from 'axios';
 import { google } from 'googleapis';
 import { ILogger } from '@common/utils/create-logger.utils';
+import { IAddYoutubeKeyBody } from '@common/model';
 
 export const addYoutubeKeyAsync = async (body: IAddYoutubeKeyBody, logger: ILogger): IAsyncPromiseResult< string> => {
     try {
