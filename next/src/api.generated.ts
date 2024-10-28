@@ -65,6 +65,7 @@ export interface IStatisticInfo {
 	'youtube_accounts_count': number;
 }
 export interface IStatistic {
+	'comment_frequency': number;
 	'comment_count': number;
 	'author_id': string;
 	'author_url': string;
@@ -117,6 +118,8 @@ export type TStatisticByVideoGetError = ''
 	 |'undefined';
 export type TStatisticByChannelGetError = ''
 	 |'undefined';
+export type TStatisticByChannelAndVideoGetError = ''
+	 |'undefined';
 export type TVideoLastDateGetError = ''
 	 |'undefined';
 export type TVideoGetError = ''
@@ -144,6 +147,7 @@ export type TPartialErrorCodes =
 	 | TStatisticInfoGetError
 	 | TStatisticByVideoGetError
 	 | TStatisticByChannelGetError
+	 | TStatisticByChannelAndVideoGetError
 	 | TVideoLastDateGetError
 	 | TVideoGetError
 	 | TVideoPostError
@@ -215,8 +219,12 @@ export const createApiRequest = (rs: IRequestService) => ({
 		rs.get(formatUrl(API_SERVER_URL + `/api/statistic/by-video`, query) ),
 
 	// get by-channel statistic.controller.ts
-	statisticByChannelGet : (query: {channel_id?:string,channel_url?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<IStatistic>,TStatisticByChannelGetError>,IBEError<TStatisticByChannelGetError>> =>
+	statisticByChannelGet : (query: {channel_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<IStatistic>,TStatisticByChannelGetError>,IBEError<TStatisticByChannelGetError>> =>
 		rs.get(formatUrl(API_SERVER_URL + `/api/statistic/by-channel`, query) ),
+
+	// get by-channel-and-video statistic.controller.ts
+	statisticByChannelAndVideoGet : (query: {channel_id?:string,video_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<IStatistic>,TStatisticByChannelAndVideoGetError>,IBEError<TStatisticByChannelAndVideoGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `/api/statistic/by-channel-and-video`, query) ),
 
 	// get last-date video.controller.ts
 	videoLastDateGet : (query: {channel_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Date,TVideoLastDateGetError>,IBEError<TVideoLastDateGetError>> =>
@@ -254,6 +262,7 @@ const URL = {
 	statisticInfoGet:  (): string => `/api/statistic/info`,
 	statisticByVideoGet:  (): string => `/api/statistic/by-video`,
 	statisticByChannelGet:  (): string => `/api/statistic/by-channel`,
+	statisticByChannelAndVideoGet:  (): string => `/api/statistic/by-channel-and-video`,
 	videoLastDateGet:  (): string => `/api/video/last-date`,
 	videoGet:  (): string => `/api/video`,
 	videoPost:  (): string => `/api/video`,
@@ -266,6 +275,8 @@ export const API_URL = URL;
 export const api = {
   ...createApiRequest(requestService),
 };
+
+
 
 
 

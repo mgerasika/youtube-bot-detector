@@ -24,6 +24,7 @@ interface IApiUrl {
                 info: IUrlItem,
                 byVideo: IUrlItem,
                 byChannel: IUrlItem,
+                byChannelAndVideo: IUrlItem,
             };
             fix: IUrlItem;
             scan: {
@@ -57,6 +58,7 @@ export const API_URL = createUrls<IApiUrl>({
                 info: EMPTY_URL_ITEM,
                 byVideo: EMPTY_URL_ITEM,
                 byChannel: EMPTY_URL_ITEM,
+                byChannelAndVideo: EMPTY_URL_ITEM,
             },
             fix: EMPTY_URL_ITEM,
             scan: {

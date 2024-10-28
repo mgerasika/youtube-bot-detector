@@ -1,7 +1,7 @@
 import { ENV, RABBIT_MQ_ENV } from '@server/env';
 import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
 import { api } from '@server/api.generated';
-import { getRabbitMqMessageId, rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
+import { getRabbitMqMessageId, getRedisMessageId, rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
 import { groupArray } from '@common/utils/group-array.util';
 import { oneByOneAsync } from '@common/utils/one-by-one-async.util';
 import { toQuery } from '@common/utils/to-query.util';
@@ -36,38 +36,24 @@ export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger
         const redis = await connectToRedisAsync(ENV.redis_url, logger);
         const missedAuthorsIds: string[] = [];
         await oneByOneAsync(uniqueAuthorIds, async (authorId) => {
-            const messageId = getRabbitMqMessageId<IScanChannelInfoBody>('scanChannelInfoAsync', { channelId: authorId });
-            const available = await redis.exists(messageId);
+            const available = await redis.exists(getRedisMessageId('channel',authorId));
             if (!available) {
                 missedAuthorsIds.push(authorId);
             }
         });
 
         if (missedAuthorsIds.length) {
+            logger.log('uniqueAuthorIds = ', uniqueAuthorIds.length, ' missedAuthorsIds = ', missedAuthorsIds.length)
             const groups = groupArray(missedAuthorsIds, 50);
             await oneByOneAsync(groups, async (group) => {
-                await rabbitMQ_sendDataAsync<IScanChannelInfoBody>(
-                    RABBIT_MQ_ENV,
-                    'scanChannelInfoAsync',
-                    {
-                        channelId: group.join(','),
-                    },
-                    logger,
-                );
-
-                await oneByOneAsync(group, async (missedAuthorId) => {
-                    const messageId = getRabbitMqMessageId<IScanChannelInfoBody>('scanChannelInfoAsync', { channelId: missedAuthorId });
-                    await redis_setAsync(redis, messageId);
-                })
+                await allServices.scan.scanChannelInfoAsync({channelId: group.join(',')}, logger);
             });
-
-            
         }
         // end submit authors
 
         const groupedComments = groupArray(comments, 100);
         await oneByOneAsync(groupedComments, async (group) => {
-            const [, apiError] = await toQuery(() =>
+            const [success, apiError] = await toQuery(() =>
                 api.commentPost({
                     comments: group.map((item) => {
                         return {
@@ -82,6 +68,12 @@ export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger
                     }),
                 }),
             );
+            if(success) {
+                await oneByOneAsync(group, async (comment) => {
+                    await redis_setAsync(redis, getRedisMessageId('comment', comment.commentId))
+                })
+                logger.log('add to redis cache comments = ', group.length )
+            }
             if (apiError) {
                 logger.log('some error in forEach', apiError);
                 throw apiError;

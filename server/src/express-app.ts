@@ -40,8 +40,13 @@ const morgan = require('morgan');
 morgan.token('body', (req: any, res: any) => {
     return JSON.stringify(req.body);
 });
-app.use(morgan(':method :url :status :response-time ms - :res[content-length] :body'));
 
+// Custom token to log body length
+morgan.token('body-length', (req:any) => {
+    return req.body ? JSON.stringify(req.body).length : 0;
+});
+//app.use(morgan(':method :url :status :response-time ms - :res[content-length] :body'));
+app.use(morgan(':method :url :status :response-time ms - :res[content-length] :body-length'));
 
 export type IExpressRequest = {};
 export type IExpressResponse<TSuccess, TError> = {

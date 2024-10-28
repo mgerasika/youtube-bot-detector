@@ -41,7 +41,6 @@ app.get(API_URL.api.statistic.byVideo.toString(), memoryCache(1), async (req: IB
 interface IByChannelRequest extends IExpressRequest {
     query: {
         channel_id?: string;
-        channel_url?: string;
     };
 }
 
@@ -49,6 +48,23 @@ interface IByChannelResponse extends IExpressResponse<IStatistic[], void> {}
 app.get(API_URL.api.statistic.byChannel.toString(),memoryCache(1), async (req: IByChannelRequest, res: IByChannelResponse) => {
     const logger = createLogger();
     const [data, error] = await allServices.statistic.getStatisticByChannelAsync(req.query.channel_id || '', logger);
+    if (error) {
+        return res.status(400).send( error);
+    }
+    return res.send(data);
+});
+
+interface IByChannelAndVideoRequest extends IExpressRequest {
+    query: {
+        channel_id?: string;
+        video_id?: string;
+    };
+}
+
+interface IByChannelAndVideoResponse extends IExpressResponse<IStatistic[], void> {}
+app.get(API_URL.api.statistic.byChannelAndVideo.toString(),memoryCache(1), async (req: IByChannelAndVideoRequest, res: IByChannelAndVideoResponse) => {
+    const logger = createLogger();
+    const [data, error] = await allServices.statistic.getStatisticByChannelAndVideoAsync(req.query.channel_id || '', req.query.video_id || '', logger);
     if (error) {
         return res.status(400).send( error);
     }

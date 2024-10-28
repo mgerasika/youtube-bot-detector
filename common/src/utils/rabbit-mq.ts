@@ -93,12 +93,17 @@ export async function rabbitMQ_subscribeAsync({ channelName, rabbit_mq_url}:{cha
 }
 
 function sendAgain(channelName: string, body: Buffer, logger: ILogger) {
-    logger.log('Rabbit MQ send again = ', `${body}`);
+    logger.log('Rabbit MQ send again after 5 secconds = ', `${body}`);
     setTimeout(() => {
+        logger.log('Rabbit MQ send again = ', `${body}`);
         _channel.sendToQueue(channelName, body, {
             persistent: true, // Ensure the message is durable
         });
     }, 5000);
+}
+
+export const getRedisMessageId = (category : 'channel' | 'video' | 'comment', id: string) => {
+    return `${category}/${id}`;
 }
 
 export const getRabbitMqMessageId = <T = any,>(methodName: keyof IScan, methodArgumentsJson: T) => {

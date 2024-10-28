@@ -5,15 +5,16 @@ import { allServices } from '@server/controller/all-services';
 import { ILogger } from '@common/utils/create-logger.utils';
 import { connectToRedisAsync, redis_setAsync } from '@common/utils/redis';
 import { ENV } from '@server/env';
-import { getRabbitMqMessageId } from '@common/utils/rabbit-mq';
+import { getRabbitMqMessageId, getRedisMessageId } from '@common/utils/rabbit-mq';
 import { IScanChannelInfoBody } from '@common/model';
+import { oneByOneAsync } from '@common/utils/one-by-one-async.util';
 
 // redis expiration should be max value (several years I think)
 export const scanChannelInfoAsync = async (body: IScanChannelInfoBody, logger: ILogger): IAsyncPromiseResult<string> => {
 
     const redis = await connectToRedisAsync(ENV.redis_url, logger)
-    const messageId = getRabbitMqMessageId<IScanChannelInfoBody>('scanChannelInfoAsync', {channelId:body.channelId})
 
+    const messageId = getRedisMessageId('channel', body.channelId);
     const available = await redis.exists(messageId);
     if(available) {
         return ['already exist in redis, skip ' + body.channelId];
@@ -23,7 +24,7 @@ export const scanChannelInfoAsync = async (body: IScanChannelInfoBody, logger: I
         if (info?.data?.id === body.channelId) {
            
             await redis_setAsync(redis, messageId);
-            return ['already exist in database, skip ' + body.channelId];
+            return ['already exist in database, add to redis and skip ' + body.channelId];
         }
     }
 
@@ -49,10 +50,17 @@ export const scanChannelInfoAsync = async (body: IScanChannelInfoBody, logger: I
                 view_count: +(channel.viewCount || 0),
             };
         });
-        const [, apiError] = await toQuery(() => api.channelPost({ channels }));
+        const [success, apiError] = await toQuery(() => api.channelPost({ channels }));
+        if(success) {
+            await oneByOneAsync(channels, async (channel) => {
+                await redis_setAsync(redis, getRedisMessageId('channel', channel.id))
+            })
+            logger.log('add to redis cache channels = ', channels.length )
+        }
         if (apiError) {
             return [, apiError];
         }
+       
     }
 
     return [, error];

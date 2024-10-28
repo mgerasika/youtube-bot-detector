@@ -644,9 +644,52 @@
             "schema": {
               "type": "string"
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IStatistic"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/statistic/by-channel-and-video": {
+      "get": {
+        "tags": [
+          "statistic"
+        ],
+        "summary": "get by-channel-and-video statistic.controller.ts",
+        "description": "get by-channel-and-video statistic.controller.ts",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "channel_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           },
           {
-            "name": "channel_url",
+            "name": "video_id",
             "in": "query",
             "required": false,
             "schema": {
@@ -1031,6 +1074,7 @@
       "IStatistic": {
         "type": "object",
         "required": [
+          "comment_frequency",
           "comment_count",
           "author_id",
           "author_url",
@@ -1041,6 +1085,9 @@
           "title"
         ],
         "properties": {
+          "comment_frequency": {
+            "type": "integer"
+          },
           "comment_count": {
             "type": "integer"
           },

@@ -40,6 +40,7 @@ const getStatisticInfoAsync = async ( logger: ILogger): IAsyncPromiseResult<ISta
 };
 
 export interface IStatistic {
+    comment_frequency: number;
     comment_count: number;
     author_id: string;
     author_url: string;
@@ -64,14 +65,96 @@ GROUP BY comment.author_id, channel.id  order by comment_count desc;`);
     return [getRowsOnlyWithAuthorUrl(list as [])];
 };
 
+const getStatisticByChannelAndVideoAsync = async (channel_id: string,video_id: string, logger: ILogger): IAsyncPromiseResult<IStatistic[]> => {
+    const [list, error] = await sqlAsync<IApiKeyDto[]>(async (client) => {
+        const { rows } = await client.query(`WITH days_difference AS (
+    SELECT 
+        (MAX(published_at) - MIN(published_at)) AS days_difference
+    FROM 
+        video
+    WHERE 
+        channel_id = ${sql_escape(channel_id)}
+),
+
+comment_counts AS (
+    SELECT 
+        COUNT(*) AS comment_count, 
+        comment.author_id, 
+        channel.*
+    FROM 
+        comment
+    INNER JOIN 
+        video ON video.id = comment.video_id
+    LEFT OUTER JOIN 
+        channel ON channel.id = comment.author_id
+    WHERE 
+        video.channel_id = ${sql_escape(channel_id)}
+    GROUP BY 
+        comment.author_id, 
+        channel.id
+)
+
+SELECT 
+    (cc.comment_count::float / NULLIF(dd.days_difference, 0)) AS comment_frequency,
+    dd.days_difference,
+    cc.*
+FROM 
+    comment_counts cc
+CROSS JOIN 
+    days_difference dd
+WHERE 
+    cc.author_id IN (SELECT author_id FROM comment WHERE video_id = ${sql_escape(video_id)})
+ORDER BY 
+    (cc.comment_count::float / NULLIF(dd.days_difference, 0)) DESC;  
+`);
+        return rows;
+    }, logger);
+    if(error) {
+        return [,error]
+    }
+    return [getRowsOnlyWithAuthorUrl(list as [])];
+};
+
 const getStatisticByChannelAsync = async (channel_id: string, logger: ILogger): IAsyncPromiseResult<IStatistic[]> => {
     const [list, error] = await sqlAsync<IApiKeyDto[]>(async (client) => {
-        const { rows } = await client.query(`SELECT COUNT(*) AS comment_count, comment.author_id, channel.*
-FROM comment
-inner join video on video.id = comment.video_id
-left outer join channel on channel.id = comment.author_id
-WHERE video.channel_id = ${sql_escape(channel_id)}
-GROUP BY comment.author_id, channel.id order by comment_count desc;`);
+        const { rows } = await client.query(`WITH days_difference AS (
+    SELECT 
+        (MAX(published_at) - MIN(published_at)) AS days_difference
+    FROM 
+        video
+    WHERE 
+        channel_id = ${sql_escape(channel_id)}
+),
+
+comment_counts AS (
+    SELECT 
+        COUNT(*) AS comment_count, 
+        comment.author_id, 
+        channel.*
+    FROM 
+        comment
+    INNER JOIN 
+        video ON video.id = comment.video_id
+    LEFT OUTER JOIN 
+        channel ON channel.id = comment.author_id
+    WHERE 
+        video.channel_id = ${sql_escape(channel_id)}
+    GROUP BY 
+        comment.author_id, 
+        channel.id
+)
+
+SELECT 
+    (cc.comment_count::float / dd.days_difference) AS comment_frequency,
+    dd.days_difference,
+    cc.*
+FROM 
+    comment_counts cc
+CROSS JOIN 
+    days_difference dd
+ORDER BY 
+    comment_frequency DESC;
+`);
         return rows;
     }, logger);
     if(error) {
@@ -87,5 +170,6 @@ function getRowsOnlyWithAuthorUrl(statistics: IStatistic[]):IStatistic[] {
 export const statistic = {
     getStatisticByVideoAsync,
     getStatisticByChannelAsync,
+    getStatisticByChannelAndVideoAsync,
     getStatisticInfoAsync
 };

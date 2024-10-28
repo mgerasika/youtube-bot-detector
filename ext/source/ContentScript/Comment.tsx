@@ -1,15 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { IStatisticInfo } from '../api.generated';
+import { IStatistic } from '../api.generated';
 import { getReplyCommentElement } from './utils/get-reply-comment-element.util';
 import { getAuthorUrl } from './utils/get-authour-url.util';
 
 interface IProps {
-  byVideo?: IStatisticInfo
-  byChannel?: IStatisticInfo
+  byVideo?: IStatistic
+  byChannelAndVideo?: IStatistic
   parentEl: HTMLElement;
   onReplyClick: (parent: HTMLElement) => void;
 }
-export const Comment: React.FC<IProps> = ({ byVideo, byChannel, parentEl, onReplyClick }: IProps) => {
+export const Comment: React.FC<IProps> = ({  byChannelAndVideo, parentEl, onReplyClick }: IProps) => {
 
   const [flagsState, setFlagsState] = useState<IFlagsState>();
   const authourUrl = useMemo(() => getAuthorUrl(parentEl),[])
@@ -37,9 +37,13 @@ export const Comment: React.FC<IProps> = ({ byVideo, byChannel, parentEl, onRepl
   useEffect(() =>{
     setFlagsState(getFlagsState(parentEl))
   },[parentEl]);
+
+  const rate = useMemo(() => {
+return byChannelAndVideo?.comment_frequency.toFixed(2)
+  },[byChannelAndVideo])
   return <div className="botDiv" id={authourUrl}>
     <div className='iconDiv'>
-    {byChannel?.comment_count || '-'}/{byVideo?.comment_count || '-'}
+    {byChannelAndVideo?.comment_count || '-'}/{rate || '-'}
 
       <pre>{false && JSON.stringify({...flagsState}, null, 2)}</pre>
     </div>
