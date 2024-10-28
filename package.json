@@ -17,7 +17,8 @@
     "concurrently": "^8.0.1"
   },
   "dependencies": {
-    "swagger-to-typescript2": "^0.1.28",
+    "axios": "^1.7.7",
+    "swagger-to-typescript2": "^0.1.29",
     "typescript-to-swagger": "^0.1.31"
   }
 }
