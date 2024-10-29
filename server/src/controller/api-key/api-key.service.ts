@@ -25,7 +25,7 @@ const getActiveApiKeyAsync = async (old_key: string | undefined, logger: ILogger
     const [list, listError] = await sqlAsync<IApiKeyDto[]>(async (client) => {
         const { rows } = await client.query(`SELECT * 
 FROM api_key 
-WHERE (expired < NOW() AND NOW() - expired > INTERVAL '60 minutes')
+WHERE (expired < NOW() AND NOW() - expired > INTERVAL '24 hours')
    OR expired IS NULL;`);
         return rows;
     }, logger);

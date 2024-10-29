@@ -18,12 +18,16 @@ app.use((err: any, req: any, res: any, next: any) => {
         return next(err);
     }
     res.status(500);
-    res.render('custom error', { error: err });
+    res.json({
+        message: err.message,
+        error: err
+      });
 });
+app.use(express.json({ limit: '500mb' }));
 app.use(function (err: any, req: any, res: any, next: any) {
     if (err) {
         console.error(err.stack);
-        res.status(400).send('Custom handler ' + err);
+        res.status(400).send('Custom handler ' + err?.toString());
     }
 });
 const morgan = require('morgan');

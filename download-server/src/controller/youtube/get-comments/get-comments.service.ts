@@ -31,7 +31,7 @@ export const getCommentsAsync = async ({videoId, publishedAt}: IGetCommentsBody,
     let nextPageToken: string | null | undefined = '';
 
     const publishedAtDate = publishedAt ? new Date(publishedAt) : new Date(1970);
-    logger.log('publishedAtDate', publishedAtDate, publishedAt)
+    logger.log('publishedAtDate for filtering', publishedAtDate, publishedAt)
     do {
         const [commentResponse, commentsError] = await toQuery(() => youtube.commentThreads.list({
             part: ['snippet', 'id', 'replies'],

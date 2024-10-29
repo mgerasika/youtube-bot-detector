@@ -6,12 +6,13 @@ import { rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
 import { allServices } from '@server/controller/all-services';
 import { ILogger } from '@common/utils/create-logger.utils';
 import { IFullScanChannelInfoBody, IScanVideosBody } from '@common/model';
+import { IScanReturn } from '@common/interfaces/scan.interface';
 
 // 1. scan channel by id. start rabbit mq queue with scanVideosByChannelId
 export const fullScanChannelInfoAsync = async (
     body: IFullScanChannelInfoBody,
     logger: ILogger,
-): IAsyncPromiseResult<string> => {
+): IAsyncPromiseResult<IScanReturn> => {
     const [data, error] = await allServices.youtube.getChannelInfoAsync({ channelId: body.channelId }, logger);
 
     if (data) {

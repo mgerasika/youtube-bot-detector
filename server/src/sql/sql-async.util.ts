@@ -31,7 +31,7 @@ class ClientAdapter {
 	}
 
 	query(sql: string) {
-		this._logger.log('sql=' + sql)
+		// this._logger.log('sql=' + sql)
 		return this._original.query(sql);
 	}
 }

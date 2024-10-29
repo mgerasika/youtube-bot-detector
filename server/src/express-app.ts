@@ -21,19 +21,22 @@ export const httpOptions = {
 };
 
 app.use(cors());
-app.use(express.json({ limit: '100mb' }));
+app.use(express.json({ limit: '500mb' }));
 app.use(compression({ threshold: 0 }));
 app.use((err: any, req: any, res: any, next: any) => {
     if (res.headersSent) {
         return next(err);
     }
     res.status(500);
-    res.render('custom error', { error: err });
+    res.json({
+        message: err.message,
+        error: err,
+    });
 });
 app.use(function (err: any, req: any, res: any, next: any) {
     if (err) {
         console.error(err.stack);
-        res.status(400).send('Custom handler ' + err);
+        res.status(400).send('Custom handler ' + err?.toString());
     }
 });
 const morgan = require('morgan');
@@ -42,7 +45,7 @@ morgan.token('body', (req: any, res: any) => {
 });
 
 // Custom token to log body length
-morgan.token('body-length', (req:any) => {
+morgan.token('body-length', (req: any) => {
     return req.body ? JSON.stringify(req.body).length : 0;
 });
 //app.use(morgan(':method :url :status :response-time ms - :res[content-length] :body'));

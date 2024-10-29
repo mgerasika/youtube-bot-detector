@@ -2,7 +2,7 @@
 export interface IAddYoutubeKeyBody {
     email: string;
     key: string;
-}export interface IFixBoxy {
+}export interface ITestBody {
     authorIds?: string[];
 }
 export interface IFullScanChannelInfoBody {
@@ -23,5 +23,10 @@ export interface IScanCommentsBody {
 
 export interface IScanVideoInfoBody {
     videoId: string;
+}
+
+export interface IFullScanVideoInfoBody {
+    videoId: string;
+    channelId: string;
 }
 

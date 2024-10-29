@@ -51,16 +51,6 @@ export interface ICommentDto {
 export interface ICommentPostBody {
 	'comments': ICommentDto[];
 }
-export interface IScanInfo {
-	'comment_count': number;
-	'author_id': string;
-	'author_url': string;
-	'id': string;
-	'published_at': Date;
-	'video_count': number;
-	'subscriber_count': number;
-	'title': string;
-}
 export interface IStatisticInfo {
 	'video_count': number;
 	'comment_count': number;
@@ -70,6 +60,7 @@ export interface IStatisticInfo {
 	'youtube_accounts_count': number;
 }
 export interface IStatistic {
+	'comment_frequency_since_channel': number;
 	'comment_frequency': number;
 	'comment_count': number;
 	'author_id': string;
@@ -111,11 +102,9 @@ export type TCommentPostError = ''
 	 |'undefined';
 export type TCommentIdGetError = ''
 	 |'undefined';
-export type TFixGetError = ''
+export type TScanFullByVideoGetError = ''
 	 |'undefined';
-export type TScanByVideoGetError = ''
-	 |'undefined';
-export type TScanByChannelGetError = ''
+export type TScanFullByChannelGetError = ''
 	 |'undefined';
 export type TStatisticInfoGetError = ''
 	 |'undefined';
@@ -124,6 +113,8 @@ export type TStatisticByVideoGetError = ''
 export type TStatisticByChannelGetError = ''
 	 |'undefined';
 export type TStatisticByChannelAndVideoGetError = ''
+	 |'undefined';
+export type TTestGetError = ''
 	 |'undefined';
 export type TVideoLastDateGetError = ''
 	 |'undefined';
@@ -146,13 +137,13 @@ export type TPartialErrorCodes =
 	 | TCommentGetError
 	 | TCommentPostError
 	 | TCommentIdGetError
-	 | TFixGetError
-	 | TScanByVideoGetError
-	 | TScanByChannelGetError
+	 | TScanFullByVideoGetError
+	 | TScanFullByChannelGetError
 	 | TStatisticInfoGetError
 	 | TStatisticByVideoGetError
 	 | TStatisticByChannelGetError
 	 | TStatisticByChannelAndVideoGetError
+	 | TTestGetError
 	 | TVideoLastDateGetError
 	 | TVideoGetError
 	 | TVideoPostError
@@ -203,17 +194,13 @@ export const createApiRequest = (rs: IRequestService) => ({
 	commentIdGet : (id:string): CustomPromise<CustomAxiosResponse<ICommentDto,TCommentIdGetError>,IBEError<TCommentIdGetError>> =>
 		rs.get(formatUrl(API_SERVER_URL + `/api/comment/${id}`) ),
 
-	// get fix fix.controller.ts
-	fixGet : (): CustomPromise<CustomAxiosResponse<string,TFixGetError>,IBEError<TFixGetError>> =>
-		rs.get(formatUrl(API_SERVER_URL + `/api/fix`) ),
+	// get full-by-video scan.controller.ts
+	scanFullByVideoGet : (query: {video_id?:string,channel_id?:string} | undefined): CustomPromise<CustomAxiosResponse<string,TScanFullByVideoGetError>,IBEError<TScanFullByVideoGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `/api/scan/full-by-video`, query) ),
 
-	// get by-video scan.controller.ts
-	scanByVideoGet : (query: {video_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<IScanInfo>,TScanByVideoGetError>,IBEError<TScanByVideoGetError>> =>
-		rs.get(formatUrl(API_SERVER_URL + `/api/scan/by-video`, query) ),
-
-	// get by-channel scan.controller.ts
-	scanByChannelGet : (query: {channel_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<IScanInfo>,TScanByChannelGetError>,IBEError<TScanByChannelGetError>> =>
-		rs.get(formatUrl(API_SERVER_URL + `/api/scan/by-channel`, query) ),
+	// get full-by-channel scan.controller.ts
+	scanFullByChannelGet : (query: {channel_id?:string} | undefined): CustomPromise<CustomAxiosResponse<string,TScanFullByChannelGetError>,IBEError<TScanFullByChannelGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `/api/scan/full-by-channel`, query) ),
 
 	// get info statistic.controller.ts
 	statisticInfoGet : (): CustomPromise<CustomAxiosResponse<IStatisticInfo,TStatisticInfoGetError>,IBEError<TStatisticInfoGetError>> =>
@@ -230,6 +217,10 @@ export const createApiRequest = (rs: IRequestService) => ({
 	// get by-channel-and-video statistic.controller.ts
 	statisticByChannelAndVideoGet : (query: {channel_id?:string,video_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<IStatistic>,TStatisticByChannelAndVideoGetError>,IBEError<TStatisticByChannelAndVideoGetError>> =>
 		rs.get(formatUrl(API_SERVER_URL + `/api/statistic/by-channel-and-video`, query) ),
+
+	// get test test.controller.ts
+	testGet : (): CustomPromise<CustomAxiosResponse<string,TTestGetError>,IBEError<TTestGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `/api/test`) ),
 
 	// get last-date video.controller.ts
 	videoLastDateGet : (query: {channel_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Date,TVideoLastDateGetError>,IBEError<TVideoLastDateGetError>> =>
@@ -261,13 +252,13 @@ const URL = {
 	commentGet:  (): string => `/api/comment`,
 	commentPost:  (): string => `/api/comment`,
 	commentIdGet:  (id:string): string => `/api/comment/${id}`,
-	fixGet:  (): string => `/api/fix`,
-	scanByVideoGet:  (): string => `/api/scan/by-video`,
-	scanByChannelGet:  (): string => `/api/scan/by-channel`,
+	scanFullByVideoGet:  (): string => `/api/scan/full-by-video`,
+	scanFullByChannelGet:  (): string => `/api/scan/full-by-channel`,
 	statisticInfoGet:  (): string => `/api/statistic/info`,
 	statisticByVideoGet:  (): string => `/api/statistic/by-video`,
 	statisticByChannelGet:  (): string => `/api/statistic/by-channel`,
 	statisticByChannelAndVideoGet:  (): string => `/api/statistic/by-channel-and-video`,
+	testGet:  (): string => `/api/test`,
 	videoLastDateGet:  (): string => `/api/video/last-date`,
 	videoGet:  (): string => `/api/video`,
 	videoPost:  (): string => `/api/video`,
@@ -280,6 +271,8 @@ export const API_URL = URL;
 export const api = {
   ...createApiRequest(requestService),
 };
+
+
 
 
 

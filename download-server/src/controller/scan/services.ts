@@ -5,7 +5,8 @@ import { IScan } from '@common/interfaces/scan.interface';
 import { addYoutubeKeyAsync } from './add-youtube-key/add-youtube-key.service';
 import { fullScanChannelInfoAsync } from './full-scan-channel-info/full-scan-channel-info.service';
 import { scanVideoInfoAsync } from './scan-video-info/scan-video-info.service';
-import { fixAsync } from './fix/fix.service';
+import { testAsync } from './test/test.service';
+import { fullScanVideoInfoAsync } from './full-scan-video-info/full-scan-video-info.service';
 
 export const scan: IScan = {
        scanVideosAsync,
@@ -13,6 +14,7 @@ export const scan: IScan = {
        scanChannelInfoAsync,
        addYoutubeKeyAsync,
        fullScanChannelInfoAsync,
+       fullScanVideoInfoAsync,
        scanVideoInfoAsync,
-       fixAsync,
+       testAsync,
 };

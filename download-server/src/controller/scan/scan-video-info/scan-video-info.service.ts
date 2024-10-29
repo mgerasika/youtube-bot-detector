@@ -7,14 +7,16 @@ import { getRabbitMqMessageId, getRedisMessageId } from '@common/utils/rabbit-mq
 import { connectToRedisAsync, redis_setAsync } from '@common/utils/redis';
 import { ENV } from '@server/env';
 import { IScanVideoInfoBody } from '@common/model';
+import { IScanReturn } from '@common/interfaces/scan.interface';
 
 // redis expiration should be max value (several years I think)
-export const scanVideoInfoAsync = async (body: IScanVideoInfoBody, logger: ILogger): IAsyncPromiseResult<string> => {
+export const scanVideoInfoAsync = async (body: IScanVideoInfoBody, logger: ILogger): IAsyncPromiseResult<IScanReturn> => {
     const redis = await connectToRedisAsync(ENV.redis_url, logger)
     const messageId = getRedisMessageId('video', body.videoId);
     const available = await redis.exists(messageId);
     if(available) {
-        return ['already exist in redis, skip ' + body.videoId];
+        
+        return [{message:logger.log('video already exist in redis, skip ' + body.videoId)}];
     }
 
     const [info, ] = await toQuery(() => api.videoIdGet(body.videoId));
@@ -22,7 +24,8 @@ export const scanVideoInfoAsync = async (body: IScanVideoInfoBody, logger: ILogg
         const redis = await connectToRedisAsync(ENV.redis_url, logger);
         await redis_setAsync(redis, messageId);
 
-        return ['already exist in database, add to redis and skip ' + body.videoId];
+       
+        return [{message: logger.log('video already exist in database, add to redis and skip ' + body.videoId)}];
     }
     // probadly not found, then add
     const [data, error] = await allServices.youtube.getVideoInfoAsync({ videoId: body.videoId }, logger);
@@ -30,21 +33,20 @@ export const scanVideoInfoAsync = async (body: IScanVideoInfoBody, logger: ILogg
         return [, error];
     }
 
-    if (data === undefined) {
-        return ['Video not found, probadly deleted'];
+    if (!data) {
+       
+        return [{message: logger.log('Video not found, probadly deleted, skip')}];
     }
-    if (data) {
-        const [, apiError] = await toQuery(() =>
-            api.videoPost({
-                videos: [
-                    { published_at: data.publishedAt, id: data.videoId, title: data.title, channel_id: data.channelId },
-                ],
-            }),
-        );
-        if (apiError) {
-            return [, apiError];
-        }
+    const [, apiError] = await toQuery(() =>
+        api.videoPost({
+            videos: [
+                { published_at: data.publishedAt, id: data.videoId, title: data.title, channel_id: data.channelId },
+            ],
+        }),
+    );
+    if (apiError) {
+        return [, apiError];
     }
 
-    return [, error];
+    return [{hasChanges:true}];
 };

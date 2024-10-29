@@ -1,26 +1,21 @@
-import React, { useCallback, useMemo } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import { getChannelId } from './utils/get-channel-id.util';
-import { getChannelUrl } from './utils/get-channel-url.util';
-import { getVideoId } from './utils/get-video-id.util';
 import ErrorBoundary from './ErrorBoundary';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { CommentsList } from './CommentList';
-import { useGetComments } from './hooks/use-get-comments.hook';
+import { VideoPage } from './VideoPage';
+import { BrowserRouter as Router} from 'react-router-dom';
+import { useVideoInfo } from './hooks/use-video-info.hook';
+
 
 const App: React.FC = () => {
-    const videoId = useMemo(getVideoId, []);
-    const channelUrl = useMemo( getChannelUrl, []);
-    const channelId = useMemo( getChannelId, []);
-    const {comments, rescan} = useGetComments();
+    const info = useVideoInfo()
 
-    const handleReployClick = useCallback((parentEl) => {
-        rescan(parentEl)
-    },[rescan])
-
-    return (
-        <CommentsList onReplyClick={handleReployClick} comments={comments} channelId={channelId || ''} videoId={videoId || ''} channelUrl={channelUrl || ''}/>
-    );
+    if (info?.videoId && info?.channelId && info?.channelUrl) {
+        return (
+            <VideoPage videoId={info.videoId} channelId={info.channelId} />
+        );
+    }
+    return <></>
 }
 
 const queryClient = new QueryClient();
@@ -31,12 +26,14 @@ export function renderReactApp() {
     // Render the main App component inside the root div
     ReactDOM.render(
         <React.StrictMode>
-            <ErrorBoundary>
+            
+            <ErrorBoundary>  <Router>
                 <QueryClientProvider client={queryClient}>
                     <App />
                 </QueryClientProvider>
+                </Router>
             </ErrorBoundary>
-        
+
         </React.StrictMode >,
         divForReact
     );

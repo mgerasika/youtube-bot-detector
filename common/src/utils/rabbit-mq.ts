@@ -37,7 +37,7 @@ export async function rabbitMQ_createConnectionAsync({channelName,  rabbit_mq_ur
 
                 await _channel.assertQueue(channelName, {});
 
-                _channel.prefetch(1);
+                // _channel.prefetch(1);
             }
         } catch (error) {
             logger.log('createConnection rabbitMQ error', error);
@@ -93,13 +93,13 @@ export async function rabbitMQ_subscribeAsync({ channelName, rabbit_mq_url}:{cha
 }
 
 function sendAgain(channelName: string, body: Buffer, logger: ILogger) {
-    logger.log('Rabbit MQ send again after 5 secconds = ', `${body}`);
+    logger.log('Rabbit MQ send again after some secconds = ', `${body}`);
     setTimeout(() => {
         logger.log('Rabbit MQ send again = ', `${body}`);
         _channel.sendToQueue(channelName, body, {
             persistent: true, // Ensure the message is durable
         });
-    }, 5000);
+    }, 1000);
 }
 
 export const getRedisMessageId = (category : 'channel' | 'video' | 'comment', id: string) => {
@@ -115,7 +115,7 @@ export const getRabbitMqMessageId = <T = any,>(methodName: keyof IScan, methodAr
 }
 export const rabbitMQ_sendDataAsync = async <T = any, >({ channelName, rabbit_mq_url, redis_url}:{channelName:string, rabbit_mq_url: string, redis_url:string}, methodName: keyof IScan, methodArgumentsJson: T, logger: ILogger): Promise<IQueryReturn<boolean>> => {
     await rabbitMQ_createConnectionAsync({channelName,  rabbit_mq_url}, logger);
-    const redisClient = await connectToRedisAsync(redis_url, logger);
+    const redis = await connectToRedisAsync(redis_url, logger);
 
     const data : IRabbitMqMessage = {
         msg: {
@@ -125,9 +125,9 @@ export const rabbitMQ_sendDataAsync = async <T = any, >({ channelName, rabbit_mq
     }
     if (_channel) {
         const messageId = getRabbitMqMessageId(methodName, methodArgumentsJson);
-        const exist = await redisClient.exists(messageId);
+        const exist = await redis.exists(messageId);
         if (!exist) {
-            await redis_setAsync(redisClient, messageId);
+            await redis_setAsync(redis, messageId);
 
             logger.log('Rabbit MQ Data send and add to Redis:', data);
             await _channel.sendToQueue(channelName, Buffer.from(JSON.stringify(data)));

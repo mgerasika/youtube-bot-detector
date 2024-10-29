@@ -8,23 +8,27 @@ import { ENV } from '@server/env';
 import { getRabbitMqMessageId, getRedisMessageId } from '@common/utils/rabbit-mq';
 import { IScanChannelInfoBody } from '@common/model';
 import { oneByOneAsync } from '@common/utils/one-by-one-async.util';
+import { IScanReturn } from '@common/interfaces/scan.interface';
 
 // redis expiration should be max value (several years I think)
-export const scanChannelInfoAsync = async (body: IScanChannelInfoBody, logger: ILogger): IAsyncPromiseResult<string> => {
+export const scanChannelInfoAsync = async (
+    body: IScanChannelInfoBody,
+    logger: ILogger,
+): IAsyncPromiseResult<IScanReturn> => {
+    const redis = await connectToRedisAsync(ENV.redis_url, logger);
 
-    const redis = await connectToRedisAsync(ENV.redis_url, logger)
-
-    const messageId = getRedisMessageId('channel', body.channelId);
-    const available = await redis.exists(messageId);
-    if(available) {
-        return ['already exist in redis, skip ' + body.channelId];
+    const available = await redis.exists(getRedisMessageId('channel', body.channelId));
+    if (available) {
+        return [{ message: logger.log('channel already exist in redis, skip ' + body.channelId) }];
     }
     if (!body.channelId.includes(',')) {
         const [info] = await toQuery(() => api.channelIdGet(body.channelId));
         if (info?.data?.id === body.channelId) {
-           
-            await redis_setAsync(redis, messageId);
-            return ['already exist in database, add to redis and skip ' + body.channelId];
+            await redis_setAsync(redis, getRedisMessageId('channel', body.channelId));
+
+            return [
+                { message: logger.log(logger.log('channel already exist in database, add to redis and skip ' + body.channelId)) },
+            ];
         }
     }
 
@@ -34,34 +38,31 @@ export const scanChannelInfoAsync = async (body: IScanChannelInfoBody, logger: I
         return [, error];
     }
 
-    if (data === undefined) {
-        return ['Channel not found, probadly deleted'];
+    if (!data) {
+        return [{ message: logger.log('Channel not found, probadly deleted, skip') }];
     }
 
-    if (data) {
-        const channels = data.map((channel) => {
-            return {
-                published_at: new Date(channel.publishedAt),
-                id: channel.channelId,
-                title: channel.title,
-                author_url: channel.authorUrl || '',
-                subscriber_count: +(channel.subscriberCount || 0),
-                video_count: +(channel.videoCount || 0),
-                view_count: +(channel.viewCount || 0),
-            };
-        });
-        const [success, apiError] = await toQuery(() => api.channelPost({ channels }));
-        if(success) {
-            await oneByOneAsync(channels, async (channel) => {
-                await redis_setAsync(redis, getRedisMessageId('channel', channel.id))
-            })
-            logger.log('add to redis cache channels = ', channels.length )
-        }
-        if (apiError) {
-            return [, apiError];
-        }
-       
+    const channels = data.map((channel) => {
+        return {
+            published_at: new Date(channel.publishedAt),
+            id: channel.channelId,
+            title: channel.title,
+            author_url: channel.authorUrl || '',
+            subscriber_count: +(channel.subscriberCount || 0),
+            video_count: +(channel.videoCount || 0),
+            view_count: +(channel.viewCount || 0),
+        };
+    });
+    const [success, apiError] = await toQuery(() => api.channelPost({ channels }));
+    if (apiError) {
+        return [, apiError];
     }
+    if (!success) {
+        return [, 'data is empty'];
+    }
+    await oneByOneAsync(channels, async (channel) => {
+        await redis_setAsync(redis, getRedisMessageId('channel', channel.id));
+    });
 
-    return [, error];
+    return [{ hasChanges: channels.length > 0, message: logger.log('add to redis cache channels = ', channels.length) }];
 };

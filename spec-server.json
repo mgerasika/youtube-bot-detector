@@ -437,15 +437,32 @@
         }
       }
     },
-    "/api/fix": {
+    "/api/scan/full-by-video": {
       "get": {
         "tags": [
-          "api"
+          "scan"
         ],
-        "summary": "get fix fix.controller.ts",
-        "description": "get fix fix.controller.ts",
+        "summary": "get full-by-video scan.controller.ts",
+        "description": "get full-by-video scan.controller.ts",
         "operationId": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channel_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -468,56 +485,13 @@
         }
       }
     },
-    "/api/scan/by-video": {
+    "/api/scan/full-by-channel": {
       "get": {
         "tags": [
           "scan"
         ],
-        "summary": "get by-video scan.controller.ts",
-        "description": "get by-video scan.controller.ts",
-        "operationId": "",
-        "parameters": [
-          {
-            "name": "video_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IScanInfo"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/scan/by-channel": {
-      "get": {
-        "tags": [
-          "scan"
-        ],
-        "summary": "get by-channel scan.controller.ts",
-        "description": "get by-channel scan.controller.ts",
+        "summary": "get full-by-channel scan.controller.ts",
+        "description": "get full-by-channel scan.controller.ts",
         "operationId": "",
         "parameters": [
           {
@@ -534,10 +508,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IScanInfo"
-                  }
+                  "type": "string"
                 }
               }
             }
@@ -706,6 +677,37 @@
                   "items": {
                     "$ref": "#/components/schemas/IStatistic"
                   }
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/test": {
+      "get": {
+        "tags": [
+          "api"
+        ],
+        "summary": "get test test.controller.ts",
+        "description": "get test test.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -1001,45 +1003,6 @@
           }
         }
       },
-      "IScanInfo": {
-        "type": "object",
-        "required": [
-          "comment_count",
-          "author_id",
-          "author_url",
-          "id",
-          "published_at",
-          "video_count",
-          "subscriber_count",
-          "title"
-        ],
-        "properties": {
-          "comment_count": {
-            "type": "integer"
-          },
-          "author_id": {
-            "type": "string"
-          },
-          "author_url": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "published_at": {
-            "type": "Date"
-          },
-          "video_count": {
-            "type": "integer"
-          },
-          "subscriber_count": {
-            "type": "integer"
-          },
-          "title": {
-            "type": "string"
-          }
-        }
-      },
       "IStatisticInfo": {
         "type": "object",
         "required": [
@@ -1074,6 +1037,7 @@
       "IStatistic": {
         "type": "object",
         "required": [
+          "comment_frequency_since_channel",
           "comment_frequency",
           "comment_count",
           "author_id",
@@ -1085,6 +1049,9 @@
           "title"
         ],
         "properties": {
+          "comment_frequency_since_channel": {
+            "type": "integer"
+          },
           "comment_frequency": {
             "type": "integer"
           },

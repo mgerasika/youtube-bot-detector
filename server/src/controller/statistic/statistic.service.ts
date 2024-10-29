@@ -40,6 +40,7 @@ const getStatisticInfoAsync = async ( logger: ILogger): IAsyncPromiseResult<ISta
 };
 
 export interface IStatistic {
+    comment_frequency_since_channel: number;
     comment_frequency: number;
     comment_count: number;
     author_id: string;
@@ -67,45 +68,43 @@ GROUP BY comment.author_id, channel.id  order by comment_count desc;`);
 
 const getStatisticByChannelAndVideoAsync = async (channel_id: string,video_id: string, logger: ILogger): IAsyncPromiseResult<IStatistic[]> => {
     const [list, error] = await sqlAsync<IApiKeyDto[]>(async (client) => {
-        const { rows } = await client.query(`WITH days_difference AS (
-    SELECT 
-        (MAX(published_at) - MIN(published_at)) AS days_difference
-    FROM 
-        video
-    WHERE 
-        channel_id = ${sql_escape(channel_id)}
-),
-
-comment_counts AS (
-    SELECT 
-        COUNT(*) AS comment_count, 
-        comment.author_id, 
-        channel.*
-    FROM 
-        comment
-    INNER JOIN 
-        video ON video.id = comment.video_id
-    LEFT OUTER JOIN 
-        channel ON channel.id = comment.author_id
-    WHERE 
-        video.channel_id = ${sql_escape(channel_id)}
-    GROUP BY 
-        comment.author_id, 
-        channel.id
-)
-
-SELECT 
+        const { rows } = await client.query(`SELECT 
     (cc.comment_count::float / NULLIF(dd.days_difference, 0)) AS comment_frequency,
+    (cc.comment_count::float / NULLIF(cc.time_since_channel_published, 0)) AS comment_frequency_since_channel,
     dd.days_difference,
     cc.*
 FROM 
-    comment_counts cc
+    (
+        SELECT 
+            COUNT(*) AS comment_count, 
+            comment.author_id, 
+            EXTRACT(EPOCH FROM (NOW() - channel.published_at)) / 86400 AS time_since_channel_published,
+            channel.*
+        FROM 
+            comment
+        INNER JOIN 
+            video ON video.id = comment.video_id
+        LEFT OUTER JOIN 
+            channel ON channel.id = comment.author_id
+        WHERE 
+            video.channel_id = ${sql_escape(channel_id)}  
+        GROUP BY 
+            comment.author_id, 
+            channel.id
+    ) AS cc
 CROSS JOIN 
-    days_difference dd
+    (
+        SELECT 
+            (MAX(published_at) - MIN(published_at)) AS days_difference
+        FROM 
+            video
+        WHERE 
+            channel_id = ${sql_escape(channel_id)}  
+    ) AS dd
 WHERE 
-    cc.author_id IN (SELECT author_id FROM comment WHERE video_id = ${sql_escape(video_id)})
+    cc.author_id IN (SELECT author_id FROM comment WHERE video_id = ${sql_escape(video_id)}  )
 ORDER BY 
-    (cc.comment_count::float / NULLIF(dd.days_difference, 0)) DESC;  
+    comment_frequency_since_channel DESC;
 `);
         return rows;
     }, logger);

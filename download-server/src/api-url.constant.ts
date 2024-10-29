@@ -4,8 +4,9 @@ interface IApiUrl {
     swagger: IUrlItem;
     api: {
         scan: {
-            fix: IUrlItem;
+            test: IUrlItem;
             fullScanChannelInfo: IUrlItem;
+            fullScanVideoInfo: IUrlItem;
             scanVideos: IUrlItem;
             scanComments: IUrlItem;
             scanChannelInfo: IUrlItem;
@@ -30,8 +31,9 @@ export const API_URL = createUrls<IApiUrl>({
     swagger: EMPTY_URL_ITEM,
     api: {
         scan: {
-            fix: EMPTY_URL_ITEM,
+            test: EMPTY_URL_ITEM,
             fullScanChannelInfo: EMPTY_URL_ITEM,
+            fullScanVideoInfo: EMPTY_URL_ITEM,
             scanVideos: EMPTY_URL_ITEM,
             scanComments: EMPTY_URL_ITEM,
             scanChannelInfo: EMPTY_URL_ITEM,

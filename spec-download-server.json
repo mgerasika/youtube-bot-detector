@@ -48,13 +48,13 @@
         }
       }
     },
-    "/api/scan/fix": {
+    "/api/scan/full-scan-channel-info": {
       "post": {
         "tags": [
           "scan"
         ],
-        "summary": "post fix fix.controller.ts",
-        "description": "post fix fix.controller.ts",
+        "summary": "post full-scan-channel-info full-scan-channel-info.controller.ts",
+        "description": "post full-scan-channel-info full-scan-channel-info.controller.ts",
         "operationId": "",
         "parameters": [],
         "requestBody": {
@@ -62,7 +62,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/IFixBoxy"
+                "$ref": "#/components/schemas/IScanChannelInfoBody"
               }
             }
           }
@@ -80,13 +80,13 @@
         }
       }
     },
-    "/api/scan/full-scan-channel-info": {
+    "/api/scan/full-scan-video-info": {
       "post": {
         "tags": [
           "scan"
         ],
-        "summary": "post full-scan-channel-info full-scan-channel-info.controller.ts",
-        "description": "post full-scan-channel-info full-scan-channel-info.controller.ts",
+        "summary": "post full-scan-video-info full-scan-video-info.controller.ts",
+        "description": "post full-scan-video-info full-scan-video-info.controller.ts",
         "operationId": "",
         "parameters": [],
         "requestBody": {
@@ -223,6 +223,38 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/IScanVideosBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/scan/test": {
+      "post": {
+        "tags": [
+          "scan"
+        ],
+        "summary": "post test test.controller.ts",
+        "description": "post test test.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ITestBody"
               }
             }
           }
@@ -450,15 +482,6 @@
           }
         }
       },
-      "IFixBoxy": {
-        "type": "object",
-        "required": [],
-        "properties": {
-          "authorIds": {
-            "type": "string[]"
-          }
-        }
-      },
       "IScanChannelInfoBody": {
         "type": "object",
         "required": [
@@ -500,6 +523,15 @@
         "properties": {
           "channelId": {
             "type": "string"
+          }
+        }
+      },
+      "ITestBody": {
+        "type": "object",
+        "required": [],
+        "properties": {
+          "authorIds": {
+            "type": "string[]"
           }
         }
       },

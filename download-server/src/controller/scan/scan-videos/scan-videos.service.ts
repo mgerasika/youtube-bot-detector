@@ -8,9 +8,10 @@ import { api } from '@server/api.generated';
 import { RABBIT_MQ_ENV } from '@server/env';
 import { createLogger, ILogger } from '@common/utils/create-logger.utils';
 import { IScanVideosBody, IScanCommentsBody } from '@common/model';
+import { IScanReturn } from '@common/interfaces/scan.interface';
 
 // scan all videos by channel id. Need to use Date cache
-export const scanVideosAsync = async (body: IScanVideosBody, logger: ILogger): IAsyncPromiseResult<string> => {
+export const scanVideosAsync = async (body: IScanVideosBody, logger: ILogger): IAsyncPromiseResult<IScanReturn> => {
     logger.log('scanVideosAsync', body);
    
     const channel_id = body.channelId;
@@ -22,9 +23,14 @@ export const scanVideosAsync = async (body: IScanVideosBody, logger: ILogger): I
     logger.log('last_date = ', lastDate?.data);
 
     const [data, error] = await getVideosAsync({channelId:body.channelId, publishedAt: lastDate?.data?.toString() || ''}, logger);
+    if(error) {
+        return [,error]
+    }
+    if(!data) {
+        return [,logger.log('recieved empty data')]
+    }
     logger.log('recieved videos count = ', data?.items.length);
 
-    if (data) {
         const videos = data.items.reverse();
 
         const groupedVideos = groupArray(videos, 100);
@@ -52,17 +58,6 @@ export const scanVideosAsync = async (body: IScanVideosBody, logger: ILogger): I
             }, logger)
         })
 
-        // // remove videos from redis cache
-        // const redisClient = await connectToRedisAsync(ENV.redis_url, logger);
-        // const messageId = getRabbitMqMessageId<IScanVideosBody>('scanVideosAsync',  {
-        //     channelId: body.channelId
-        // });
-        // await redisClient.set(messageId, '', {
-        //     EX: 60 // one minute
-        // });
+        return [{hasChanges: videos.length >0,  message:logger.log(`post to videos db ${videos.length}`)}];
 
-        return [`post to videos db ${videos.length}`];
-    }
-
-    return [, error];
 };

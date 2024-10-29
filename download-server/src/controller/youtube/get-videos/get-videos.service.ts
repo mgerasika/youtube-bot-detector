@@ -26,7 +26,7 @@ export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody, l
     }
     
     const publishedAtDate = publishedAt ? new Date(publishedAt) : new Date(1970);
-    logger.log('publishedAtDate', publishedAtDate, publishedAt)
+    logger.log('publishedAtDate for filtering', publishedAtDate, publishedAt)
 
     // Get the channel's uploads playlist ID
     const [channelResponse, channelError] = await toQuery(() => youtube.channels.list({
