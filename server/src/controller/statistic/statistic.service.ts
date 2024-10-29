@@ -5,6 +5,7 @@ import { sqlAsync } from '@server/sql/sql-async.util';
 import { sql_escape } from '@server/sql/sql.util';
 import { ENV } from '@server/env';
 import { ILogger } from '@common/utils/create-logger.utils';
+import { getStatisticByGroup } from './group-statistic';
 
 export interface IStatisticInfo {
     video_count: number;
@@ -40,72 +41,88 @@ const getStatisticInfoAsync = async ( logger: ILogger): IAsyncPromiseResult<ISta
 };
 
 export interface IStatistic {
-    comment_frequency_since_channel: number;
-    comment_frequency: number;
-    comment_count: number;
-    author_id: string;
-    author_url: string;
+    comments_on_all_channels: number;
+    comments_on_current_channel: number;
+   
+    channel_id: string;
+    channel_url: string;
     id: string;
-    published_at: Date;
-    video_count: number;
-    subscriber_count: number;
-    title: string;
+    channel_published_at: Date;
+    min_comment_publish_date: Date;
+    max_comment_publish_date: Date;
+    
 }
-const getStatisticByVideoAsync = async (video_id: string, logger: ILogger): IAsyncPromiseResult<IStatistic[]> => {
-    const [list, error] = await sqlAsync<IApiKeyDto[]>(async (client) => {
-        const { rows } = await client.query(`SELECT COUNT(*) AS comment_count, comment.author_id, channel.*
-FROM comment
-left outer join channel on channel.id = comment.author_id
-WHERE comment.video_id = ${sql_escape(video_id)}
-GROUP BY comment.author_id, channel.id  order by comment_count desc;`);
-        return rows;
-    }, logger);
-    if(error) {
-        return [,error]
-    }
-    return [getRowsOnlyWithAuthorUrl(list as [])];
-};
 
 const getStatisticByChannelAndVideoAsync = async (channel_id: string,video_id: string, logger: ILogger): IAsyncPromiseResult<IStatistic[]> => {
     const [list, error] = await sqlAsync<IApiKeyDto[]>(async (client) => {
         const { rows } = await client.query(`SELECT 
-    (cc.comment_count::float / NULLIF(dd.days_difference, 0)) AS comment_frequency,
-    (cc.comment_count::float / NULLIF(cc.time_since_channel_published, 0)) AS comment_frequency_since_channel,
-    dd.days_difference,
-    cc.*
+    distinct(comment.author_id) as channel_id, 
+    channel_comment.author_url AS channel_url,
+    channel_comment.published_at as channel_published_at,
+
+  (SELECT COUNT(*)  
+    FROM 
+      comment as c1
+    INNER JOIN 
+      video as v1 ON v1.id = c1.video_id
+--     LEFT JOIN 
+--       channel AS ch1 ON ch1.id = c1.author_id
+--     LEFT JOIN 
+--       channel AS chm ON chm.id = v1.channel_id
+    WHERE 
+      c1.author_id = comment.author_id and v1.channel_id = video.channel_id
+  ) as comments_on_current_channel,
+
+
+
+  (SELECT MIN(c1.published_at_time) 
+    FROM 
+      comment as c1
+    INNER JOIN 
+      video as v1 ON v1.id = c1.video_id
+--     LEFT JOIN 
+--       channel AS ch1 ON ch1.id = c1.author_id
+--     LEFT JOIN 
+--       channel AS chm ON chm.id = v1.channel_id
+    WHERE 
+      c1.author_id = comment.author_id 
+) as min_comment_publish_date,
+  
+
+  (SELECT MAX(c1.published_at_time) 
+    FROM 
+      comment as c1
+    INNER JOIN 
+      video as v1 ON v1.id = c1.video_id
+--     LEFT JOIN 
+--       channel AS ch1 ON ch1.id = c1.author_id
+--     LEFT JOIN 
+--       channel AS chm ON chm.id = v1.channel_id
+    WHERE 
+      c1.author_id = comment.author_id 
+) as max_comment_publish_date,
+
+  (SELECT COUNT(*) 
+    FROM 
+      comment as c1
+    INNER JOIN 
+      video as v1 ON v1.id = c1.video_id
+--     LEFT JOIN 
+--       channel AS ch1 ON ch1.id = c1.author_id
+--     LEFT JOIN 
+--       channel AS chm ON chm.id = v1.channel_id
+    WHERE 
+      c1.author_id = comment.author_id 
+) as comments_on_all_channels
+  
 FROM 
-    (
-        SELECT 
-            COUNT(*) AS comment_count, 
-            comment.author_id, 
-            EXTRACT(EPOCH FROM (NOW() - channel.published_at)) / 86400 AS time_since_channel_published,
-            channel.*
-        FROM 
-            comment
-        INNER JOIN 
-            video ON video.id = comment.video_id
-        LEFT OUTER JOIN 
-            channel ON channel.id = comment.author_id
-        WHERE 
-            video.channel_id = ${sql_escape(channel_id)}  
-        GROUP BY 
-            comment.author_id, 
-            channel.id
-    ) AS cc
-CROSS JOIN 
-    (
-        SELECT 
-            (MAX(published_at) - MIN(published_at)) AS days_difference
-        FROM 
-            video
-        WHERE 
-            channel_id = ${sql_escape(channel_id)}  
-    ) AS dd
+    comment 
+INNER JOIN 
+    video ON video.id = comment.video_id 
+LEFT JOIN 
+    channel AS channel_comment ON channel_comment.id = comment.author_id 
 WHERE 
-    cc.author_id IN (SELECT author_id FROM comment WHERE video_id = ${sql_escape(video_id)}  )
-ORDER BY 
-    comment_frequency_since_channel DESC;
-`);
+    comment.video_id = ${sql_escape(video_id)}`);
         return rows;
     }, logger);
     if(error) {
@@ -163,12 +180,12 @@ ORDER BY
 };
 
 function getRowsOnlyWithAuthorUrl(statistics: IStatistic[]):IStatistic[] {
-    return statistics.filter(s => s.author_url);
+    return statistics.filter(s => s.channel_url);
 }
 
 export const statistic = {
-    getStatisticByVideoAsync,
     getStatisticByChannelAsync,
     getStatisticByChannelAndVideoAsync,
-    getStatisticInfoAsync
+    getStatisticInfoAsync,
+    getStatisticByGroup
 };

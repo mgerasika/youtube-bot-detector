@@ -10,9 +10,10 @@ import { useVideoInfo } from './hooks/use-video-info.hook';
 const App: React.FC = () => {
     const info = useVideoInfo()
 
+    console.log('info', info);
     if (info?.videoId && info?.channelId && info?.channelUrl) {
         return (
-            <VideoPage videoId={info.videoId} channelId={info.channelId} />
+            <VideoPage videoId={info.videoId} channelId={info.channelId} channelUrl={info.channelUrl} />
         );
     }
     return <></>

@@ -12,7 +12,7 @@ export const useInfinitePolling = <T,>(callback: ()=> T | undefined, deps: any[]
         }
         const poll = () => {
             const result = handler();
-            timeoutRef.current = setTimeout(poll, 50);
+            timeoutRef.current = setTimeout(poll, 500);
             if(result) {
                 setState(prev => {
                     if(JSON.stringify(prev) !== JSON.stringify(result)) {

@@ -60,16 +60,29 @@ export interface IStatisticInfo {
 	'youtube_accounts_count': number;
 }
 export interface IStatistic {
-	'comment_frequency_since_channel': number;
-	'comment_frequency': number;
-	'comment_count': number;
+	'comments_on_all_channels': number;
+	'comments_on_current_channel': number;
+	'channel_id': string;
+	'channel_url': string;
+	'id': string;
+	'channel_published_at': Date;
+	'min_comment_publish_date': Date;
+	'max_comment_publish_date': Date;
+}
+export interface IGroupStatistic {
 	'author_id': string;
 	'author_url': string;
-	'id': string;
+	'author_published_at': string;
+	'items': IGroupStatisticItem[];
+}
+export interface IGroupStatisticItem {
 	'published_at': Date;
-	'video_count': number;
-	'subscriber_count': number;
-	'title': string;
+	'total_comment_count': number;
+	'channel_url': string;
+	'channel_id': string;
+	'comment_count': number;
+	'first_video_published_at': Date;
+	'last_video_published_at': Date;
 }
 export interface IVideoDto {
 	'id': string;
@@ -108,11 +121,11 @@ export type TScanFullByChannelGetError = ''
 	 |'undefined';
 export type TStatisticInfoGetError = ''
 	 |'undefined';
-export type TStatisticByVideoGetError = ''
-	 |'undefined';
 export type TStatisticByChannelGetError = ''
 	 |'undefined';
 export type TStatisticByChannelAndVideoGetError = ''
+	 |'undefined';
+export type TStatisticByGroupGetError = ''
 	 |'undefined';
 export type TTestGetError = ''
 	 |'undefined';
@@ -140,9 +153,9 @@ export type TPartialErrorCodes =
 	 | TScanFullByVideoGetError
 	 | TScanFullByChannelGetError
 	 | TStatisticInfoGetError
-	 | TStatisticByVideoGetError
 	 | TStatisticByChannelGetError
 	 | TStatisticByChannelAndVideoGetError
+	 | TStatisticByGroupGetError
 	 | TTestGetError
 	 | TVideoLastDateGetError
 	 | TVideoGetError
@@ -206,10 +219,6 @@ export const createApiRequest = (rs: IRequestService) => ({
 	statisticInfoGet : (): CustomPromise<CustomAxiosResponse<IStatisticInfo,TStatisticInfoGetError>,IBEError<TStatisticInfoGetError>> =>
 		rs.get(formatUrl(API_SERVER_URL + `/api/statistic/info`) ),
 
-	// get by-video statistic.controller.ts
-	statisticByVideoGet : (query: {video_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<IStatistic>,TStatisticByVideoGetError>,IBEError<TStatisticByVideoGetError>> =>
-		rs.get(formatUrl(API_SERVER_URL + `/api/statistic/by-video`, query) ),
-
 	// get by-channel statistic.controller.ts
 	statisticByChannelGet : (query: {channel_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<IStatistic>,TStatisticByChannelGetError>,IBEError<TStatisticByChannelGetError>> =>
 		rs.get(formatUrl(API_SERVER_URL + `/api/statistic/by-channel`, query) ),
@@ -217,6 +226,10 @@ export const createApiRequest = (rs: IRequestService) => ({
 	// get by-channel-and-video statistic.controller.ts
 	statisticByChannelAndVideoGet : (query: {channel_id?:string,video_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<IStatistic>,TStatisticByChannelAndVideoGetError>,IBEError<TStatisticByChannelAndVideoGetError>> =>
 		rs.get(formatUrl(API_SERVER_URL + `/api/statistic/by-channel-and-video`, query) ),
+
+	// get by-group statistic.controller.ts
+	statisticByGroupGet : (query: {video_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<IGroupStatistic>,TStatisticByGroupGetError>,IBEError<TStatisticByGroupGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `/api/statistic/by-group`, query) ),
 
 	// get test test.controller.ts
 	testGet : (): CustomPromise<CustomAxiosResponse<string,TTestGetError>,IBEError<TTestGetError>> =>
@@ -255,9 +268,9 @@ const URL = {
 	scanFullByVideoGet:  (): string => `/api/scan/full-by-video`,
 	scanFullByChannelGet:  (): string => `/api/scan/full-by-channel`,
 	statisticInfoGet:  (): string => `/api/statistic/info`,
-	statisticByVideoGet:  (): string => `/api/statistic/by-video`,
 	statisticByChannelGet:  (): string => `/api/statistic/by-channel`,
 	statisticByChannelAndVideoGet:  (): string => `/api/statistic/by-channel-and-video`,
+	statisticByGroupGet:  (): string => `/api/statistic/by-group`,
 	testGet:  (): string => `/api/test`,
 	videoLastDateGet:  (): string => `/api/video/last-date`,
 	videoGet:  (): string => `/api/video`,
@@ -271,6 +284,10 @@ export const API_URL = URL;
 export const api = {
   ...createApiRequest(requestService),
 };
+
+
+
+
 
 
 

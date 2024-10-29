@@ -7,6 +7,7 @@ import { useGetStatisticByChannelAndVideo } from './api/use-get-statistic-by-cha
 
 interface IProps {
     videoId: string;
+    channelUrl: string;
     channelId: string;
     comments: HTMLElement[];
     onReplyClick: (parent: HTMLElement) => void;
@@ -20,11 +21,12 @@ export const CommentsList: React.FC<IProps> = ({comments, onReplyClick, videoId,
         <>
             {comments.map((parentEl,index) => {
                 const authourUrl = getAuthorUrl(parentEl);
-                const statByChannel = byChannelAndVideo?.find(f => f.author_url === authourUrl);
+                const statByChannel = byChannelAndVideo?.find(f => f.channel_url === authourUrl);
                 parentEl.style.position = "relative";
+                
                 return <React.Fragment key={`${authourUrl}-${index}`}>
                     {ReactDOM.createPortal(
-                        <Comment byChannelAndVideo={statByChannel} parentEl={parentEl} onReplyClick={onReplyClick} />,
+                        statByChannel ? <Comment byChannelAndVideo={statByChannel} parentEl={parentEl} onReplyClick={onReplyClick} /> : null,
                         parentEl
                     )}
                 </React.Fragment>

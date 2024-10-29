@@ -5,7 +5,7 @@ style.innerHTML = `
     position:absolute;
     left:0px;
     top:0px;
-    font-size:12px;
+    font-size:10px;
     border:1px solid black;
     color:black;
     border-radius:4px; 
@@ -18,4 +18,12 @@ style.innerHTML = `
     color:red;
     border:1px solid red;
 }
+    .botDivPopup {
+     position:absolute;
+        top:20px;
+        z-index:200;
+         border:1px solid black;
+    border-radius:4px; 
+        background-color:white;
+    }
 `;

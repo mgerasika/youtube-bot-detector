@@ -556,49 +556,6 @@
         }
       }
     },
-    "/api/statistic/by-video": {
-      "get": {
-        "tags": [
-          "statistic"
-        ],
-        "summary": "get by-video statistic.controller.ts",
-        "description": "get by-video statistic.controller.ts",
-        "operationId": "",
-        "parameters": [
-          {
-            "name": "video_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IStatistic"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/statistic/by-channel": {
       "get": {
         "tags": [
@@ -676,6 +633,49 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/IStatistic"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/statistic/by-group": {
+      "get": {
+        "tags": [
+          "statistic"
+        ],
+        "summary": "get by-group statistic.controller.ts",
+        "description": "get by-group statistic.controller.ts",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IGroupStatistic"
                   }
                 }
               }
@@ -1037,47 +1037,97 @@
       "IStatistic": {
         "type": "object",
         "required": [
-          "comment_frequency_since_channel",
-          "comment_frequency",
-          "comment_count",
-          "author_id",
-          "author_url",
+          "comments_on_all_channels",
+          "comments_on_current_channel",
+          "channel_id",
+          "channel_url",
           "id",
-          "published_at",
-          "video_count",
-          "subscriber_count",
-          "title"
+          "channel_published_at",
+          "min_comment_publish_date",
+          "max_comment_publish_date"
         ],
         "properties": {
-          "comment_frequency_since_channel": {
+          "comments_on_all_channels": {
             "type": "integer"
           },
-          "comment_frequency": {
+          "comments_on_current_channel": {
             "type": "integer"
           },
-          "comment_count": {
-            "type": "integer"
+          "channel_id": {
+            "type": "string"
           },
+          "channel_url": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "channel_published_at": {
+            "type": "Date"
+          },
+          "min_comment_publish_date": {
+            "type": "Date"
+          },
+          "max_comment_publish_date": {
+            "type": "Date"
+          }
+        }
+      },
+      "IGroupStatistic": {
+        "type": "object",
+        "required": [
+          "author_id",
+          "author_url",
+          "author_published_at",
+          "items"
+        ],
+        "properties": {
           "author_id": {
             "type": "string"
           },
           "author_url": {
             "type": "string"
           },
-          "id": {
+          "author_published_at": {
             "type": "string"
           },
+          "items": {
+            "type": "IGroupStatisticItem[]"
+          }
+        }
+      },
+      "IGroupStatisticItem": {
+        "type": "object",
+        "required": [
+          "published_at",
+          "total_comment_count",
+          "channel_url",
+          "channel_id",
+          "comment_count",
+          "first_video_published_at",
+          "last_video_published_at"
+        ],
+        "properties": {
           "published_at": {
             "type": "Date"
           },
-          "video_count": {
+          "total_comment_count": {
             "type": "integer"
           },
-          "subscriber_count": {
-            "type": "integer"
-          },
-          "title": {
+          "channel_url": {
             "type": "string"
+          },
+          "channel_id": {
+            "type": "string"
+          },
+          "comment_count": {
+            "type": "integer"
+          },
+          "first_video_published_at": {
+            "type": "Date"
+          },
+          "last_video_published_at": {
+            "type": "Date"
           }
         }
       },
