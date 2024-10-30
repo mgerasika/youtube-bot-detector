@@ -26,7 +26,7 @@ const getFullScanByChannelAsync = async (channel_id: string, logger: ILogger): I
         'fullScanChannelInfoAsync',
         {
             channelId: channel_id,
-        },
+        } as any,
         logger,
     );
 

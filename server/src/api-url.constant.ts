@@ -23,7 +23,7 @@ interface IApiUrl {
             statistic: {
                 info: IUrlItem,
                 byChannel: IUrlItem,
-                byChannelAndVideo: IUrlItem,
+                byVideo: IUrlItem,
                 byGroup: IUrlItem;
             };
             test: IUrlItem;
@@ -56,7 +56,7 @@ export const API_URL = createUrls<IApiUrl>({
             statistic: {
                 info: EMPTY_URL_ITEM,
                 byChannel: EMPTY_URL_ITEM,
-                byChannelAndVideo: EMPTY_URL_ITEM,
+                byVideo: EMPTY_URL_ITEM,
                 byGroup: EMPTY_URL_ITEM
             },
             test: EMPTY_URL_ITEM,

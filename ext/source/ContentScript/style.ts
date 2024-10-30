@@ -20,10 +20,11 @@ style.innerHTML = `
 }
     .botDivPopup {
      position:absolute;
-        top:20px;
+        top:21px;
         z-index:200;
          border:1px solid black;
     border-radius:4px; 
         background-color:white;
+        padding:4px;
     }
 `;

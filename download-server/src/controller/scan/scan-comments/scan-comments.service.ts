@@ -22,7 +22,7 @@ export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger
     if (lastDateError) {
         return [, lastDateError];
     }
-    logger.log('last_date from db  = ', lastDate?.data);
+    logger.log('last_date from db (last comment date) = ', lastDate?.data);
 
     const [data, error] = await allServices.youtube.getCommentsAsync(
         { videoId: body.videoId, publishedAt: lastDate?.data?.toString() || '' },

@@ -20,7 +20,7 @@ export const scanVideosAsync = async (body: IScanVideosBody, logger: ILogger): I
     if (lastDateError) {
         return [, lastDateError];
     }
-    logger.log('last_date = ', lastDate?.data);
+    logger.log('last_date from db (last video date) = ', lastDate?.data);
 
     const [data, error] = await getVideosAsync({channelId:body.channelId, publishedAt: lastDate?.data?.toString() || ''}, logger);
     if(error) {
@@ -40,6 +40,7 @@ export const scanVideosAsync = async (body: IScanVideosBody, logger: ILogger): I
                     videos: group.map((item) => {
                         return {
                             published_at: item.publishedAt,
+                            published_at_time: item.publishedAt,
                             id: item.videoId,
                             title: item.title,
                             channel_id: item.channelId,

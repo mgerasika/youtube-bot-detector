@@ -7,8 +7,13 @@ import { IVideoDto, VideoDto } from "@server/dto/video.dto";
 
 const getLastVideoDateAsync = async ({channel_id}: {channel_id?:string}, logger: ILogger) : IAsyncPromiseResult<Date>=> {
     return await sqlAsync<Date>(async (client) => {
-        const {rows} = await client.query(`select published_at_time from video ${sql_where('channel_id', channel_id)} ORDER BY published_at_time DESC LIMIT 1`);
-        return rows.length ? rows[0].published_at_time : undefined;
+        const data = await client.query(`select published_at_time from video ${sql_where('channel_id', channel_id)} ORDER BY published_at_time DESC LIMIT 1`);
+        let res = data?.rows?.length ? data.rows[0].published_at_time : undefined;
+        if(!res) {
+            const data = await client.query(`select published_at from video ${sql_where('channel_id', channel_id)} ORDER BY published_at DESC LIMIT 1`);
+            res = data?.rows?.length ? data.rows[0].published_at : undefined;
+        }
+        return res;
     }, logger);
 };
 

@@ -33,44 +33,34 @@ export const Comment: React.FC<IProps> = ({ byChannelAndVideo, parentEl, onReply
     return () => parentEl.removeEventListener('click', handleParentClick);
   }, []);
 
-  const commentMinMaxDiff = useMemo((): number | undefined => {
-    if (byChannelAndVideo?.min_comment_publish_date && byChannelAndVideo.max_comment_publish_date) {
-      return calculateDateDifference(new Date(byChannelAndVideo?.min_comment_publish_date), new Date(byChannelAndVideo?.max_comment_publish_date))
+  
+
+  const frequency_by_all = useMemo(() => {
+    if (byChannelAndVideo.unique_days_all) {
+      return (+(byChannelAndVideo?.comments_on_all_channels || 0) / (+byChannelAndVideo.unique_days_all || 1) )
     }
     return undefined;
   }, [byChannelAndVideo])
 
-  const channelAgeFromToday = useMemo((): number | undefined => {
-    if (byChannelAndVideo?.channel_published_at) {
-      return calculateDateDifference(new Date(byChannelAndVideo?.channel_published_at), new Date())
+  const frequency_by_channel = useMemo(() => {
+    if (byChannelAndVideo.unique_days_on_channel) {
+      return (+(byChannelAndVideo?.comments_on_current_channel || 0) / (+byChannelAndVideo.unique_days_on_channel || 1))
     }
     return undefined;
   }, [byChannelAndVideo])
-  const rate = useMemo(() => {
-    if (commentMinMaxDiff) {
-      return (+(byChannelAndVideo?.comments_on_current_channel || 0) / commentMinMaxDiff || 1)
-    }
-    return undefined;
 
-  }, [byChannelAndVideo, commentMinMaxDiff])
 
-  const rate_from_start = useMemo(() => {
-    if (channelAgeFromToday) {
-      return (+(byChannelAndVideo?.comments_on_current_channel || 0) / channelAgeFromToday || 1)
-    }
-    return undefined;
-  }, [byChannelAndVideo, channelAgeFromToday])
 
   const isBot = useMemo((): boolean => {
-    if (rate && +rate > 2) {
+    if (frequency_by_channel && frequency_by_channel > 4) {
       return true;
     }
-    if (rate_from_start && +rate_from_start > 2) {
+    if (frequency_by_all && frequency_by_all > 4) {
       return true;
     }
     return false;
 
-  }, [rate, rate_from_start])
+  }, [frequency_by_channel, frequency_by_all])
 
   useEffect(() => {
     if (isBot) {
@@ -90,11 +80,12 @@ export const Comment: React.FC<IProps> = ({ byChannelAndVideo, parentEl, onReply
 
   return <div className="botDiv" id={authourUrl} onClick={() => setIsOpen(!isOpen)}>
     <div className='iconDiv'>
-      {byChannelAndVideo?.comments_on_all_channels}/{byChannelAndVideo?.comments_on_current_channel}/{rate?.toFixed(1)}/{rate_from_start?.toFixed(1)}
+      {byChannelAndVideo?.comments_on_all_channels}/{byChannelAndVideo?.comments_on_current_channel}/{frequency_by_all?.toFixed(1)}/{frequency_by_channel?.toFixed(1)}
     </div>
-    {isOpen && <CommentPopup byChannelAndVideo={byChannelAndVideo}
-      channelAgeFromToday={channelAgeFromToday}
-      rate={rate} rate_from_start={rate_from_start} commentMinMaxDiff={commentMinMaxDiff} />}
+    {isOpen && <CommentPopup
+      frequency_by_channel={frequency_by_channel}
+      frequency_by_all={frequency_by_all}
+      byChannelAndVideo={byChannelAndVideo} />}
   </div>;
 
 }
@@ -124,13 +115,3 @@ function getFlagsState(el: HTMLElement): IFlagsState {
 
   return res;
 };
-
-function calculateDateDifference(startDate: Date, endDate: Date): number {
-  // Get the difference in milliseconds
-  const differenceInMs = endDate.getTime() - startDate.getTime();
-
-  // Convert milliseconds to days
-  const differenceInDays = differenceInMs / (1000 * 60 * 60 * 24);
-
-  return Math.floor(differenceInDays); // Use Math.floor to get full days
-}

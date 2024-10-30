@@ -7,8 +7,13 @@ import { CommentDto, ICommentDto } from "@server/dto/comment.dto";
 
 const getLastCommentDateAsync = async ({video_id}: {video_id?:string}, logger: ILogger) : IAsyncPromiseResult<Date>=> {
     return await sqlAsync<Date>(async (client) => {
-        const {rows} = await client.query(`select published_at_time from comment ${sql_where('video_id', video_id)} ORDER BY published_at_time DESC LIMIT 1`);
-        return rows.length ? rows[0].published_at_time : undefined;
+        const data = await client.query(`select published_at_time from comment ${sql_where('video_id', video_id)} ORDER BY published_at_time DESC LIMIT 1`);
+        let res = data?.rows?.length ? data.rows[0].published_at_time : undefined;
+        if(!res) {
+            const data = await client.query(`select published_at from comment ${sql_where('video_id', video_id)} ORDER BY published_at DESC LIMIT 1`);
+            res = data?.rows?.length ? data.rows[0].published_at : undefined;
+        }
+        return res;
     }, logger);
 };
   const getCommentListAllAsync = async ({comment_id}: {comment_id?:string}, logger: ILogger) : IAsyncPromiseResult<ICommentDto[]>=> {

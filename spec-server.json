@@ -1043,8 +1043,8 @@
           "channel_url",
           "id",
           "channel_published_at",
-          "min_comment_publish_date",
-          "max_comment_publish_date"
+          "unique_days_on_channel",
+          "unique_days_all"
         ],
         "properties": {
           "comments_on_all_channels": {
@@ -1065,11 +1065,11 @@
           "channel_published_at": {
             "type": "Date"
           },
-          "min_comment_publish_date": {
-            "type": "Date"
+          "unique_days_on_channel": {
+            "type": "integer"
           },
-          "max_comment_publish_date": {
-            "type": "Date"
+          "unique_days_all": {
+            "type": "integer"
           }
         }
       },

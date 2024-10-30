@@ -40,7 +40,9 @@ export const scanVideoInfoAsync = async (body: IScanVideoInfoBody, logger: ILogg
     const [, apiError] = await toQuery(() =>
         api.videoPost({
             videos: [
-                { published_at: data.publishedAt, id: data.videoId, title: data.title, channel_id: data.channelId },
+                { published_at: data.publishedAt,
+                published_at_time: data.publishedAt as any,
+                    id: data.videoId, title: data.title, channel_id: data.channelId },
             ],
         }),
     );

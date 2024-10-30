@@ -6,6 +6,7 @@ export interface IVideoDto {
     id: string;
 
     published_at: Date;
+    published_at_time?: Date;
 
     channel_id: string;
 
@@ -20,6 +21,9 @@ export class VideoDto implements IVideoDto {
 
     @Column({ nullable: false, type: 'date'})
     published_at!: Date;
+
+    @Column({ nullable: true, type: 'timestamptz'})
+    published_at_time?: Date;
 
     @Column({ type: 'varchar', length: 255 })
     channel_id!: string;

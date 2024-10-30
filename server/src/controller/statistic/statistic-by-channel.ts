@@ -22,7 +22,7 @@ export interface IGroupStatisticItem {
     last_video_published_at: Date;
 }
 
-export const getStatisticByGroup = async (video_id: string, logger: ILogger): IAsyncPromiseResult<IGroupStatistic[]> => {
+export const getStatisticByChannel = async (video_id: string, logger: ILogger): IAsyncPromiseResult<IGroupStatistic[]> => {
 
     // get unique author comments by video_id
     const [list, error] = await sqlAsync<{author_id:string, author_url:string,author_published_at: string}[]>(async (client) => {

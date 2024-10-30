@@ -5,7 +5,7 @@ import { sqlAsync } from '@server/sql/sql-async.util';
 import { sql_escape } from '@server/sql/sql.util';
 import { ENV } from '@server/env';
 import { ILogger } from '@common/utils/create-logger.utils';
-import { getStatisticByGroup } from './group-statistic';
+import { getStatisticByChannel } from './statistic-by-channel';
 
 export interface IStatisticInfo {
     video_count: number;
@@ -48,8 +48,8 @@ export interface IStatistic {
     channel_url: string;
     id: string;
     channel_published_at: Date;
-    min_comment_publish_date: Date;
-    max_comment_publish_date: Date;
+    unique_days_on_channel :number;
+    unique_days_all:number;
     
 }
 
@@ -65,55 +65,39 @@ const getStatisticByChannelAndVideoAsync = async (channel_id: string,video_id: s
       comment as c1
     INNER JOIN 
       video as v1 ON v1.id = c1.video_id
---     LEFT JOIN 
---       channel AS ch1 ON ch1.id = c1.author_id
---     LEFT JOIN 
---       channel AS chm ON chm.id = v1.channel_id
     WHERE 
       c1.author_id = comment.author_id and v1.channel_id = video.channel_id
   ) as comments_on_current_channel,
 
-
-
-  (SELECT MIN(c1.published_at_time) 
+    (SELECT COUNT(*) 
     FROM 
       comment as c1
     INNER JOIN 
       video as v1 ON v1.id = c1.video_id
---     LEFT JOIN 
---       channel AS ch1 ON ch1.id = c1.author_id
---     LEFT JOIN 
---       channel AS chm ON chm.id = v1.channel_id
     WHERE 
       c1.author_id = comment.author_id 
-) as min_comment_publish_date,
-  
+) as comments_on_all_channels,
 
-  (SELECT MAX(c1.published_at_time) 
+
+
+  (SELECT count(distinct c1.published_at) 
     FROM 
       comment as c1
     INNER JOIN 
       video as v1 ON v1.id = c1.video_id
---     LEFT JOIN 
---       channel AS ch1 ON ch1.id = c1.author_id
---     LEFT JOIN 
---       channel AS chm ON chm.id = v1.channel_id
     WHERE 
       c1.author_id = comment.author_id 
-) as max_comment_publish_date,
+) as unique_days_all,
 
-  (SELECT COUNT(*) 
+  (SELECT count(distinct c1.published_at) 
     FROM 
       comment as c1
     INNER JOIN 
       video as v1 ON v1.id = c1.video_id
---     LEFT JOIN 
---       channel AS ch1 ON ch1.id = c1.author_id
---     LEFT JOIN 
---       channel AS chm ON chm.id = v1.channel_id
     WHERE 
-      c1.author_id = comment.author_id 
-) as comments_on_all_channels
+       c1.author_id = comment.author_id and v1.channel_id = video.channel_id
+) as unique_days_on_channel
+
   
 FROM 
     comment 
@@ -187,5 +171,5 @@ export const statistic = {
     getStatisticByChannelAsync,
     getStatisticByChannelAndVideoAsync,
     getStatisticInfoAsync,
-    getStatisticByGroup
+    getStatisticByGroup: getStatisticByChannel
 };

@@ -5,7 +5,7 @@ import { IApiKeyDto } from "@server/dto/api-key.dto";
 import { IStatistic, IStatisticInfo } from "./statistic.service";
 import { memoryCache } from "@common/utils/memory-cache";
 import { createLogger } from "@common/utils/create-logger.utils";
-import { IGroupStatistic } from "./group-statistic";
+import { IGroupStatistic } from "./statistic-by-channel";
 
 interface IStatisticInfoRequest extends IExpressRequest {
 }
@@ -46,7 +46,7 @@ interface IByChannelAndVideoRequest extends IExpressRequest {
 }
 
 interface IByChannelAndVideoResponse extends IExpressResponse<IStatistic[], void> {}
-app.get(API_URL.api.statistic.byChannelAndVideo.toString(),memoryCache(1), async (req: IByChannelAndVideoRequest, res: IByChannelAndVideoResponse) => {
+app.get(API_URL.api.statistic.byVideo.toString(),memoryCache(1), async (req: IByChannelAndVideoRequest, res: IByChannelAndVideoResponse) => {
     const logger = createLogger();
     const [data, error] = await allServices.statistic.getStatisticByChannelAndVideoAsync(req.query.channel_id || '', req.query.video_id || '', logger);
     if (error) {

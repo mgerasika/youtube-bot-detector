@@ -66,8 +66,8 @@ export interface IStatistic {
     channel_url: string;
     id: string;
     channel_published_at: Date;
-    min_comment_publish_date: Date;
-    max_comment_publish_date: Date;
+    unique_days_on_channel: number;
+    unique_days_all: number;
 }
 export interface IGroupStatistic {
     author_id: string;
@@ -87,6 +87,7 @@ export interface IGroupStatisticItem {
 export interface IVideoDto {
     id: string;
     published_at: Date;
+    published_at_time: Date;
     channel_id: string;
     title: string;
 }
