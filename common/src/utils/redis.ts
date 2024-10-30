@@ -32,10 +32,10 @@ export async function connectToRedisAsync(redis_url: string, logger: ILogger): P
     return _client;
 }
 
-export const redis_setAsync = async (redisClient: TRedisClient, messageId: string) => {
+export const redis_setAsync = async (redis: TRedisClient, messageId: string) => {
     const oneDay = 24*60*60;
     const oneYear = 12*30*oneDay;
-    await redisClient.set(messageId, '', {
+    await redis.set(messageId, '', {
         EX: oneYear
     });
 }

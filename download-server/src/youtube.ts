@@ -7,21 +7,24 @@ import { ILogger } from '@common/utils/create-logger.utils';
 
 let _youtubeInstance: youtube_v3.Youtube | undefined;
 
-export async function getYoutube(oldKey:string | undefined, logger: ILogger): IAsyncPromiseResult<youtube_v3.Youtube > {
+export async function getYoutube(oldKey:string | undefined, logger: ILogger): IAsyncPromiseResult<youtube_v3.Youtube | undefined > {
     if (oldKey || !_youtubeInstance) {
         _youtubeInstance = undefined;        
         const [key, keyError] = await toQuery(() => api.keyActiveGet({old_key: oldKey}));
         if (keyError) {
-            return [,keyError]
+            return [, logger.log('can not find valid youtube key ', keyError?.message)]
 
         }
         logger.log('youtube key', key?.data)
-        _youtubeInstance = google.youtube({
-            version: 'v3',
-            auth: key?.data.youtube_key || '',
-        });
+        if(key?.data.youtube_key.length) {
+            _youtubeInstance = google.youtube({
+                version: 'v3',
+                auth: key?.data.youtube_key || '',
+            });
+        }
     }
-    return [_youtubeInstance as youtube_v3.Youtube];
+   
+    return [_youtubeInstance];
 
 }
 

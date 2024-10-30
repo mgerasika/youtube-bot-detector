@@ -9,10 +9,12 @@ export interface IGetChannelIdBody {
 
 
 export const getChannelIdAsync = async (channelName: string, logger: ILogger): IAsyncPromiseResult<string> => {
+  logger.log('getChannelIdAsync start', channelName)
     const channelId = await requestChannelIdAsync(channelName, logger);
     if(!channelId) {
         return [,'channel id not found']
     }
+    logger.log('getChannelIdAsync end')
     return [channelId];
 };
 

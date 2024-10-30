@@ -20,6 +20,8 @@ export interface IShortVideoInfo {
 }
 
 export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody, logger: ILogger): IAsyncPromiseResult<ICollection<IShortVideoInfo>> => {
+    logger.log('getVideosAsync start', channelId, publishedAt)
+
     const [youtube, youtubeError] = await getYoutube(undefined, logger);
     if(!youtube || youtubeError) {
         return [, youtubeError];
@@ -97,6 +99,8 @@ export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody, l
 
     } while (nextPageToken);
     const allVideos = groupVideos.flat() as IShortVideoInfo[];
+
+    logger.log('getVideosAsync end')
     return [{
         total: allVideos.length,
         items: allVideos

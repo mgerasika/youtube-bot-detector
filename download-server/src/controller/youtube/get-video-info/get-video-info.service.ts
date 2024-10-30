@@ -11,6 +11,7 @@ export interface IGetVideoInfoBody {
 
 
 export const getVideoInfoAsync = async (body: IGetVideoInfoBody, logger: ILogger): IAsyncPromiseResult<IShortVideoInfo | undefined> => {
+    logger.log('getVideoInfoAsync start', body)
     const [youtube, youtubeError] = await getYoutube(undefined, logger);
     if(!youtube || youtubeError) {
         return [, youtubeError];
@@ -43,6 +44,8 @@ export const getVideoInfoAsync = async (body: IGetVideoInfoBody, logger: ILogger
         logger.log('No video found for the provided name');
         // implement this https://www.youtube.com/channel/UC-gIX2RdnTumzuxmMWPo0uw
     }
+
+    logger.log('getVideoInfoAsync end')
 
     return [undefined]
 }

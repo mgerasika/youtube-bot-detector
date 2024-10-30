@@ -20,11 +20,11 @@ app.get('/', (req, res) => {
 
 const port = process.env.PORT || 8009;
 if (ENV.rabbit_mq_url) {
-    rabbitMQ_subscribeAsync({channelName: ENV.rabbit_mq_channel_name, rabbit_mq_url: ENV.rabbit_mq_url},(data) => {
+    rabbitMQ_subscribeAsync({channelName: ENV.rabbit_mq_channel_name, rabbit_mq_url: ENV.rabbit_mq_url, redis_url: ENV.redis_url},async (data) => {
         if (data.msg) {
             const method = (allServices.scan as any)[data.msg.methodName] as Function;
             if(method) {
-                return  method.call(allServices.scan, data.msg.methodArgumentsJson, createLogger());
+                return await method.call(allServices.scan, data.msg.methodArgumentsJson, createLogger());
             }
         }
         return Promise.resolve();

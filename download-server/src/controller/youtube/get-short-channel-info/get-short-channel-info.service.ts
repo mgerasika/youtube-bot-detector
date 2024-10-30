@@ -18,10 +18,12 @@ export interface IShortChannelInfo {
 }
 
 export const getShortChannelInfoAsync = async (channelId: string, logger: ILogger): IAsyncPromiseResult<IShortChannelInfo> => {
+  logger.log('getCommentsAsync start', channelId)
     const channelInfo = await requestChannelInfoAsync(channelId, logger);
     if(!channelInfo) {
         return [,'channel id not found']
     }
+    logger.log('getCommentsAsync end')
     return [channelInfo];
 };
 

@@ -15,6 +15,7 @@ export const scanChannelInfoAsync = async (
     body: IScanChannelInfoBody,
     logger: ILogger,
 ): IAsyncPromiseResult<IScanReturn> => {
+    logger.log('scanChannelInfoAsync start', body)
     const redis = await connectToRedisAsync(ENV.redis_url, logger);
 
     const available = await redis.exists(getRedisMessageId('channel', body.channelId));
@@ -60,9 +61,21 @@ export const scanChannelInfoAsync = async (
     if (!success) {
         return [, 'data is empty'];
     }
+    if(channels.length) {
+        logger.log('post to database new channels ',channels.length)
+    }
+    
     await oneByOneAsync(channels, async (channel) => {
         await redis_setAsync(redis, getRedisMessageId('channel', channel.id));
     });
 
-    return [{ hasChanges: channels.length > 0, message: logger.log('add to redis cache channels = ', channels.length) }];
+    const redisClient = await connectToRedisAsync(ENV.redis_url, logger);
+    const messageId = getRabbitMqMessageId<IScanChannelInfoBody>('scanChannelInfoAsync', body);
+    await redisClient.set(messageId, '', {
+        EX: 60,
+    });
+    logger.log('add to redis cache scanChannelInfoAsync', messageId);
+
+    logger.log('scanChannelInfoAsync end')
+    return [{ hasChanges: channels.length > 0, message: logger.log('add to redis cache new channels = ', channels.length) }];
 };

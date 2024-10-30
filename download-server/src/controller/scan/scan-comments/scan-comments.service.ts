@@ -18,9 +18,10 @@ import { IScanReturn } from '@common/interfaces/scan.interface';
 // remove from redis cache for rescan
 
 export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger): IAsyncPromiseResult<IScanReturn> => {
+    logger.log('scanCommentsAsync start', body)
     const [lastDate, lastDateError] = await toQuery(() => api.commentLastDateGet({ video_id: body.videoId }));
     if (lastDateError) {
-        return [, lastDateError];
+        return [,logger.log(lastDateError)];
     }
     logger.log('last_date from db (last comment date) = ', lastDate?.data);
 
@@ -29,7 +30,7 @@ export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger
         logger,
     );
     if(error || !data) {
-        return [, error];
+        return [,logger.log(error)];
     }
     logger.log('recieved comments count = ', data?.items.length);
 
@@ -72,6 +73,7 @@ export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger
             }),
         );
         if(success) {
+            logger.log('post to db comments', group.length)
             await oneByOneAsync(group, async (comment) => {
                 await redis_setAsync(redis, getRedisMessageId('comment', comment.commentId))
             })
@@ -83,15 +85,14 @@ export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger
         }
     });
 
-    // remove comments from redis cache
+    logger.log(`total post to db comments ${comments.length}`)
+
     const redisClient = await connectToRedisAsync(ENV.redis_url, logger);
-    const messageId = getRabbitMqMessageId<IScanCommentsBody>('scanCommentsAsync', {
-        videoId: body.videoId,
-    });
+    const messageId = getRabbitMqMessageId<IScanCommentsBody>('scanCommentsAsync', body);
     await redisClient.set(messageId, '', {
         EX: 60,
     });
-    
-   
-    return [{message: logger.log(`post to db comments ${comments.length}`), hasChanges:comments.length > 0 || missedAuthorsIds.length > 0}];
+    logger.log('add to redis cache scanCommentsAsync ', messageId);
+    logger.log('scanCommentsAsync end')
+    return [{ hasChanges:comments.length > 0 || missedAuthorsIds.length > 0}];
 };

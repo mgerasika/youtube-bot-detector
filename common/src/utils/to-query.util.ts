@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 
-export type IQueryReturn<T> = [T, undefined] | [undefined, string | Error | AxiosError] | [T];
+export type IQueryReturn<T> = [T, undefined] | [undefined, string | Error | AxiosError | any] | [T];
 
 export async function toQuery<T>(callback: () => Promise<T>): Promise<IQueryReturn<T>> {
     try {

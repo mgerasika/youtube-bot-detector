@@ -12,7 +12,7 @@ export const fullScanVideoInfoAsync = async (
     logger: ILogger,
 ): IAsyncPromiseResult<IScanReturn> => {
     
-    logger.log('start full scan video videoId = ', body.videoId)
+    logger.log('fullScanVideoInfoAsync start', body);
     const [channelResult, channelError] = await allServices.scan.scanChannelInfoAsync({channelId: body.channelId}, logger)
     if(channelError) {
         return [,channelError]
@@ -36,15 +36,14 @@ export const fullScanVideoInfoAsync = async (
 
     logger.log('finish full scan videoId = ', body.videoId)
     
-     // remove comments from redis cache
-     const redisClient = await connectToRedisAsync(ENV.redis_url, logger);
-     const messageId = getRabbitMqMessageId<IFullScanVideoInfoBody>('fullScanVideoInfoAsync', {
-         videoId: body.videoId,
-         channelId: body.channelId
-     });
-     await redisClient.set(messageId, '', {
-         EX: 1,
-     });
+    
+    const redisClient = await connectToRedisAsync(ENV.redis_url, logger);
+    const messageId = getRabbitMqMessageId<IFullScanVideoInfoBody>('fullScanVideoInfoAsync', body);
+    await redisClient.set(messageId, '', {
+        EX: 60,
+    });
+    logger.log('add to redis cache fullScanVideoInfoAsync', messageId);
 
+     logger.log('fullScanVideoInfoAsync end');
     return [{}];
 };

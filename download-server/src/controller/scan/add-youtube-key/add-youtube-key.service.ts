@@ -9,6 +9,7 @@ import { IAddYoutubeKeyBody } from '@common/model';
 import { IScanReturn } from '@common/interfaces/scan.interface';
 
 export const addYoutubeKeyAsync = async (body: IAddYoutubeKeyBody, logger: ILogger): IAsyncPromiseResult<IScanReturn> => {
+    logger.log('addYoutubeKeyAsync start', body);
     try {
         const youtubeInstance = google.youtube({
             version: 'v3',
@@ -35,5 +36,6 @@ export const addYoutubeKeyAsync = async (body: IAddYoutubeKeyBody, logger: ILogg
         return [, postError];
     }
    
+    logger.log('addYoutubeKeyAsync end');
     return [{message: logger.log('success add/update key')}];
 };

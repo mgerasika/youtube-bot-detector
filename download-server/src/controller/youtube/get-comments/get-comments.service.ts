@@ -22,10 +22,14 @@ export interface IShortCommentInfo {
 
 
 export const getCommentsAsync = async ({videoId, publishedAt}: IGetCommentsBody, logger: ILogger): IAsyncPromiseResult<ICollection<IShortCommentInfo>> => {
+    logger.log('getCommentsAsync start', videoId, publishedAt)
+
     const [youtube, youtubeError] = await getYoutube(undefined, logger);
     if(!youtube || youtubeError) {
-        return [, youtubeError];
+        return [, logger.log(youtubeError)];
     }
+
+    logger.log('start call youtube api by videoId and publishedAt', videoId, publishedAt)
    
     let allComments: Array<IShortCommentInfo> = [];
     let nextPageToken: string | null | undefined = '';
@@ -88,6 +92,8 @@ export const getCommentsAsync = async ({videoId, publishedAt}: IGetCommentsBody,
     } while (nextPageToken);
 
     logger.log(`Total comments retrieved: ${allComments.length}`);
+
+    logger.log('getCommentsAsync end')
     return [{
         total: allComments.length,
         items: allComments

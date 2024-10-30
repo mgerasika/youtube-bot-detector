@@ -27,6 +27,8 @@ export const getChannelInfoAsync = async (
     body: IGetChannelInfoBody,
     logger: ILogger,
 ): IAsyncPromiseResult<IChannelInfo[] | undefined> => {
+    logger.log('getChannelInfoAsync start', body)
+
     const [youtube, youtubeError] = await getYoutube(undefined, logger);
     if (!youtube || youtubeError) {
         return [, youtubeError];
@@ -73,6 +75,6 @@ export const getChannelInfoAsync = async (
         logger.log('No channel found for the provided name, probadly deleted');
         // implement this https://www.youtube.com/channel/UC-gIX2RdnTumzuxmMWPo0uw
     }
-
+    logger.log('getChannelInfoAsync end')
     return [,];
 };
