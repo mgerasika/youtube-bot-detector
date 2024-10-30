@@ -59,23 +59,7 @@ export interface IStatisticInfo {
     rabbitm_mq_consumer_count: number;
     youtube_accounts_count: number;
 }
-export interface IStatistic {
-    comments_on_all_channels: number;
-    comments_on_current_channel: number;
-    channel_id: string;
-    channel_url: string;
-    id: string;
-    channel_published_at: Date;
-    unique_days_on_channel: number;
-    unique_days_all: number;
-}
-export interface IGroupStatistic {
-    author_id: string;
-    author_url: string;
-    author_published_at: string;
-    items: IGroupStatisticItem[];
-}
-export interface IGroupStatisticItem {
+export interface IStatisticByChannel {
     published_at: Date;
     total_comment_count: number;
     channel_url: string;
@@ -84,10 +68,23 @@ export interface IGroupStatisticItem {
     first_video_published_at: Date;
     last_video_published_at: Date;
 }
+export interface IStatisticByVideo {
+    isBot: boolean;
+    channel_id: string;
+    channel_url: string;
+    comments_on_current_channel: number;
+    comments_on_all_channels: number;
+    comments_per_day_by_range_all: number;
+    comments_per_day_by_range_current: number;
+    comments_per_day_current: number;
+    comments_per_day_all: number;
+    comments_days_diff_currrent: number;
+    comments_days_diff_all: number;
+}
 export interface IVideoDto {
     id: string;
     published_at: Date;
-    published_at_time: Date;
+    published_at_time?: Date;
     channel_id: string;
     title: string;
 }
@@ -109,8 +106,7 @@ export type TScanFullByVideoGetError = '' | 'undefined';
 export type TScanFullByChannelGetError = '' | 'undefined';
 export type TStatisticInfoGetError = '' | 'undefined';
 export type TStatisticByChannelGetError = '' | 'undefined';
-export type TStatisticByChannelAndVideoGetError = '' | 'undefined';
-export type TStatisticByGroupGetError = '' | 'undefined';
+export type TStatisticByVideoGetError = '' | 'undefined';
 export type TTestGetError = '' | 'undefined';
 export type TVideoLastDateGetError = '' | 'undefined';
 export type TVideoGetError = '' | 'undefined';
@@ -132,8 +128,7 @@ export type TPartialErrorCodes =
     | TScanFullByChannelGetError
     | TStatisticInfoGetError
     | TStatisticByChannelGetError
-    | TStatisticByChannelAndVideoGetError
-    | TStatisticByGroupGetError
+    | TStatisticByVideoGetError
     | TTestGetError
     | TVideoLastDateGetError
     | TVideoGetError
@@ -228,25 +223,17 @@ export const createApiRequest = (rs: IRequestService) => ({
     statisticByChannelGet: (
         query: { channel_id?: string } | undefined,
     ): CustomPromise<
-        CustomAxiosResponse<Array<IStatistic>, TStatisticByChannelGetError>,
+        CustomAxiosResponse<Array<IStatisticByChannel>, TStatisticByChannelGetError>,
         IBEError<TStatisticByChannelGetError>
     > => rs.get(formatUrl(API_SERVER_URL + `/api/statistic/by-channel`, query)),
 
-    // get by-channel-and-video statistic.controller.ts
-    statisticByChannelAndVideoGet: (
-        query: { channel_id?: string; video_id?: string } | undefined,
-    ): CustomPromise<
-        CustomAxiosResponse<Array<IStatistic>, TStatisticByChannelAndVideoGetError>,
-        IBEError<TStatisticByChannelAndVideoGetError>
-    > => rs.get(formatUrl(API_SERVER_URL + `/api/statistic/by-channel-and-video`, query)),
-
-    // get by-group statistic.controller.ts
-    statisticByGroupGet: (
+    // get by-video statistic.controller.ts
+    statisticByVideoGet: (
         query: { video_id?: string } | undefined,
     ): CustomPromise<
-        CustomAxiosResponse<Array<IGroupStatistic>, TStatisticByGroupGetError>,
-        IBEError<TStatisticByGroupGetError>
-    > => rs.get(formatUrl(API_SERVER_URL + `/api/statistic/by-group`, query)),
+        CustomAxiosResponse<Array<IStatisticByVideo>, TStatisticByVideoGetError>,
+        IBEError<TStatisticByVideoGetError>
+    > => rs.get(formatUrl(API_SERVER_URL + `/api/statistic/by-video`, query)),
 
     // get test test.controller.ts
     testGet: (): CustomPromise<CustomAxiosResponse<string, TTestGetError>, IBEError<TTestGetError>> =>
@@ -291,8 +278,7 @@ const URL = {
     scanFullByChannelGet: (): string => `/api/scan/full-by-channel`,
     statisticInfoGet: (): string => `/api/statistic/info`,
     statisticByChannelGet: (): string => `/api/statistic/by-channel`,
-    statisticByChannelAndVideoGet: (): string => `/api/statistic/by-channel-and-video`,
-    statisticByGroupGet: (): string => `/api/statistic/by-group`,
+    statisticByVideoGet: (): string => `/api/statistic/by-video`,
     testGet: (): string => `/api/test`,
     videoLastDateGet: (): string => `/api/video/last-date`,
     videoGet: (): string => `/api/video`,

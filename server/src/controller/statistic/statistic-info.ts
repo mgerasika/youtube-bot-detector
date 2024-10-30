@@ -5,7 +5,7 @@ import { sqlAsync } from '@server/sql/sql-async.util';
 import { sql_escape } from '@server/sql/sql.util';
 import { ENV } from '@server/env';
 import { ILogger } from '@common/utils/create-logger.utils';
-import { getStatisticByChannel } from './statistic-by-channel';
+import { getStatisticByChannelAsync } from './statistic-by-channel';
 
 export interface IStatisticInfo {
     video_count: number;

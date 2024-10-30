@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
-import { CommentsList } from './CommentList';
-import { useGetComments } from './hooks/use-get-comments.hook';
+import { useGetComments } from '../hooks/use-get-comments.hook';
+import { CommentsList } from '../components/comment-list/CommentList';
 
 interface IProps {
     videoId:string;

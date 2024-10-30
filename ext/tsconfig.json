@@ -11,5 +11,5 @@
     "useDefineForClassFields": true,
     "skipLibCheck": true
   },
-  "include": ["source", "scripts", "webpack.config.js"]
+  "include": ["src", "scripts", "webpack.config.js", "types.d.ts"]
 }

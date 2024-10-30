@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ErrorBoundary from './ErrorBoundary';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { VideoPage } from './VideoPage';
+import { VideoPage } from './pages/VideoPage';
 import { BrowserRouter as Router} from 'react-router-dom';
 import { useVideoInfo } from './hooks/use-video-info.hook';
 

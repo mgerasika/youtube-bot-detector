@@ -1,11 +1,11 @@
 import { API_URL } from "@server/api-url.constant";
 import { app, IExpressRequest, IExpressResponse } from "@server/express-app";
 import { allServices } from "../all-services";
-import { IApiKeyDto } from "@server/dto/api-key.dto";
-import { IStatistic, IStatisticInfo } from "./statistic.service";
 import { memoryCache } from "@common/utils/memory-cache";
 import { createLogger } from "@common/utils/create-logger.utils";
-import { IGroupStatistic } from "./statistic-by-channel";
+import { IStatisticByChannel } from "./statistic-by-channel";
+import { IStatisticInfo } from "./statistic-info";
+import { getStatisticByVideoAsync, IStatisticByVideo } from "./statistic-by-video";
 
 interface IStatisticInfoRequest extends IExpressRequest {
 }
@@ -22,14 +22,14 @@ app.get(API_URL.api.statistic.info.toString(), memoryCache(1), async (req: IStat
 });
 
 
-interface IByChannelRequest extends IExpressRequest {
+interface IStatisticByChannelRequest extends IExpressRequest {
     query: {
         channel_id?: string;
     };
 }
 
-interface IByChannelResponse extends IExpressResponse<IStatistic[], void> {}
-app.get(API_URL.api.statistic.byChannel.toString(),memoryCache(1), async (req: IByChannelRequest, res: IByChannelResponse) => {
+interface IStatisticByChannelResponse extends IExpressResponse<IStatisticByChannel[], void> {}
+app.get(API_URL.api.statistic.byChannel.toString(),memoryCache(1), async (req: IStatisticByChannelRequest, res: IStatisticByChannelResponse) => {
     const logger = createLogger();
     const [data, error] = await allServices.statistic.getStatisticByChannelAsync(req.query.channel_id || '', logger);
     if (error) {
@@ -38,38 +38,22 @@ app.get(API_URL.api.statistic.byChannel.toString(),memoryCache(1), async (req: I
     return res.send(data);
 });
 
-interface IByChannelAndVideoRequest extends IExpressRequest {
+interface IStatisticByVideoRequest extends IExpressRequest {
     query: {
-        channel_id?: string;
         video_id?: string;
     };
 }
 
-interface IByChannelAndVideoResponse extends IExpressResponse<IStatistic[], void> {}
-app.get(API_URL.api.statistic.byVideo.toString(),memoryCache(1), async (req: IByChannelAndVideoRequest, res: IByChannelAndVideoResponse) => {
+interface IStatisticByVideoResponse extends IExpressResponse<IStatisticByVideo[], void> {}
+app.get(API_URL.api.statistic.byVideo.toString(),memoryCache(1), async (req: IStatisticByVideoRequest, res: IStatisticByVideoResponse) => {
     const logger = createLogger();
-    const [data, error] = await allServices.statistic.getStatisticByChannelAndVideoAsync(req.query.channel_id || '', req.query.video_id || '', logger);
+    const [data, error] = await getStatisticByVideoAsync( req.query.video_id || '', logger);
     if (error) {
         return res.status(400).send( error);
     }
     return res.send(data);
 });
 
-interface IByGroupRequest extends IExpressRequest {
-    query: {
-        video_id?: string;
-    };
-}
-
-interface IByGroupResponse extends IExpressResponse<IGroupStatistic[], void> {}
-app.get(API_URL.api.statistic.byGroup.toString(),memoryCache(1), async (req: IByGroupRequest, res: IByGroupResponse) => {
-    const logger = createLogger();
-    const [data, error] = await allServices.statistic.getStatisticByGroup(req.query.video_id || '', logger);
-    if (error) {
-        return res.status(400).send( error);
-    }
-    return res.send(data);
-});
 
 
 

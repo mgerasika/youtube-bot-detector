@@ -581,7 +581,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/IStatistic"
+                    "$ref": "#/components/schemas/IStatisticByChannel"
                   }
                 }
               }
@@ -599,64 +599,13 @@
         }
       }
     },
-    "/api/statistic/by-channel-and-video": {
+    "/api/statistic/by-video": {
       "get": {
         "tags": [
           "statistic"
         ],
-        "summary": "get by-channel-and-video statistic.controller.ts",
-        "description": "get by-channel-and-video statistic.controller.ts",
-        "operationId": "",
-        "parameters": [
-          {
-            "name": "channel_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "video_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/IStatistic"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/statistic/by-group": {
-      "get": {
-        "tags": [
-          "statistic"
-        ],
-        "summary": "get by-group statistic.controller.ts",
-        "description": "get by-group statistic.controller.ts",
+        "summary": "get by-video statistic.controller.ts",
+        "description": "get by-video statistic.controller.ts",
         "operationId": "",
         "parameters": [
           {
@@ -675,7 +624,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/IGroupStatistic"
+                    "$ref": "#/components/schemas/IStatisticByVideo"
                   }
                 }
               }
@@ -1034,69 +983,7 @@
           }
         }
       },
-      "IStatistic": {
-        "type": "object",
-        "required": [
-          "comments_on_all_channels",
-          "comments_on_current_channel",
-          "channel_id",
-          "channel_url",
-          "id",
-          "channel_published_at",
-          "unique_days_on_channel",
-          "unique_days_all"
-        ],
-        "properties": {
-          "comments_on_all_channels": {
-            "type": "integer"
-          },
-          "comments_on_current_channel": {
-            "type": "integer"
-          },
-          "channel_id": {
-            "type": "string"
-          },
-          "channel_url": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "channel_published_at": {
-            "type": "Date"
-          },
-          "unique_days_on_channel": {
-            "type": "integer"
-          },
-          "unique_days_all": {
-            "type": "integer"
-          }
-        }
-      },
-      "IGroupStatistic": {
-        "type": "object",
-        "required": [
-          "author_id",
-          "author_url",
-          "author_published_at",
-          "items"
-        ],
-        "properties": {
-          "author_id": {
-            "type": "string"
-          },
-          "author_url": {
-            "type": "string"
-          },
-          "author_published_at": {
-            "type": "string"
-          },
-          "items": {
-            "type": "IGroupStatisticItem[]"
-          }
-        }
-      },
-      "IGroupStatisticItem": {
+      "IStatisticByChannel": {
         "type": "object",
         "required": [
           "published_at",
@@ -1131,6 +1018,57 @@
           }
         }
       },
+      "IStatisticByVideo": {
+        "type": "object",
+        "required": [
+          "isBot",
+          "channel_id",
+          "channel_url",
+          "comments_on_current_channel",
+          "comments_on_all_channels",
+          "comments_per_day_by_range_all",
+          "comments_per_day_by_range_current",
+          "comments_per_day_current",
+          "comments_per_day_all",
+          "comments_days_diff_currrent",
+          "comments_days_diff_all"
+        ],
+        "properties": {
+          "isBot": {
+            "type": "boolean"
+          },
+          "channel_id": {
+            "type": "string"
+          },
+          "channel_url": {
+            "type": "string"
+          },
+          "comments_on_current_channel": {
+            "type": "integer"
+          },
+          "comments_on_all_channels": {
+            "type": "integer"
+          },
+          "comments_per_day_by_range_all": {
+            "type": "integer"
+          },
+          "comments_per_day_by_range_current": {
+            "type": "integer"
+          },
+          "comments_per_day_current": {
+            "type": "integer"
+          },
+          "comments_per_day_all": {
+            "type": "integer"
+          },
+          "comments_days_diff_currrent": {
+            "type": "integer"
+          },
+          "comments_days_diff_all": {
+            "type": "integer"
+          }
+        }
+      },
       "IVideoDto": {
         "type": "object",
         "required": [
@@ -1144,6 +1082,9 @@
             "type": "string"
           },
           "published_at": {
+            "type": "Date"
+          },
+          "published_at_time": {
             "type": "Date"
           },
           "channel_id": {

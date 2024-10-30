@@ -50,4 +50,4 @@ if (!doc) {
 	throw "Document cannot be null";
 }
 const tsCode = swaggerToTypescript(doc);
-writeTsToFile(`source/api.generated.ts`, tsCode);
+writeTsToFile(`src/api.generated.ts`, tsCode);
