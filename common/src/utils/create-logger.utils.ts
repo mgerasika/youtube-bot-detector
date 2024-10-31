@@ -4,12 +4,14 @@ export interface ILogger {
 }
 export const createLogger = () : ILogger => {
     const _logs: string[] = [];
-
+let _time = new Date();
     
     return {
         log: (msg: any, ...rest: any[]) => {
-            console.log(msg, ...rest);
-            _logs.push(msg + (rest.length ? ' - ' + rest.join() : ''));
+            const now = new Date();
+            const diff = Math.floor((now.getTime() - _time.getTime() )/1000)
+            console.log(msg, ...rest, diff + 'ms');
+            _logs.push(msg + (rest.length ? ' - ' + rest.join() : '') + ' ' + diff + 'ms');
 
             const res = msg + (rest.length ? ' - ' + rest.join(', ') : '');
             return res;

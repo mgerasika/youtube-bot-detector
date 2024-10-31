@@ -25,6 +25,7 @@ export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger
     }
     logger.log('last_date from db (last comment date) = ', lastDate?.data);
 
+    logger.log('start download comments by videoId and lastDate')
     const [data, error] = await allServices.youtube.getCommentsAsync(
         { videoId: body.videoId, publishedAt: lastDate?.data?.toString() || '' },
         logger,
@@ -32,16 +33,17 @@ export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger
     if(error || !data) {
         return [,logger.log(error)];
     }
+    logger.log('end download comments ')
     logger.log('recieved comments count = ', data?.items.length);
 
     const comments = data.items.reverse();
 
     // start submit authors
     const uniqueAuthorIds = getUniqueKeys(comments, 'authorChannelId');
-    const redis = await connectToRedisAsync(ENV.redis_url, logger);
+    const redisClient = await connectToRedisAsync(ENV.redis_url, logger);
     const missedAuthorsIds: string[] = [];
     await oneByOneAsync(uniqueAuthorIds, async (authorId) => {
-        const available = await redis.exists(getRedisMessageId('channel',authorId));
+        const available = await redisClient.exists(getRedisMessageId('channel',authorId));
         if ( !available) {
             missedAuthorsIds.push(authorId);
         }
@@ -50,11 +52,15 @@ export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger
     if (missedAuthorsIds.length) {
         logger.log('uniqueAuthorIds = ', uniqueAuthorIds.length, ' missedAuthorsIds = ', missedAuthorsIds.length)
         const groups = groupArray(missedAuthorsIds, 50);
+        logger.log('start download channels by groups ', groups.length)
         await oneByOneAsync(groups, async (group) => {
             await allServices.scan.scanChannelInfoAsync({channelId: group.join(',')}, logger);
         });
+        logger.log('end download channels')
     }
     // end submit authors
+
+    logger.log('start push to database comments (after channels)')
     const groupedComments = groupArray(comments, 100);
     await oneByOneAsync(groupedComments, async (group) => {
         const [success, apiError] = await toQuery(() =>
@@ -75,7 +81,7 @@ export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger
         if(success) {
             logger.log('post to db comments', group.length)
             await oneByOneAsync(group, async (comment) => {
-                await redis_setAsync(redis, getRedisMessageId('comment', comment.commentId))
+                await redis_setAsync(redisClient, getRedisMessageId('comment', comment.commentId))
             })
             logger.log('add to redis cache comments = ', group.length )
         }
@@ -84,10 +90,9 @@ export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger
             throw apiError;
         }
     });
-
+    
     logger.log(`total post to db comments ${comments.length}`)
 
-    const redisClient = await connectToRedisAsync(ENV.redis_url, logger);
     const messageId = getRabbitMqMessageId<IScanCommentsBody>('scanCommentsAsync', body);
     await redisClient.set(messageId, '', {
         EX: 60,

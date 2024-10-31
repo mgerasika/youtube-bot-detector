@@ -1,7 +1,7 @@
 import amqp, { Channel, Connection, ConsumeMessage } from 'amqplib';
 import { IQueryReturn } from './to-query.util';
 import { IRabbitMqBody, IRabbitMqMessage } from '../interfaces/rabbit-mq-message.interface';
-import { connectToRedisAsync , redis_setAsync} from './redis';
+import { connectToRedisAsync , redis_setAsync, TRedisClient} from './redis';
 import { IScan } from '@common/interfaces/scan.interface';
 import { ILogger } from './create-logger.utils';
 
@@ -51,7 +51,7 @@ export async function rabbitMQ_createConnectionAsync({channelName,  rabbit_mq_ur
 
 export async function rabbitMQ_subscribeAsync({ channelName, rabbit_mq_url, redis_url}:{channelName:string, rabbit_mq_url: string, redis_url: string}, callback: (data: IRabbitMqMessage) => Promise<any>, logger: ILogger) {
     try {
-        const redis = await connectToRedisAsync(redis_url, logger);
+        const redisClient = await connectToRedisAsync(redis_url, logger);
         const connection = await rabbitMQ_createConnectionAsync({rabbit_mq_url, channelName: channelName}, logger);
         if (connection) {
             _channel.consume(
@@ -60,7 +60,7 @@ export async function rabbitMQ_subscribeAsync({ channelName, rabbit_mq_url, redi
                     if (msg) {
                         const body = Buffer.from(msg.content);
                         // {"msg":{"methodName":"scanCommentsAsync","methodArgumentsJson":{"videoId":"sRdqKztogIQ"}}}
-                        logger.log('Rabbit MQ Data received on download server:', `${body}`);
+                        logger.log('rabbit mq data received on download server:', `${body}`);
                         let obj: IRabbitMqMessage | undefined;
                         try {
                             obj = JSON.parse(body.toString());
@@ -68,18 +68,27 @@ export async function rabbitMQ_subscribeAsync({ channelName, rabbit_mq_url, redi
                             logger.log('error parse rabbit mq message', ex);
                         }
                         if (obj) {
+                            const messageId = getRabbitMqMessageId(obj.msg.methodName as keyof IScan, obj.msg.methodArgumentsJson);
                             callback(obj)
                                 .then(async (res: any[]) => {
-                                    logger.log('Rabbit MQ response', res);
-                                    logger.log('')
+                                    logger.log('rabbit mq response', res);
+                                   
                                     if (res.length > 1 && res[1]) {
-                                        sendAgain(channelName, body, logger);
+                                        logger.log('remove from redis', messageId);
+                                        await redisClient.del(messageId);
+
+                                        sendAgain( channelName, body, logger);
                                     }
                                     _channel.ack(msg);
                                 })
-                                .catch(() => {
-                                    sendAgain(channelName, body, logger);
+                                .catch(async () => {
+                                    logger.log('remove from redis ', messageId);
+                                    await redisClient.del(messageId);
+
+                                    sendAgain( channelName, body, logger);
                                     _channel.ack(msg);
+                                }).finally(() =>{
+                                    logger.log('-----------------------------------')
                                 });
                         } else {
                             _channel.ack(msg);
@@ -96,10 +105,10 @@ export async function rabbitMQ_subscribeAsync({ channelName, rabbit_mq_url, redi
     }
 }
 
-function sendAgain(channelName: string, body: Buffer, logger: ILogger) {
-    logger.log('Rabbit MQ send again after some secconds = ', `${body}`);
+function sendAgain( channelName: string, body: Buffer, logger: ILogger) {
+    logger.log('rabbit mq will send again same message after 1 seccond = ', `${body}`);
+   
     setTimeout(() => {
-        logger.log('Rabbit MQ send again = ', `${body}`);
         _channel.sendToQueue(channelName, body, {
             persistent: true, // Ensure the message is durable
         });
@@ -119,7 +128,7 @@ export const getRabbitMqMessageId = <T = any,>(methodName: keyof IScan, methodAr
 }
 export const rabbitMQ_sendDataAsync = async <T = any, >({ channelName, rabbit_mq_url, redis_url}:{channelName:string, rabbit_mq_url: string, redis_url:string}, methodName: keyof IScan, methodArgumentsJson: T, logger: ILogger): Promise<IQueryReturn<boolean>> => {
     await rabbitMQ_createConnectionAsync({channelName,  rabbit_mq_url}, logger);
-    const redis = await connectToRedisAsync(redis_url, logger);
+    const redisClient = await connectToRedisAsync(redis_url, logger);
 
     const data : IRabbitMqMessage = {
         msg: {
@@ -129,9 +138,9 @@ export const rabbitMQ_sendDataAsync = async <T = any, >({ channelName, rabbit_mq
     }
     if (_channel) {
         const messageId = getRabbitMqMessageId(methodName, methodArgumentsJson);
-        const exist = await redis.exists(messageId);
+        const exist = await redisClient.exists(messageId);
         if (!exist) {
-            logger.log('Rabbit MQ Data send and add to redis:', data);
+            logger.log('Rabbit MQ Data send:', data);
             await _channel.sendToQueue(channelName, Buffer.from(JSON.stringify(data)));
         } else {
             logger.log('Rabbit MQ - already exist in Redis, skip', messageId);

@@ -16,16 +16,16 @@ export const scanChannelInfoAsync = async (
     logger: ILogger,
 ): IAsyncPromiseResult<IScanReturn> => {
     logger.log('scanChannelInfoAsync start', body)
-    const redis = await connectToRedisAsync(ENV.redis_url, logger);
+    const redisClient = await connectToRedisAsync(ENV.redis_url, logger);
 
-    const available = await redis.exists(getRedisMessageId('channel', body.channelId));
+    const available = await redisClient.exists(getRedisMessageId('channel', body.channelId));
     if (available) {
         return [{ message: logger.log('channel already exist in redis, skip ' + body.channelId) }];
     }
     if (!body.channelId.includes(',')) {
         const [info] = await toQuery(() => api.channelIdGet(body.channelId));
         if (info?.data?.id === body.channelId) {
-            await redis_setAsync(redis, getRedisMessageId('channel', body.channelId));
+            await redis_setAsync(redisClient, getRedisMessageId('channel', body.channelId));
 
             return [
                 { message: logger.log(logger.log('channel already exist in database, add to redis and skip ' + body.channelId)) },
@@ -65,16 +65,15 @@ export const scanChannelInfoAsync = async (
         logger.log('post to database new channels ',channels.length)
     }
     
+    logger.log('Add to redis channels')
     await oneByOneAsync(channels, async (channel) => {
-        await redis_setAsync(redis, getRedisMessageId('channel', channel.id));
-    });
+        await redis_setAsync(redisClient, getRedisMessageId('channel', channel.id));
 
-    const redisClient = await connectToRedisAsync(ENV.redis_url, logger);
-    const messageId = getRabbitMqMessageId<IScanChannelInfoBody>('scanChannelInfoAsync', body);
-    await redisClient.set(messageId, '', {
-        EX: 60,
+        const messageId = getRabbitMqMessageId<IScanChannelInfoBody>('scanChannelInfoAsync', {channelId:channel.id});
+             await redisClient.set(messageId, '', {
+                EX: 60*60*24*12*10, // 10 years
+            });
     });
-    logger.log('add to redis cache scanChannelInfoAsync', messageId);
 
     logger.log('scanChannelInfoAsync end')
     return [{ hasChanges: channels.length > 0, message: logger.log('add to redis cache new channels = ', channels.length) }];

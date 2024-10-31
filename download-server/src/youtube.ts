@@ -12,7 +12,7 @@ export async function getYoutube(oldKey:string | undefined, logger: ILogger): IA
         _youtubeInstance = undefined;        
         const [key, keyError] = await toQuery(() => api.keyActiveGet({old_key: oldKey}));
         if (keyError) {
-            return [, logger.log('can not find valid youtube key ', keyError?.message)]
+            return [, 'can not find valid youtube key ' + keyError?.message]
 
         }
         logger.log('youtube key', key?.data)
@@ -29,8 +29,10 @@ export async function getYoutube(oldKey:string | undefined, logger: ILogger): IA
 }
 
 export async function processYoutubeErrorAsync(youtubeError: AxiosError , logger: ILogger ): IAsyncPromiseResult<any> {
+    // youtube error Permission denied: Consumer 'api_key:AIzaSyCjWKCsfOwQItGPfrZ80uANaD3-JgU3eIY' has been suspended.
+    logger.log('youtube error', youtubeError.message)
     if(youtubeError && !youtubeError?.message?.includes('has disabled comments') ) {
-        logger.log('youtube quota error', youtubeError.message)
+        logger.log('request new youtube key')
         const oldKey = _youtubeInstance?.youtube.context._options.auth
         await getYoutube(oldKey as string, logger);
         return [, 'youtube quota oldKey = ' + oldKey]

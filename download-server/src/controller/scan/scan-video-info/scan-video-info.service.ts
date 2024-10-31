@@ -12,9 +12,9 @@ import { IScanReturn } from '@common/interfaces/scan.interface';
 // redis expiration should be max value (several years I think)
 export const scanVideoInfoAsync = async (body: IScanVideoInfoBody, logger: ILogger): IAsyncPromiseResult<IScanReturn> => {
     logger.log('scanVideoInfoAsync start', body)
-    const redis = await connectToRedisAsync(ENV.redis_url, logger)
+    const redisClient = await connectToRedisAsync(ENV.redis_url, logger)
     
-    const available = await redis.exists(getRedisMessageId('video', body.videoId));
+    const available = await redisClient.exists(getRedisMessageId('video', body.videoId));
     if(available) {
         
         return [{message:logger.log('video already exist in redis, skip ' + body.videoId)}];
@@ -22,8 +22,7 @@ export const scanVideoInfoAsync = async (body: IScanVideoInfoBody, logger: ILogg
 
     const [info, ] = await toQuery(() => api.videoIdGet(body.videoId));
     if (info?.data?.id === body.videoId) {
-        const redis = await connectToRedisAsync(ENV.redis_url, logger);
-        await redis_setAsync(redis, getRedisMessageId('video', body.videoId));
+        await redis_setAsync(redisClient, getRedisMessageId('video', body.videoId));
 
        
         return [{message: logger.log('video already exist in database, add to redis and skip ' + body.videoId)}];
@@ -51,7 +50,6 @@ export const scanVideoInfoAsync = async (body: IScanVideoInfoBody, logger: ILogg
         return [, apiError];
     }
 
-    const redisClient = await connectToRedisAsync(ENV.redis_url, logger);
     const messageId = getRabbitMqMessageId<IScanVideoInfoBody>('scanVideoInfoAsync', body);
     await redisClient.set(messageId, '', {
         EX: 60,

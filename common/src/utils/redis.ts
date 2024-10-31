@@ -36,6 +36,6 @@ export const redis_setAsync = async (redis: TRedisClient, messageId: string) => 
     const oneDay = 24*60*60;
     const oneYear = 12*30*oneDay;
     await redis.set(messageId, '', {
-        EX: oneYear
+        EX: oneYear*10
     });
 }
