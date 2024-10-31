@@ -2,14 +2,13 @@ import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.int
 import { oneByOneAsync } from '@common/utils/one-by-one-async.util';
 import { toQuery } from '@common/utils/to-query.util';
 import { groupArray } from '@common/utils/group-array.util';
-import { getRabbitMqMessageId, rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
+import { rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
 import { getVideosAsync } from '@server/controller/youtube/get-videos/get-videos.service';
 import { api } from '@server/api.generated';
 import { ENV, RABBIT_MQ_ENV } from '@server/env';
 import { createLogger, ILogger } from '@common/utils/create-logger.utils';
 import { IScanVideosBody, IScanCommentsBody } from '@common/model';
 import { IScanReturn } from '@common/interfaces/scan.interface';
-import { connectToRedisAsync } from '@common/utils/redis';
 
 // scan all videos by channel id. Need to use Date cache
 export const scanVideosAsync = async (body: IScanVideosBody, logger: ILogger): IAsyncPromiseResult<IScanReturn> => {
@@ -60,12 +59,6 @@ export const scanVideosAsync = async (body: IScanVideosBody, logger: ILogger): I
             }, logger)
         })
 
-        const redisClient = await connectToRedisAsync(ENV.redis_url, logger);
-        const messageId = getRabbitMqMessageId<IScanVideosBody>('scanVideosAsync', body);
-        await redisClient.set(messageId, '', {
-            EX: 60,
-        });
-        logger.log('add to redis cache scanVideosAsync', messageId);
 
         logger.log('scanVideosAsync end');
         return [{hasChanges: videos.length >0,  message:logger.log(`post to videos db ${videos.length}`)}];

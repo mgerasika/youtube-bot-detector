@@ -1,7 +1,7 @@
 import { ENV, RABBIT_MQ_ENV } from '@server/env';
 import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
 import { api } from '@server/api.generated';
-import { getRabbitMqMessageId, getRedisMessageId, rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
+import {  getRedisMessageId, rabbitMQ_sendDataAsync } from '@common/utils/rabbit-mq';
 import { groupArray } from '@common/utils/group-array.util';
 import { oneByOneAsync } from '@common/utils/one-by-one-async.util';
 import { toQuery } from '@common/utils/to-query.util';
@@ -12,11 +12,12 @@ import { allServices } from '@server/controller/all-services';
 import { IScanCommentsBody, IScanChannelInfoBody } from '@common/model';
 import { connectToRedisAsync, redis_setAsync } from '@common/utils/redis';
 import { IScanReturn } from '@common/interfaces/scan.interface';
+import { filterAuthorIdsAsync } from '../scan-channel-info/scan-channel-info.service';
 
 // scan all comments by videoId
 // possible to use lastDate, but problem with reply comments
 // remove from redis cache for rescan
-
+// refactor and put commentIds here, no comments
 export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger): IAsyncPromiseResult<IScanReturn> => {
     logger.log('scanCommentsAsync start', body)
     const [lastDate, lastDateError] = await toQuery(() => api.commentLastDateGet({ video_id: body.videoId }));
@@ -41,17 +42,18 @@ export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger
     // start submit authors
     const uniqueAuthorIds = getUniqueKeys(comments, 'authorChannelId');
     const redisClient = await connectToRedisAsync(ENV.redis_url, logger);
-    const missedAuthorsIds: string[] = [];
-    await oneByOneAsync(uniqueAuthorIds, async (authorId) => {
-        const available = await redisClient.exists(getRedisMessageId('channel',authorId));
-        if ( !available) {
-            missedAuthorsIds.push(authorId);
-        }
-    });
+    const [missedIds, missedIdsError] = await filterAuthorIdsAsync(uniqueAuthorIds, logger);
+    if(missedIdsError) {
+        return [,missedIdsError]
+    }
+    if(!missedIds) {
+        return [,'missedIds empty']
+    }
 
-    if (missedAuthorsIds.length) {
-        logger.log('uniqueAuthorIds = ', uniqueAuthorIds.length, ' missedAuthorsIds = ', missedAuthorsIds.length)
-        const groups = groupArray(missedAuthorsIds, 50);
+    //!!!Warning This method sync call scan chanels (no rabbit mq here) because need corectly post into database (foreing key problem)
+    if (missedIds?.length) {
+        logger.log('uniqueAuthorIds = ', uniqueAuthorIds.length, ' missedAuthorsIds = ', missedIds.length)
+        const groups = groupArray(missedIds, 50);
         logger.log('start download channels by groups ', groups.length)
         await oneByOneAsync(groups, async (group) => {
             await allServices.scan.scanChannelInfoAsync({channelId: group.join(',')}, logger);
@@ -83,7 +85,6 @@ export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger
             await oneByOneAsync(group, async (comment) => {
                 await redis_setAsync(redisClient, getRedisMessageId('comment', comment.commentId))
             })
-            logger.log('add to redis cache comments = ', group.length )
         }
         if (apiError) {
             logger.log('some error in forEach', apiError);
@@ -93,11 +94,7 @@ export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger
     
     logger.log(`total post to db comments ${comments.length}`)
 
-    const messageId = getRabbitMqMessageId<IScanCommentsBody>('scanCommentsAsync', body);
-    await redisClient.set(messageId, '', {
-        EX: 60,
-    });
-    logger.log('add to redis cache scanCommentsAsync ', messageId);
+    
     logger.log('scanCommentsAsync end')
-    return [{ hasChanges:comments.length > 0 || missedAuthorsIds.length > 0}];
+    return [{ hasChanges:comments.length > 0 || missedIds.length > 0}];
 };

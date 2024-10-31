@@ -3,7 +3,7 @@ import { api } from '@server/api.generated';
 import { toQuery } from '@common/utils/to-query.util';
 import { allServices } from '@server/controller/all-services';
 import { ILogger } from '@common/utils/create-logger.utils';
-import { getRabbitMqMessageId, getRedisMessageId } from '@common/utils/rabbit-mq';
+import { getRedisMessageId } from '@common/utils/rabbit-mq';
 import { connectToRedisAsync, redis_setAsync } from '@common/utils/redis';
 import { ENV } from '@server/env';
 import { IScanVideoInfoBody } from '@common/model';
@@ -16,7 +16,6 @@ export const scanVideoInfoAsync = async (body: IScanVideoInfoBody, logger: ILogg
     
     const available = await redisClient.exists(getRedisMessageId('video', body.videoId));
     if(available) {
-        
         return [{message:logger.log('video already exist in redis, skip ' + body.videoId)}];
     }
 
@@ -24,7 +23,6 @@ export const scanVideoInfoAsync = async (body: IScanVideoInfoBody, logger: ILogg
     if (info?.data?.id === body.videoId) {
         await redis_setAsync(redisClient, getRedisMessageId('video', body.videoId));
 
-       
         return [{message: logger.log('video already exist in database, add to redis and skip ' + body.videoId)}];
     }
     // probadly not found, then add
@@ -50,11 +48,6 @@ export const scanVideoInfoAsync = async (body: IScanVideoInfoBody, logger: ILogg
         return [, apiError];
     }
 
-    const messageId = getRabbitMqMessageId<IScanVideoInfoBody>('scanVideoInfoAsync', body);
-    await redisClient.set(messageId, '', {
-        EX: 60,
-    });
-    logger.log('add to redis cache scanVideoInfoAsync', messageId);
 
     logger.log('scanVideoInfoAsync end')
     return [{hasChanges:true}];
