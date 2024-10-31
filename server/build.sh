@@ -2,6 +2,7 @@
 image=youtube-bot-filter
 container=youtube-bot-filter
 port=8077
+ports=8078
 
 if [ "$(docker ps -aq -f name=$container)" ]; then
   docker stop $container
@@ -14,4 +15,4 @@ fi
 
 cd ..
 docker build -t $image -f server/Dockerfile . --build-arg PORT=$port
-docker run --security-opt=no-new-privileges:false --network=host --restart=always --env PORT=8010 -v /home:/home -d -p $port:8010 --env-file=server/.env --name $container $image
+docker run --security-opt=no-new-privileges:false --network=host --restart=always --env PORT=$port --env  PORTS=$ports -v /home:/home -d -p $port:$port --env-file=server/.env --name $container $image
