@@ -1,0 +1,213 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "youtube-bot-filter",
+    "description": "statistic-server",
+    "version": "0.0.1"
+  },
+  "tags": [
+    {
+      "name": "api",
+      "description": "api"
+    },
+    {
+      "name": "statistic",
+      "description": "statistic"
+    }
+  ],
+  "paths": {
+    "/api/server-info": {
+      "get": {
+        "tags": [
+          "api"
+        ],
+        "summary": "get server-info server-info.controller.ts",
+        "description": "get server-info server-info.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IServerInfo"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/statistic/test": {
+      "get": {
+        "tags": [
+          "statistic"
+        ],
+        "summary": "get test test.controller.ts",
+        "description": "get test test.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IStatisticServerTestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/statistic/upload-statistic": {
+      "get": {
+        "tags": [
+          "statistic"
+        ],
+        "summary": "get upload-statistic upload-statistic.controller.ts",
+        "description": "get upload-statistic upload-statistic.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IUploadStatisticBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "IServerInfo": {
+        "type": "object",
+        "required": [
+          "serverName",
+          "memory",
+          "ipV4"
+        ],
+        "properties": {
+          "serverName": {
+            "type": "string"
+          },
+          "memory": {
+            "type": "IMemoryInfo"
+          },
+          "ipV4": {
+            "type": "string"
+          }
+        }
+      },
+      "IMemoryInfo": {
+        "type": "object",
+        "required": [
+          "RSS",
+          "heapTotal",
+          "heapUsed",
+          "external"
+        ],
+        "properties": {
+          "RSS": {
+            "type": "integer"
+          },
+          "heapTotal": {
+            "type": "integer"
+          },
+          "heapUsed": {
+            "type": "integer"
+          },
+          "external": {
+            "type": "integer"
+          }
+        }
+      },
+      "IStatisticServerTestBody": {
+        "type": "object",
+        "required": [],
+        "properties": {}
+      },
+      "IUploadStatisticBody": {
+        "type": "object",
+        "required": [
+          "channel_id",
+          "channel_url",
+          "comment_count",
+          "days_tick",
+          "published_at_diff",
+          "frequency",
+          "frequency_tick"
+        ],
+        "properties": {
+          "channel_id": {
+            "type": "string"
+          },
+          "channel_url": {
+            "type": "string"
+          },
+          "comment_count": {
+            "type": "integer"
+          },
+          "published_at": {
+            "type": "Date"
+          },
+          "uploaded_at_time": {
+            "type": "Date"
+          },
+          "min_published_at": {
+            "type": "Date"
+          },
+          "max_published_at": {
+            "type": "Date"
+          },
+          "days_tick": {
+            "type": "integer"
+          },
+          "published_at_diff": {
+            "type": "integer"
+          },
+          "frequency": {
+            "type": "integer"
+          },
+          "frequency_tick": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}

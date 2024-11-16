@@ -1,0 +1,54 @@
+{
+    "kind": "youtube#playlistItem",
+    "etag": "9Ju9ST6XuE50JL5FCTJLZjFzK5A",
+    "id": "VVVxT293UXA5NnZuS0pfZTRlb0R2VXNBLjBFYVJXQ1RkZXhv",
+    "snippet": {
+        "publishedAt": "2023-11-13T10:55:00Z",
+        "channelId": "UCqOowQp96vnKJ_e4eoDvUsA",
+        "title": "Самий бюджетний саморобний ліхтарик на 60wh. Вартість без зарядного 350-400 грн. Світить 10 год",
+        "description": "Купляти бу АКБ з ноутбуків не рекомендую 1500 має в середньому але ціна 15 грн за штуку.\nЛампочка 12в 6ват тепле світло https://www.aliexpress.com/item/32868861545.html?spm=a2g0o.order_list.order_list_main.11.6f841802rRXBur 44 грн\nКорпус https://krivoyrog.prom.ua/ua/p1473305962-korpus-plastikovyj-n8bb.html ₴35\nКнопка https://krivoyrog.prom.ua/ua/p1504258517-vyklyuchatel-klavishnyj-kruglyj.html ₴15\nАкумулятори https://www.olx.ua/d/uk/obyavlenie/6-elementv-opt-akkumulyator-batareya-18650-IDTjktW.html?reason=seller_listing%7Colx_shop_premium ₴15 грн але краще пошукати щось краще бо ризик попасти на старе - хібаа що бюджет критичний\n\nУ відео заговорився і цей акб має десь 60 ват/год а не 90 бо акб старі. (якби були нові 18650 більше 3000mah було б 90 а може і ще більше)\n\nЗробив декілька штук хто хоче може купити\nhttps://www.olx.ua/d/uk/obyavlenie/lhtarik-samorobniy-fonar-fonarik-IDTIeYv.html\n\nЗ нових АКБ не роблю бо ціна буде за 1500 грн в кращому випадку.",
+        "thumbnails": {
+            "default": {
+                "url": "https://i.ytimg.com/vi/0EaRWCTdexo/default.jpg",
+                "width": 120,
+                "height": 90
+            },
+            "medium": {
+                "url": "https://i.ytimg.com/vi/0EaRWCTdexo/mqdefault.jpg",
+                "width": 320,
+                "height": 180
+            },
+            "high": {
+                "url": "https://i.ytimg.com/vi/0EaRWCTdexo/hqdefault.jpg",
+                "width": 480,
+                "height": 360
+            },
+            "standard": {
+                "url": "https://i.ytimg.com/vi/0EaRWCTdexo/sddefault.jpg",
+                "width": 640,
+                "height": 480
+            },
+            "maxres": {
+                "url": "https://i.ytimg.com/vi/0EaRWCTdexo/maxresdefault.jpg",
+                "width": 1280,
+                "height": 720
+            }
+        },
+        "channelTitle": "Mykhaylo H",
+        "playlistId": "UUqOowQp96vnKJ_e4eoDvUsA",
+        "position": 0,
+        "resourceId": {
+            "kind": "youtube#video",
+            "videoId": "0EaRWCTdexo"
+        },
+        "videoOwnerChannelTitle": "Mykhaylo H",
+        "videoOwnerChannelId": "UCqOowQp96vnKJ_e4eoDvUsA"
+    },
+    "contentDetails": {
+        "videoId": "0EaRWCTdexo",
+        "videoPublishedAt": "2023-11-13T10:55:00Z"
+    },
+    "status": {
+        "privacyStatus": "public"
+    }
+}

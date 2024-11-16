@@ -1,0 +1,195 @@
+For deploy new image:
+sh build.sh
+sudo docker tag youtube-bot-filter-downloader mgerasika/youtube-bot-filter-downloader:v10
+sudo docker login
+sudo docker push mgerasika/youtube-bot-filter-downloader:v10
+
+# on another pc
+docker pull mgerasika/youtube-bot-filter-downloader:v10
+docker run --network=host --restart=always --env PORT=8008 -v /home:/home -d \
+  -p $port:8008 \
+  --env RABBIT_MQ=amqp://test:test@178.210.131.101:5672 \
+  --env API_SERVER_URL=http://178.210.131.101:8007 \
+  --env REDIS_URL=redis://178.210.131.101:6379 \
+  --name youtube-bot-filter-downloader \
+  mgerasika/youtube-bot-filter-downloader:v10
+
+
+@NBCNews UCeY0bbntWzzVIaj2z3QigXg
+@CBSNews UC8p1vwvWtl6T73JiExfWs1g
+@FoxNews UCXIJgqnII2ZOINSWNOGFThA
+@mgerasika UCqOowQp96vnKJ_e4eoDvUsA
+@tsn UCXoJ8kY9zpLBEz-8saaT3ew
+@HKBD66 UCEaLASpyvrDrNPcHHfrxtmg
+@pavelsuboplatov3315 UC_PcSvU5ZczCqLRrIgzDrbg
+@УкраїнськаПравда UChparf_xrUZ_CJGQY5g4aEg
+@unian UCKCVeAihEfJr-pGH7B73Wyg
+@ButusovPlus UCg7T647ROSeONOCHeNMBduQ
+@army_tv_ua UCWRZ7gEgbry5FI2-46EX3jA
+@IstoriyaBezMifiv UCXx3yVx9paWJ-BLZVqQ8CRQ
+@bootuseua UCk_mTOq1CM29S3fvIaV0Gdw
+@portnikov UCV0ZrOPCKzqx36rRiPHkwFg
+
+@liga_net UCozzcggrnIZPLgDSVA4qKCQ
+@FaktyICTVchannel UCG26bSkEjJc7SqGsxoHNnbA
+@UKRAINETODAY24 UCjAg2-3PgoksLAkYE88S_6g
+@RadaTVchannel UC5V8mErVFOpcQXEb3y9IMZw
+@weukrainetv UCEduOt4TK8TtOaznB45TrhA
+@1plus1 UCVEaAWKfv7fE1c-ZuBs7TKQ
+@НароднаДумка UCsWMSE0bHdHLCqsMXUfQeSA
+
+@lugablog UCWParBCQ4W46CDNAxA5IXFg
+@DmytriyGordon UCZIFo5MmrUJS5JbLOxgnHuQ
+@NevzorovTV UC8kI2B-UUv7A5u3AOUnHNMQ
+@Censor_Net UC2J8-ykgWRStTGy6uUvhr_A
+@pryamiy  UCH9H_b9oJtSHBovh94yB5HA
+@Taras.Berezovets UC7FEBULCrgaFxH05t6mYeHA
+
+@STERNENKO UC5HBd4l_kpba5b0O1pK-Bfg
+@MackNack UCgpSieplNxXxLXYAzJLLpng
+@OlegZhdanov UC111NXlcDs0VGfyre6EiPmA
+@Taras_Lawyer UCxS4p_IE2fQG5kJu9coxn4w
+@ZnajUA UCCj_la08uOQ1teL2dD-xcRw
+@dneprexpress UC1h4sv6jq8vrKvtyNSqbpYQ
+@EspresoTv UCMEiyV8N2J93GdPNltPYM6w
+@hromadske_ua UC2oGvjIJwxn1KeZR3JtE-uQ
+@PresidentGovUa UCncq73xfx9sVA3Ht2uVRrCw
+@RadioSvobodaUkraine UC-wWyFdk_txbZV8FKEk0V8A
+@arestovych UCjWy2g76QZf7QLEwx4cB46g
+@YuriyRomanenko_Ukraine UCY2z9noVRgOx0AZwqMCLuBA
+
+@FeyginLive UCQVtD_N4OeD-9PshBq7NwyQ
+@yuryshvets UCb2oej0JtxlnywlqoSiHHVQ
+@Max_Katz UCUGfDbfRIx51kJGGHIFo8Rw
+@varlamov UC101o-vQ2iOj9vr00JUlyKw
+
+
+
+
+
+
+
+
+
+mgerasika@gmail.com
+AIzaSyCXuMpc8Ci70dELX9m4tCDHbveG1XjIUbg
+
+alta.romeo@gmail.com
+AIzaSyABSxMZ3X2-85t9I-DFfiPLyNa-TRaE46s
+AIzaSyBDBdB0Ilztog93hj-uMnfCPkUIPGoK_Nc
+AIzaSyDs839LILnDeGP8vVadsiPMh6VhuIu6PTI
+AIzaSyBpN7CuR3xrHaiuznExipzj6DdURvxGyIE
+AIzaSyC9_kwJz_PHGuJYa_0-Y1SIFd6pkKndH5I
+AIzaSyDmaL1yBfRlKSMm5uIUUqiJvujX_Qw7bUA
+AIzaSyBWsdGmcrAyGoSNmQIvtR1RzPsfsu7A6v4
+AIzaSyDyFpBmS86GjkOcTp0lrvuCP-51a6F4ti8
+AIzaSyBp74-2fGQrzxcqtyiAkDutVzAXKl9rOT4
+AIzaSyDxxl611oAJLgS7gb2w_CQMMrh1Xw2MbTE
+AIzaSyBZeXBuq76frN05xM5d3qzFjsZq--TWp1k
+AIzaSyA7nEK1luvMGRFyT6MyQJNBe30WCK_ZwG8
+
+mgerasika2@gmail.com
+AIzaSyClZRlrQY2JcU2VEMNVy7fa1GZB9raDk2g
+
+oddbox.cypress@gmail.com
+AIzaSyB2_b83SZDhN4WKMX5V-drV3DoQ8F5xzN0
+AIzaSyDcqbXXM4tdYxe6UC1cy-o4HEya6mVnwic
+AIzaSyCppzNT1SSvsEDFVdBYKPqZB5uIu-SaslY
+AIzaSyASxjMtitQ0bFHMr6-47SKLnJTcoWqGZGo
+AIzaSyDi_8-rLPBTaE-f8BWkm-TIbIn2_aTH8uo
+AIzaSyA2SMi5u6MQ222tWDZKKVjSEWv41bac4Ns
+AIzaSyBMPpQZ6VFwGca2mT75Z_NVVSIoNAj4UvA
+AIzaSyBtIj9kIXq8T6CPEgq518CVX6wgKpAkCe0
+AIzaSyC8X7IqyJxlybfKq_VnmP1MaqIA-0eYRjQ
+AIzaSyATgJDmP3LgvwhnaH6B8GVh4aJAiarx8FI
+
+
+mherasika@gmail.com
+AIzaSyBQEx9McZ82-bshI2jTw2IuU47VJH0gszs
+
+horodechnajulia@gmail.com
+AIzaSyBQn6hna3tyPc6SvG2WQ_KAw6LvGpDFMms
+AIzaSyBO6vlCE12m5Cfm-V8VLF421b_BdXFh3Sw
+AIzaSyAEMs5_ty0bOkSSKMt5n6FXv_1-oVdvGio
+AIzaSyAy0AATqkBKKOxR8nSlPXn-vLF3MpV7T50
+AIzaSyDkoT-DP1Me8FmoDGhCbcOd_Wx95rw0om8
+AIzaSyC-C7av0qoflIh8EHi_a2LTRYKnNqF3tr0
+AIzaSyCH4BXGdFQCwcyzfEJFu6YuqCM30rAvET4
+AIzaSyBna04ZluQo-_5nxORY2r6Rd-aRovEchgE
+AIzaSyDrp5PJgbAXTC_PUcnPdsWd_ofDGuBq444
+AIzaSyB_mx_PAQ6jED9XGXzxn1kagXRoiot3dUU
+AIzaSyDc6ygGiqEHY2Wp4z9JutK9Msk7mK2sCXw
+
+
+mgerasika3@gmail.com
+AIzaSyCszefmn92_1or2Wat7DNupqLuC6ZaJJXo
+
+gerasikaivanna@gmail.com
+AIzaSyBZ-d-VRkWQc6uUi0u3mXwS13y9KMswIOU
+AIzaSyAF2F52cXiKm8W0w64AcyaTaWOtu4kfSPQ
+AIzaSyB_WARTqHYny9l_F4clAF-9b339b4q8RAs
+AIzaSyD0kX64YX-98Au_hjDs0DZBcUKqcqj38o4
+AIzaSyB78shlNpmnpTuADehI4l02HkxxJHxZXkw
+AIzaSyD0K5GglSHijdIdwxYY3ipKdA3ba3_Nt-4
+AIzaSyA-BqpnfuAXN0prTi6-ESqc2vPW79oC7c0
+AIzaSyBZTKRjQhpc8gTEk2LuTjp2v7k21ZEE170
+AIzaSyA38ay0aBIv5RMfpczeutkSunqyPutIERQ
+AIzaSyB8JlyTAC2Cj5bXlioTAkiI78C6HBX2odE
+
+mgerasika84@gmail.com
+AIzaSyCqwDMvexrDjINTDW5DP4Xa8AOivRBLCHE
+
+mykhaylo.gerasika@gmail.com
+AIzaSyAG2Yrr86p-FaPHBzD2Ct13sswP3iytC9M  
+
+ivannagerasika@gmail.com
+AIzaSyCnmY0bluGqIqJTvSZrw1Q6PRBw_-jiPkc
+AIzaSyC7fgh1cmg3aZt7W06l0CordCKl7guCmAM
+AIzaSyBez7IIi6uy3iSu4TGGcgjYB9qnc_upl6E
+AIzaSyARzVFZI4Wd5uUsoamUpBd1NN22DS5Wm6c
+AIzaSyAJSUiD4QVX7WnJ0TYftu0NjYyaR5mRsLE
+AIzaSyDtOCMVf5YbhSy7QrElt6nYXa_nIF9WAZQ
+AIzaSyD9VvOQ24D0sC7yLodfNfzEPAUA4dVJgBE
+AIzaSyCSpchEZ2A4KGyiuKtEtJOSdjaCPN9SVhU
+AIzaSyAlgN7m4OWo5tA-Iv7wRKhAZB8ahdHV7as
+AIzaSyAJWMH-giZA6jir5ASrcos0yn0sxVLsWBY
+
+mopsyky.priyately@gmail.com
+AIzaSyBEfm2X5Yei315BAswX0l3lsx7EkDJ_kUk
+AIzaSyAPHKmQt3_wrcMjfKrBqs3XucstfwYEnHA
+AIzaSyCj6QAc0qzYJaBlqxSFp54mpe-EltYo4I8
+AIzaSyACdM1LjFyWgDTXV2R_aCTSkMmzHwZYp_I
+AIzaSyD65isNkL0D0awKz08siU3G_PM6S5ZQeaA
+AIzaSyD36d9UqXVo-8Mo1ClUFlOflPnYzkySVAo
+AIzaSyD7bT8kPUOyB3bA1z7rfiTemuryvZU8Ukc
+AIzaSyCjWKCsfOwQItGPfrZ80uANaD3-JgU3eIY
+AIzaSyCNSjJ0EUCj-J_1LxYPazgbVBOzqDydycM
+
+nataly.plastova@gmail.com
+AIzaSyAqFUh0klMKb_EigU48eh_LwLmWv92OoYw
+AIzaSyCLpbhK4h4KxyszgjCAApf36M0Rchg860k
+AIzaSyDlUkm7TGXhsO7GqpNtjQDpg-hZe_emR9Y
+AIzaSyDKc_KyE_u6tAzFQ5pnGtPOhwTpye6jG5Y
+AIzaSyDfqhG1Gjn1m4o59cwk5_uvZw4k2okC_C8
+AIzaSyA9RELRz3hwnt4U_Bs3cwch3EmHEI-K7IQ
+AIzaSyD7utdiYwQzMQzf8MB-tMAOeYdThMwNmiM
+AIzaSyBjKyvX9zTXlKvo39JdewQn94UsAOOu7qw
+AIzaSyD-lqLRgLVGA6DpbWbZN_2a6bXJvt4dxo0
+AIzaSyDUCY0R4wSDDyqTBFHXJMMYWOK7Q04XbEY
+
+horodechnaira@gmail.com
+AIzaSyCAa8MpBQxDht2Z1zjb2ZLpzMT5PLnL2n0
+AIzaSyCEpNqiCKT8uPb3mtsARDwWUMER8eG3pZg
+AIzaSyDkto8X-CBz5nnHnIXDN8kN6NWPrc3IpNs
+AIzaSyBYxwhHpK8Fwi8ZfYmBh7TAUYDeHz7huRU
+AIzaSyBhZJfPNz7rsAnuTUX4sARmXmivyL_jWjI
+AIzaSyBJESX2YpbGM7FjRQjTN3Xgd0EuH4moFWk
+AIzaSyBG6UaW5TC7XkgrgVCs1KwltjVZ9w0iNwE
+AIzaSyDgKTpc7Z36OoaiEJgDMDOXx2zkk2Z16z4
+AIzaSyC8__cYAEZ6HIAXs_hiOci5fQk8msCsnMI
+
+
+
+
+
+

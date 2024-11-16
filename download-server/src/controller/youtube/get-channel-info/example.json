@@ -1,0 +1,67 @@
+{
+    "kind": "youtube#channel",
+    "etag": "LHP_1amQs-2l2OYeKOu9ybMY4wo",
+    "id": "UCqOowQp96vnKJ_e4eoDvUsA",
+    "snippet": {
+        "title": "Mykhaylo H",
+        "description": "",
+        "customUrl": "@mgerasika",
+        "publishedAt": "2008-04-09T05:50:51Z",
+        "thumbnails": {
+            "default": {
+                "url": "https://yt3.ggpht.com/ytc/AIdro_lk4-A29Z0kkwOB6NWIbzncQdY3knIn3SRZef3XTmoln8x_=s88-c-k-c0x00ffffff-no-rj",
+                "width": 88,
+                "height": 88
+            },
+            "medium": {
+                "url": "https://yt3.ggpht.com/ytc/AIdro_lk4-A29Z0kkwOB6NWIbzncQdY3knIn3SRZef3XTmoln8x_=s240-c-k-c0x00ffffff-no-rj",
+                "width": 240,
+                "height": 240
+            },
+            "high": {
+                "url": "https://yt3.ggpht.com/ytc/AIdro_lk4-A29Z0kkwOB6NWIbzncQdY3knIn3SRZef3XTmoln8x_=s800-c-k-c0x00ffffff-no-rj",
+                "width": 800,
+                "height": 800
+            }
+        },
+        "localized": {
+            "title": "Mykhaylo H",
+            "description": ""
+        }
+    },
+    "contentDetails": {
+        "relatedPlaylists": {
+            "likes": "",
+            "uploads": "UUqOowQp96vnKJ_e4eoDvUsA"
+        }
+    },
+    "statistics": {
+        "viewCount": "11973",
+        "subscriberCount": "23",
+        "hiddenSubscriberCount": false,
+        "videoCount": "20"
+    },
+    "topicDetails": {
+        "topicIds": [
+            "/m/03glg",
+            "/m/019_rr",
+            "/m/07c1v"
+        ],
+        "topicCategories": [
+            "https://en.wikipedia.org/wiki/Hobby",
+            "https://en.wikipedia.org/wiki/Lifestyle_(sociology)",
+            "https://en.wikipedia.org/wiki/Technology"
+        ]
+    },
+    "status": {
+        "privacyStatus": "public",
+        "isLinked": true,
+        "longUploadsStatus": "longUploadsUnspecified"
+    },
+    "brandingSettings": {
+        "channel": {
+            "title": "Mykhaylo H"
+        }
+    },
+    "contentOwnerDetails": {}
+}

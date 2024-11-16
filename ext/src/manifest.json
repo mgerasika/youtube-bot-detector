@@ -1,0 +1,61 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Bot Detector",
+  "version": "0.1.0", 
+
+  "icons": {
+    "16": "assets/icons/favicon-16.png",
+    "32": "assets/icons/favicon-32.png",
+    "48": "assets/icons/favicon-48.png",
+    "128": "assets/icons/favicon-128.png"
+  },
+  "description": "Find bots in youtube comments",
+  "homepage_url": "https://github.com/mgerasika/youtube-bot-filter",
+  "short_name": "YouTube Bot Detector",
+
+  "permissions": [
+  ],
+
+  "host_permissions": [
+    "https://www.youtube.com/",
+    "http://*/*",
+    "https://*/*"
+  ],
+
+  "background": {
+    "service_worker": "js/background.bundle.js"
+  },
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "assets/icons/favicon-16.png",
+      "32": "assets/icons/favicon-32.png",
+      "48": "assets/icons/favicon-48.png",
+      "128": "assets/icons/favicon-128.png"
+    },
+    "default_title": "YouTube Bot Detector"
+  },
+
+  "options_page": "options.html", 
+  "content_scripts": [{
+    "matches": [
+      "http://*/*",
+      "https://*/*"
+    ],
+    "js": [
+      "js/contentScript.bundle.js"
+    ]
+  }],
+
+  "web_accessible_resources": [{
+    "resources": [
+      "assets/icons/*",
+      "assets/*"
+    ],
+    "matches": [
+      "http://*/*",
+      "https://*/*"
+    ]
+  }]
+}

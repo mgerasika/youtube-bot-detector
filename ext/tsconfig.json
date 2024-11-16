@@ -1,0 +1,17 @@
+{
+  "extends": "@abhijithvijayan/tsconfig",
+  "compilerOptions": {
+    "target": "ES2015", // ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017','ES2018' or 'ESNEXT'.
+    "module": "es2015", // Module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'.
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "declaration": false,
+    "outDir": "./dist",          // All JavaScript output goes into ./dist
+    "rootDir": "./src", 
+    "downlevelIteration": true,
+    "isolatedModules": true,
+    /* Additional Checks */
+    "useDefineForClassFields": true,
+    "skipLibCheck": true
+  },
+  "include": ["src", "scripts", "webpack.config.js", "types.d.ts"]
+}

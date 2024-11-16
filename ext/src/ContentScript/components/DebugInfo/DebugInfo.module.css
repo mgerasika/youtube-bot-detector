@@ -1,0 +1,12 @@
+.root {
+    position: absolute;
+    background-color: white;
+    right: calc(100% - 40px);
+    top: -4px;
+    border:1px solid #ccc;
+    padding:2px;
+    border-radius:4px;
+    font-size:9px;
+    z-index: 400;
+    line-height: 12px;
+}

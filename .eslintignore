@@ -1,0 +1,11 @@
+node_modules/
+dist/
+extension/
+.yarn/
+.pnp.js
+
+**/node_modules/
+**/dist/
+**/extension/
+**/.yarn/
+**/.pnp.js

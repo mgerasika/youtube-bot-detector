@@ -1,0 +1,1896 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "youtube-bot-filter",
+    "description": "server",
+    "version": "0.0.1"
+  },
+  "tags": [
+    {
+      "name": "api",
+      "description": "api"
+    },
+    {
+      "name": "api-key",
+      "description": "api-key"
+    },
+    {
+      "name": "channel",
+      "description": "channel"
+    },
+    {
+      "name": "comment",
+      "description": "comment"
+    },
+    {
+      "name": "scan",
+      "description": "scan"
+    },
+    {
+      "name": "statistic",
+      "description": "statistic"
+    },
+    {
+      "name": "task",
+      "description": "task"
+    },
+    {
+      "name": "video",
+      "description": "video"
+    }
+  ],
+  "paths": {
+    "/api/all-server-info": {
+      "get": {
+        "tags": [
+          "api"
+        ],
+        "summary": "get all-server-info all-server-info.controller.ts",
+        "description": "get all-server-info all-server-info.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IServerInfoDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "api"
+        ],
+        "summary": "post all-server-info all-server-info.controller.ts",
+        "description": "post all-server-info all-server-info.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IAddServerInfoBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/api-key/active": {
+      "get": {
+        "tags": [
+          "api-key"
+        ],
+        "summary": "get active api-key.controller.ts",
+        "description": "get active api-key.controller.ts",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "old_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "old_status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IApiKeyDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/api-key/info": {
+      "get": {
+        "tags": [
+          "api-key"
+        ],
+        "summary": "get info api-key.controller.ts",
+        "description": "get info api-key.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IApiKeyDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/api-key": {
+      "post": {
+        "tags": [
+          "api"
+        ],
+        "summary": "post api-key api-key.controller.ts",
+        "description": "post api-key api-key.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IApiKeyPostBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/api-key/add-youtube-key": {
+      "post": {
+        "tags": [
+          "api-key"
+        ],
+        "summary": "post add-youtube-key api-key.controller.ts",
+        "description": "post add-youtube-key api-key.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/channel/exist": {
+      "post": {
+        "tags": [
+          "channel"
+        ],
+        "summary": "post exist channel.controller.ts",
+        "description": "post exist channel.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IExistBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string[]"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/channel": {
+      "get": {
+        "tags": [
+          "api"
+        ],
+        "summary": "get channel channel.controller.ts",
+        "description": "get channel channel.controller.ts",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "channel_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IChannelDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "api"
+        ],
+        "summary": "post channel channel.controller.ts",
+        "description": "post channel channel.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IChannelPostBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/channel/{id}": {
+      "get": {
+        "tags": [
+          "channel"
+        ],
+        "summary": "get {id} channel.controller.ts",
+        "description": "get {id} channel.controller.ts",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IChannelDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/comment/last-date": {
+      "get": {
+        "tags": [
+          "comment"
+        ],
+        "summary": "get last-date comment.controller.ts",
+        "description": "get last-date comment.controller.ts",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "Date"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/comment/author-ids": {
+      "get": {
+        "tags": [
+          "comment"
+        ],
+        "summary": "get author-ids comment.controller.ts",
+        "description": "get author-ids comment.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "Date"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/comment": {
+      "get": {
+        "tags": [
+          "api"
+        ],
+        "summary": "get comment comment.controller.ts",
+        "description": "get comment comment.controller.ts",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "author_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ICommentDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "api"
+        ],
+        "summary": "post comment comment.controller.ts",
+        "description": "post comment comment.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ICommentPostBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/comment/{id}": {
+      "get": {
+        "tags": [
+          "comment"
+        ],
+        "summary": "get {id} comment.controller.ts",
+        "description": "get {id} comment.controller.ts",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ICommentDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/scan/full-by-video": {
+      "get": {
+        "tags": [
+          "scan"
+        ],
+        "summary": "get full-by-video scan.controller.ts",
+        "description": "get full-by-video scan.controller.ts",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/scan/full-by-channel": {
+      "get": {
+        "tags": [
+          "scan"
+        ],
+        "summary": "get full-by-channel scan.controller.ts",
+        "description": "get full-by-channel scan.controller.ts",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "channel_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/server-info": {
+      "get": {
+        "tags": [
+          "api"
+        ],
+        "summary": "get server-info server-info.controller.ts",
+        "description": "get server-info server-info.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IServerInfo"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/statistic/info": {
+      "get": {
+        "tags": [
+          "statistic"
+        ],
+        "summary": "get info statistic.controller.ts",
+        "description": "get info statistic.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IStatisticInfo"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/statistic/by-channel": {
+      "get": {
+        "tags": [
+          "statistic"
+        ],
+        "summary": "get by-channel statistic.controller.ts",
+        "description": "get by-channel statistic.controller.ts",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "channel_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IStatisticByChannel"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/statistic/by-channel-for-one": {
+      "get": {
+        "tags": [
+          "statistic"
+        ],
+        "summary": "get by-channel-for-one statistic.controller.ts",
+        "description": "get by-channel-for-one statistic.controller.ts",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "channel_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IStatisticByChannelForOne"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/statistic/by-video": {
+      "get": {
+        "tags": [
+          "statistic"
+        ],
+        "summary": "get by-video statistic.controller.ts",
+        "description": "get by-video statistic.controller.ts",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IStatisticByVideo"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/statistic": {
+      "get": {
+        "tags": [
+          "api"
+        ],
+        "summary": "get statistic statistic.controller.ts",
+        "description": "get statistic statistic.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IStatisticDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "api"
+        ],
+        "summary": "post statistic statistic.controller.ts",
+        "description": "post statistic statistic.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IStatisticPostBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/statistic/{id}": {
+      "get": {
+        "tags": [
+          "statistic"
+        ],
+        "summary": "get {id} statistic.controller.ts",
+        "description": "get {id} statistic.controller.ts",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IStatisticDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/task/channel-to-statistic": {
+      "get": {
+        "tags": [
+          "task"
+        ],
+        "summary": "get channel-to-statistic task.controller.ts",
+        "description": "get channel-to-statistic task.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/task/statistic-to-firebase": {
+      "get": {
+        "tags": [
+          "task"
+        ],
+        "summary": "get statistic-to-firebase task.controller.ts",
+        "description": "get statistic-to-firebase task.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/task/rescan-channels": {
+      "get": {
+        "tags": [
+          "task"
+        ],
+        "summary": "get rescan-channels task.controller.ts",
+        "description": "get rescan-channels task.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/test": {
+      "get": {
+        "tags": [
+          "api"
+        ],
+        "summary": "get test test.controller.ts",
+        "description": "get test test.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/video/last-date": {
+      "get": {
+        "tags": [
+          "video"
+        ],
+        "summary": "get last-date video.controller.ts",
+        "description": "get last-date video.controller.ts",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "channel_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "Date"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/video": {
+      "get": {
+        "tags": [
+          "api"
+        ],
+        "summary": "get video video.controller.ts",
+        "description": "get video video.controller.ts",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "video_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IVideoDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "api"
+        ],
+        "summary": "post video video.controller.ts",
+        "description": "post video video.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IVideoPostBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/video/{id}": {
+      "get": {
+        "tags": [
+          "video"
+        ],
+        "summary": "get {id} video.controller.ts",
+        "description": "get {id} video.controller.ts",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IVideoDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "IServerInfoDto": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "ip",
+          "memory_info"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "ip": {
+            "type": "string"
+          },
+          "memory_info": {
+            "type": "IMemoryInfo"
+          }
+        }
+      },
+      "IMemoryInfo": {
+        "type": "object",
+        "required": [
+          "RSS",
+          "heapTotal",
+          "heapUsed",
+          "external"
+        ],
+        "properties": {
+          "RSS": {
+            "type": "integer"
+          },
+          "heapTotal": {
+            "type": "integer"
+          },
+          "heapUsed": {
+            "type": "integer"
+          },
+          "external": {
+            "type": "integer"
+          }
+        }
+      },
+      "IAddServerInfoBody": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "ip",
+          "memory_info"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "ip": {
+            "type": "string"
+          },
+          "memory_info": {
+            "type": "IMemoryInfo"
+          }
+        }
+      },
+      "IApiKeyDto": {
+        "type": "object",
+        "required": [
+          "email",
+          "youtube_key",
+          "status"
+        ],
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "youtube_key": {
+            "type": "string"
+          },
+          "expired": {
+            "type": "Date"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "IApiKeyPostBody": {
+        "type": "object",
+        "required": [
+          "email",
+          "youtube_key",
+          "status"
+        ],
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "youtube_key": {
+            "type": "string"
+          },
+          "expired": {
+            "type": "Date"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "IExistBody": {
+        "type": "object",
+        "required": [
+          "ids"
+        ],
+        "properties": {
+          "ids": {
+            "type": "string[]"
+          }
+        }
+      },
+      "IChannelDto": {
+        "type": "object",
+        "required": [
+          "id",
+          "published_at",
+          "video_count",
+          "view_count",
+          "subscriber_count",
+          "title",
+          "author_url"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "published_at": {
+            "type": "Date"
+          },
+          "video_count": {
+            "type": "integer"
+          },
+          "view_count": {
+            "type": "integer"
+          },
+          "subscriber_count": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "author_url": {
+            "type": "string"
+          },
+          "is_scannable": {
+            "type": "boolean"
+          },
+          "is_deleted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "IChannelPostBody": {
+        "type": "object",
+        "required": [
+          "channels"
+        ],
+        "properties": {
+          "channels": {
+            "type": "IChannelDto[]"
+          }
+        }
+      },
+      "ICommentDto": {
+        "type": "object",
+        "required": [
+          "id",
+          "published_at",
+          "author_id",
+          "video_id",
+          "text"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "published_at": {
+            "type": "Date"
+          },
+          "published_at_time": {
+            "type": "Date"
+          },
+          "author_id": {
+            "type": "string"
+          },
+          "video_id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "parent_comment_id": {
+            "type": "string"
+          }
+        }
+      },
+      "ICommentPostBody": {
+        "type": "object",
+        "required": [
+          "comments"
+        ],
+        "properties": {
+          "comments": {
+            "type": "ICommentDto[]"
+          }
+        }
+      },
+      "IServerInfo": {
+        "type": "object",
+        "required": [
+          "serverName",
+          "memory",
+          "ipV4"
+        ],
+        "properties": {
+          "serverName": {
+            "type": "string"
+          },
+          "memory": {
+            "type": "IMemoryInfo"
+          },
+          "ipV4": {
+            "type": "string"
+          }
+        }
+      },
+      "IStatisticInfo": {
+        "type": "object",
+        "required": [
+          "video",
+          "comment",
+          "statistic",
+          "channel",
+          "missed_statistic_channels",
+          "youtube_key",
+          "statistic_rabbit_mq",
+          "download_rabbit_mq",
+          "servers"
+        ],
+        "properties": {
+          "video": {
+            "type": "IVideoInfo"
+          },
+          "comment": {
+            "type": "ICommentInfo"
+          },
+          "statistic": {
+            "type": "IStatisticInternalInfo"
+          },
+          "channel": {
+            "type": "IChannelInfo"
+          },
+          "missed_statistic_channels": {
+            "type": "integer"
+          },
+          "youtube_key": {
+            "type": "IYoutubeKeyInfo"
+          },
+          "statistic_rabbit_mq": {
+            "type": "IRabbitMqConnectionInfo"
+          },
+          "download_rabbit_mq": {
+            "type": "IRabbitMqConnectionInfo"
+          },
+          "servers": {
+            "type": "IServerInfoDto[]"
+          }
+        }
+      },
+      "IVideoInfo": {
+        "type": "object",
+        "required": [
+          "all_keys"
+        ],
+        "properties": {
+          "all_keys": {
+            "type": "integer"
+          }
+        }
+      },
+      "ICommentInfo": {
+        "type": "object",
+        "required": [
+          "all_keys"
+        ],
+        "properties": {
+          "all_keys": {
+            "type": "integer"
+          }
+        }
+      },
+      "IStatisticInternalInfo": {
+        "type": "object",
+        "required": [
+          "all_keys"
+        ],
+        "properties": {
+          "all_keys": {
+            "type": "integer"
+          }
+        }
+      },
+      "IChannelInfo": {
+        "type": "object",
+        "required": [
+          "all_keys"
+        ],
+        "properties": {
+          "all_keys": {
+            "type": "integer"
+          }
+        }
+      },
+      "IYoutubeKeyInfo": {
+        "type": "object",
+        "required": [
+          "active_keys",
+          "active_not_expired_keys",
+          "suspended_keys",
+          "all_keys"
+        ],
+        "properties": {
+          "active_keys": {
+            "type": "integer"
+          },
+          "active_not_expired_keys": {
+            "type": "integer"
+          },
+          "suspended_keys": {
+            "type": "integer"
+          },
+          "all_keys": {
+            "type": "integer"
+          }
+        }
+      },
+      "IRabbitMqConnectionInfo": {
+        "type": "object",
+        "required": [
+          "messageCount",
+          "consumerCount"
+        ],
+        "properties": {
+          "messageCount": {
+            "type": "integer"
+          },
+          "consumerCount": {
+            "type": "integer"
+          }
+        }
+      },
+      "IStatisticByChannel": {
+        "type": "object",
+        "required": [
+          "items",
+          "forOne"
+        ],
+        "properties": {
+          "items": {
+            "type": "IStatisticByChannelInvividualWithCalc[]"
+          },
+          "forOne": {
+            "type": "object",
+            "required": [
+              "db",
+              "calc"
+            ],
+            "properties": {
+              "db": {
+                "type": "IStatisticByChannelForOne"
+              },
+              "calc": {
+                "type": "ICalc"
+              }
+            }
+          }
+        }
+      },
+      "IStatisticByChannelInvividualWithCalc": {
+        "type": "object",
+        "required": [
+          "db",
+          "calc"
+        ],
+        "properties": {
+          "db": {
+            "type": "IStatisticByChannelInvdividual"
+          },
+          "calc": {
+            "type": "ICalc"
+          }
+        }
+      },
+      "IStatisticByChannelInvdividual": {
+        "type": "object",
+        "required": [
+          "comment_count",
+          "channel_id",
+          "channel_url",
+          "published_at",
+          "min_published_at",
+          "max_published_at",
+          "days_tick",
+          "published_at_diff"
+        ],
+        "properties": {
+          "comment_count": {
+            "type": "integer"
+          },
+          "channel_id": {
+            "type": "integer"
+          },
+          "channel_url": {
+            "type": "string"
+          },
+          "published_at": {
+            "type": "Date"
+          },
+          "min_published_at": {
+            "type": "Date"
+          },
+          "max_published_at": {
+            "type": "Date"
+          },
+          "days_tick": {
+            "type": "integer"
+          },
+          "published_at_diff": {
+            "type": "integer"
+          }
+        }
+      },
+      "ICalc": {
+        "type": "object",
+        "required": [
+          "frequency",
+          "frequency_tick"
+        ],
+        "properties": {
+          "frequency": {
+            "type": "integer"
+          },
+          "frequency_tick": {
+            "type": "integer"
+          }
+        }
+      },
+      "IStatisticByChannelForOne": {
+        "type": "object",
+        "required": [
+          "published_at",
+          "channel_url",
+          "channel_id",
+          "comment_count",
+          "min_published_at",
+          "max_published_at",
+          "days_tick",
+          "published_at_diff",
+          "frequency",
+          "frequency_tick"
+        ],
+        "properties": {
+          "published_at": {
+            "type": "Date"
+          },
+          "channel_url": {
+            "type": "string"
+          },
+          "channel_id": {
+            "type": "string"
+          },
+          "comment_count": {
+            "type": "integer"
+          },
+          "min_published_at": {
+            "type": "Date"
+          },
+          "max_published_at": {
+            "type": "Date"
+          },
+          "days_tick": {
+            "type": "integer"
+          },
+          "published_at_diff": {
+            "type": "integer"
+          },
+          "frequency": {
+            "type": "integer"
+          },
+          "frequency_tick": {
+            "type": "integer"
+          }
+        }
+      },
+      "IStatisticByVideo": {
+        "type": "object",
+        "required": [
+          "published_at",
+          "channel_url",
+          "channel_id",
+          "comment_count",
+          "min_published_at",
+          "max_published_at",
+          "days_tick",
+          "published_at_diff",
+          "frequency",
+          "frequency_tick"
+        ],
+        "properties": {
+          "published_at": {
+            "type": "Date"
+          },
+          "channel_url": {
+            "type": "string"
+          },
+          "channel_id": {
+            "type": "string"
+          },
+          "comment_count": {
+            "type": "integer"
+          },
+          "min_published_at": {
+            "type": "Date"
+          },
+          "max_published_at": {
+            "type": "Date"
+          },
+          "days_tick": {
+            "type": "integer"
+          },
+          "published_at_diff": {
+            "type": "integer"
+          },
+          "frequency": {
+            "type": "integer"
+          },
+          "frequency_tick": {
+            "type": "integer"
+          }
+        }
+      },
+      "IStatisticDto": {
+        "type": "object",
+        "required": [
+          "channel_id",
+          "channel_url",
+          "comment_count",
+          "days_tick",
+          "published_at_diff",
+          "frequency",
+          "frequency_tick"
+        ],
+        "properties": {
+          "channel_id": {
+            "type": "string"
+          },
+          "channel_url": {
+            "type": "string"
+          },
+          "comment_count": {
+            "type": "integer"
+          },
+          "published_at": {
+            "type": "Date"
+          },
+          "min_published_at": {
+            "type": "Date"
+          },
+          "max_published_at": {
+            "type": "Date"
+          },
+          "days_tick": {
+            "type": "integer"
+          },
+          "published_at_diff": {
+            "type": "integer"
+          },
+          "uploaded_at_time": {
+            "type": "Date"
+          },
+          "frequency": {
+            "type": "integer"
+          },
+          "frequency_tick": {
+            "type": "integer"
+          },
+          "hash": {
+            "type": "string"
+          }
+        }
+      },
+      "IStatisticPostBody": {
+        "type": "object",
+        "required": [
+          "statistics"
+        ],
+        "properties": {
+          "statistics": {
+            "type": "IStatisticDto[]"
+          }
+        }
+      },
+      "IVideoDto": {
+        "type": "object",
+        "required": [
+          "id",
+          "published_at",
+          "channel_id",
+          "title"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "published_at": {
+            "type": "Date"
+          },
+          "published_at_time": {
+            "type": "Date"
+          },
+          "channel_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "IVideoPostBody": {
+        "type": "object",
+        "required": [
+          "videos"
+        ],
+        "properties": {
+          "videos": {
+            "type": "IVideoDto[]"
+          }
+        }
+      }
+    }
+  }
+}

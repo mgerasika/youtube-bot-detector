@@ -1,0 +1,82 @@
+import 'module-alias/register';
+import dotenv from 'dotenv';
+dotenv.config(); // Load environment variables from .env
+
+import { ENV, RABBIT_MQ_DOWNLOAD_ENV, RABBIT_MQ_STATISTIC_ENV, } from '@server/env';
+
+import { allServices, } from './controller/all-services';
+import { typeOrmAsync, } from './sql/type-orm-async.util';
+import {rabbitMqService,} from '@common/services/rabbit-mq'
+import https from 'https';
+import { createLogger, } from '@common/utils/create-logger.utils';
+import { app } from './express-app';
+import { httpOptions } from '@common/create-express-app';
+import { IExpressRequest } from '@common/interfaces/express.interface';
+import {startCronJob} from '@common/services/cron.service'
+import { toQuery } from '@common/utils/to-query.util';
+export * from './controller/all-controllers';
+
+const mainLogger = createLogger();
+mainLogger.log('ENV=', ENV);
+
+app.get('/', (_req: IExpressRequest, res: { send: (arg0: string) => void; }) => {
+    res.send(JSON.stringify(allServices, null, 2));
+});
+
+if (process.env.NODE_ENV === 'development') {
+    // sync database
+    mainLogger.log('before sync orm')
+    typeOrmAsync(() => Promise.resolve(['']), mainLogger);
+    mainLogger.log('after sync orm')
+}
+
+const port = process.env.PORT || 8007;
+const ports = process.env.PORTS || 8008;
+if (ENV.rabbit_mq_url) {
+    // rabbitMQ_subscribeAsync((data) => {
+    //     if (data.setupBody) {
+    //         logger.log('Recived here')
+    //     }
+    //     return Promise.resolve('empty');
+    // });
+
+    
+    rabbitMqService.createConnectionAsync(RABBIT_MQ_DOWNLOAD_ENV, mainLogger); 
+    rabbitMqService.createConnectionAsync(RABBIT_MQ_STATISTIC_ENV, mainLogger); 
+}
+
+startCronJob('rescanChannelsAsync', '0 0 * * *', async () => {
+    await allServices.task.rescanChannelsAsync(mainLogger);
+}, mainLogger)
+
+startCronJob('channelToStatisticAsync', '0 0 */2 * *', async () => {
+    await allServices.task.channelToStatisticAsync(mainLogger);
+}, mainLogger)
+
+startCronJob('server-info', '*/10 * * * *', async () => {
+    const [serverInfo, serverInfoError] = await allServices.serverInfo.getServerInfoAsync(mainLogger)
+    if(serverInfoError) {
+        mainLogger.log('cron job serverInfo error ', serverInfoError)
+    }
+    if(serverInfo) {
+        const ipWithPort = serverInfo.ipV4 + ':' + port
+        const [, postError] = await allServices.allServerInfo.postServerInfoAsync({
+            id: `${serverInfo.serverName} - ${ipWithPort}`,
+            name: serverInfo.serverName ,
+            ip: ipWithPort,
+            memory_info: serverInfo.memory
+        }, mainLogger);
+
+        if(postError) {
+            mainLogger.log('cron job serverInfo post error', postError)
+        }
+    }
+}, mainLogger)
+
+app.listen(port, function () {
+    mainLogger.log('Server started on port ' + port);
+});
+
+https.createServer(httpOptions, app).listen(ports, () => {
+    mainLogger.log('Https server started on port ' + ports);
+});

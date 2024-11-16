@@ -1,0 +1,12 @@
+.icon {
+    cursor:pointer;
+    position:absolute;
+    left:0px;
+    top:0px;
+    z-index:100;
+    border-radius:50%;
+    width:0px;
+    height:0px;
+    pointer-events: none;
+    background-color: white;
+}

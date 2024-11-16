@@ -1,0 +1,53 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "react",
+    "react-hooks"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended"
+  ],
+  "rules": {
+    "no-require-imports": "off",
+    "@typescript-eslint/no-require-imports":"off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/triple-slash-reference": "off",
+    "@typescript-eslint/no-unsafe-declaration-merging": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-unnecessary-type-constraint": "off",
+     "@typescript-eslint/no-empty-object-type": "off", 
+    "@typescript-eslint/no-unsafe-function-type": "off",
+    "no-sparse-arrays": "off",
+    "no-mixed-spaces-and-tabs": "off",
+    "no-control-regex":"off",
+    "react/no-unknown-property": ["error", { "ignore": ["tw"] }]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+      }
+    },
+    {
+      "files": ["*.js", "*.jsx"],
+      "rules": {
+      }
+    }
+  ]
+}

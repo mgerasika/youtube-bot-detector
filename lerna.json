@@ -1,0 +1,10 @@
+{
+  "packages": [
+    "server",
+    "download-server",
+    "statistic-server",
+    "ext",
+    "next"
+  ],
+  "version": "0.0.0"
+}
