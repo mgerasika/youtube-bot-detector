@@ -6,7 +6,7 @@ export const ENV = {
     database: 'youtube-bot-filter',
     password: process.env.DB_PASSWORD,
     node_env: process.env.NODE_ENV,
-    port: 5432,
+    port: 5433,
     rabbit_mq_url: process.env.RABBIT_MQ || '',
     redis_url: process.env.REDIS_URL || '',
     rabbit_mq_download_channel_name: 'youtube-bot-filter-queue-v3',

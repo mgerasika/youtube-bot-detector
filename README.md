@@ -34,3 +34,11 @@ WHERE is_scannable = 'true';
 wget https://raw.githubusercontent.com/Psiphon-Labs/psiphon-tunnel-core-binaries/master/linux/psiphon-tunnel-core-x86_64
 sudo chmod +x psiphon-tunnel-core-x86_64
 sudo psiphon
+
+
+
+
+
+
+
+

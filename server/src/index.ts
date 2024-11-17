@@ -45,13 +45,13 @@ if (ENV.rabbit_mq_url) {
     rabbitMqService.createConnectionAsync(RABBIT_MQ_STATISTIC_ENV, mainLogger); 
 }
 
-startCronJob('rescanChannelsAsync', '0 0 * * *', async () => {
-    await allServices.task.rescanChannelsAsync(mainLogger);
-}, mainLogger)
+// startCronJob('rescanChannelsAsync', '0 0 * * *', async () => {
+//     await allServices.task.rescanChannelsAsync(mainLogger);
+// }, mainLogger)
 
-startCronJob('channelToStatisticAsync', '0 0 */2 * *', async () => {
-    await allServices.task.channelToStatisticAsync(mainLogger);
-}, mainLogger)
+// startCronJob('channelToStatisticAsync', '0 0 */2 * *', async () => {
+//     await allServices.task.channelToStatisticAsync(mainLogger);
+// }, mainLogger)
 
 startCronJob('server-info', '*/10 * * * *', async () => {
     const [serverInfo, serverInfoError] = await allServices.serverInfo.getServerInfoAsync(mainLogger)
