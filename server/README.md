@@ -16,18 +16,23 @@ sudo docker login
 sudo docker push mgerasika/youtube-bot-server:v11
 
 # on another pc
-docker pull mgerasika/youtube-bot-server:v11
-docker run --network=host --restart=always --env PORT=8077 -v /home:/home -d \
-    -p $port:8077 \ 
-    --env DB_USER=test \
-    --env DB_PASSWORD=test \
-    --env DB_OWNER_USER=postgres \
-    --env DB_OWNER_PASSWORD=homeassistant \
-    --env DB_HOST=192.168.0.106 \
-    --env RABBIT_MQ=amqp://test:Zxc123=-@178.210.131.101:5672 \   
-    --env REDIS_URL=redis://178.210.131.101:6379 \
-    --name youtube-bot-server \
-  mgerasika/youtube-bot-server:v11
+docker run --network=host \
+  --restart=always \
+  --env PORT=8077 \
+  --env DB_USER=test \
+  --env DB_PASSWORD=test \
+  --env DB_OWNER_USER=postgres \
+  --env DB_OWNER_PASSWORD=homeassistant \
+  --env DB_HOST=192.168.0.106 \
+  --env RABBIT_MQ=amqp://test:Zxc123=-@178.210.131.101:5672 \
+  --env REDIS_URL=redis://178.210.131.101:6379 \
+  -v /home:/home \
+  -d \
+  -p $port:8077 \
+  --name youtube-bot-server \
+  mgeras
+
+
 
 
 
@@ -40,13 +45,13 @@ docker run -p 5433:5432 \
 
 
 
-docker run --name pgadmin4 -p 5050:80 \
+docker run --restart always --name pgadmin4 -p 5050:80 \
     -e 'PGADMIN_DEFAULT_EMAIL=mgerasika@gmail.com' \
     -e 'PGADMIN_DEFAULT_PASSWORD=Zxc123=-' \
     -d dpage/pgadmin4
 
 
-docker run -d --name rabbitmq \
+docker run  --restart always  -d --name rabbitmq \
   -p 5672:5672 -p 15672:15672 \
   -e RABBITMQ_DEFAULT_USER=test \
   -e RABBITMQ_DEFAULT_PASS=Zxc123=- \
@@ -54,7 +59,7 @@ docker run -d --name rabbitmq \
   rabbitmq:management
 
 
-docker run -d --name redis-stack \
+docker run --restart always -d --name redis-stack \
   -p 6379:6379 -p 8001:8001 \
   -v /media/mgerasika/ssd13/redis_data:/data \
   redis/redis-stack:latest
