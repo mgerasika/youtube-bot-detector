@@ -7,6 +7,9 @@ import { huggingFaceAsync } from './hugging-face.service';
 import { oneByOneAsync } from '@common/utils/one-by-one-async.util';
 import { channel } from 'diagnostics_channel';
 import { allServices } from '../all-services';
+import { IFullScanChannelInfoBody } from '@common/model/download-server.model';
+import { rabbitMqService } from '@common/services/rabbit-mq';
+import { RABBIT_MQ_DOWNLOAD_ENV } from '@server/env';
 
 
 const youtubeChannels = [
@@ -60,7 +63,16 @@ export const testAsync = async (logger: ILogger): IAsyncPromiseResult<unknown> =
 
     await oneByOneAsync(youtubeChannels, async (channel) => {
         logger.log('start getFullScanByChannelAsync ', channel.username)
-        await allServices.scan.getFullScanByChannelAsync(channel.channelId, logger)
+        await rabbitMqService.sendDataAsync<IFullScanChannelInfoBody>(
+            RABBIT_MQ_DOWNLOAD_ENV,
+            'fullScanChannelInfoAsync',
+            {
+                channelId: channel.channelId,
+                ignoreCommentsLastDate:true,
+                ignoreVideoLastDate: true,
+            } ,
+            logger
+        );
     })
 
     logger.log('testAsync end');

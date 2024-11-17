@@ -41,6 +41,7 @@ export const scanVideosAsync = async (body: IScanVideosBody, logger: ILogger): I
     const videos = data.items.reverse();
 
     const groupedVideos = groupArray(videos, 100);
+    logger.log('before one by one groups = ', groupedVideos.length)
     await oneByOneAsync(groupedVideos, async (group, cancelFn) => {
         const [, apiError] = await toQuery(() =>
             api.videoPost({
@@ -58,6 +59,7 @@ export const scanVideosAsync = async (body: IScanVideosBody, logger: ILogger): I
         if (apiError) {
             return cancelFn(apiError);
         }
+        logger.log('post videos count = ', group.length)
         
     });
 

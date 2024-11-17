@@ -1,8 +1,8 @@
 For deploy new image:
 sh build.sh
-sudo docker tag youtube-bot-downloader mgerasika/youtube-bot-downloader:v12
+sudo docker tag youtube-bot-downloader mgerasika/youtube-bot-downloader:v13
 sudo docker login
-sudo docker push mgerasika/youtube-bot-downloader:v12
+sudo docker push mgerasika/youtube-bot-downloader:v13
 
 # on another pc
 docker pull mgerasika/youtube-bot-downloader:v12

@@ -18,9 +18,13 @@ export const fullScanVideoInfoAsync = async (
 ): IAsyncPromiseResult<IScanReturn> => {
     logger.log('fullScanVideoInfoAsync start', body);
 
+    
     const available = await redisService.existsAsync(redisService.getMessageId('full-video', body.video_id));
     if(available) {
         return [{message:logger.log('full-video already exist in redis, skip ' + body.video_id)}];
+    }
+    else {
+        logger.log('not available in redis full-video', body.video_id)
     }
 
     let channelId = '';

@@ -31,11 +31,12 @@ export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody, l
     logger.log('publishedAtDate for filtering', publishedAtDate, publishedAt)
 
     // Get the channel's uploads playlist ID
+    logger.log('before get channels from youtube', channelId)
     const [channelResponse, channelError] = await toQuery(() => youtube.channels.list({
         part: ['contentDetails'],
         id: [channelId || '' ],
     }));
-
+    logger.log('after get channels from youtube', channelResponse?.data?.items?.length)
     
     if (channelError) {
         return await processYoutubeErrorAsync(channelError as AxiosError, logger);
@@ -56,6 +57,7 @@ export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody, l
 
     do {
         // Fetch the videos from the uploads playlist
+        
         const [playlistItemsResponse, playListError] = await toQuery(() => youtube.playlistItems.list({
             part: ['snippet', 'id', 'status'],
             playlistId: uploadsPlaylistId,
@@ -70,12 +72,13 @@ export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody, l
         if (!playlistItemsResponse?.data.items || playlistItemsResponse.data.items.length === 0) {
             return [, 'No videos found'];
         }
-
+        
         const videoIds = playlistItemsResponse.data.items.map(item => item.snippet?.resourceId?.videoId || '' )
         // const [videoStatisticItems, statError] = await getVideoStatsisticItems(videoIds);
         // if(statError) {
         //     return [,statError];
         // }
+        logger.log('get playlist items count = ', videoIds?.length)
         let videos = playlistItemsResponse.data.items.map((item: youtube_v3.Schema$PlaylistItem): IShortVideoInfo => {
             // const videoStatistic = videoStatisticItems?.find(v => v.id === item.snippet?.resourceId?.videoId)
             return {

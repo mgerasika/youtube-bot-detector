@@ -30,9 +30,10 @@ docker run --network=host \
   -d \
   -p $port:8077 \
   --name youtube-bot-server \
-  mgeras
+mgerasika/youtube-bot-server:v11
 
-
+# for windows
+docker run --restart=always --env PORT=8077 --env DB_USER=test --env DB_PASSWORD=test --env DB_OWNER_USER=postgres --env DB_OWNER_PASSWORD=homeassistant --env DB_HOST=192.168.0.106 --env RABBIT_MQ=amqp://test:Zxc123=-@178.210.131.101:5672 --env REDIS_URL=redis://178.210.131.101:6379 -v /c/home:/home -d -p 8077:8077 --name youtube-bot-server mgerasika/youtube-bot-server:v11
 
 
 
@@ -51,6 +52,7 @@ docker run --restart always --name pgadmin4 -p 5050:80 \
     -d dpage/pgadmin4
 
 
+sudo chown -R 999:999 /media/mgerasika/ssd13/rabbit_mq_data
 docker run  --restart always  -d --name rabbitmq \
   -p 5672:5672 -p 15672:15672 \
   -e RABBITMQ_DEFAULT_USER=test \

@@ -60,6 +60,7 @@ async function subscribeAsync({ channelName, rabbit_mq_url }: { channelName: str
                     if (msg) {
                         const body = Buffer.from(msg.content);
                         // {"msg":{"methodName":"scanCommentsAsync","methodArgumentsJson":{"videoId":"sRdqKztogIQ"}}}
+                        messageLogger.log('-----------------------------------')
                         messageLogger.log(`rabbit mq data received on '${channelName}':`, `${body}`);
                         let obj: IRabbitMqMessage | undefined;
                         try {
@@ -89,7 +90,7 @@ async function subscribeAsync({ channelName, rabbit_mq_url }: { channelName: str
 
                                 }).finally(() => {
                                     logMemoryUsage(messageLogger);
-                                    messageLogger.log('-----------------------------------')
+                                    
                                 });
                         } else {
                             logger.log('error parse JSON in rabbit mq subscribe ');
