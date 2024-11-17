@@ -10,23 +10,23 @@ import { IRabbitMqConnectionInfo } from '../model/rabbit-mq-connection-Info.inte
 let _connection: Connection | undefined;
 let _channel: Channel;
 
- async function rabbitMQ_createChannelAsync({channelName,  rabbit_mq_url}:{channelName:string, rabbit_mq_url: string}, logger: ILogger) {
-    await createConnectionAsync({channelName, rabbit_mq_url}, logger)
-     return _channel;
- }
- 
-  const getInfoAsync = async ({channelName,  rabbit_mq_url}:{channelName:string, rabbit_mq_url: string}, logger: ILogger): Promise<IRabbitMqConnectionInfo> => {
-     const channel = await rabbitMQ_createChannelAsync({channelName, rabbit_mq_url}, logger);
-     try {
-       const { messageCount, consumerCount } = await channel.checkQueue(channelName);
-       return {messageCount, consumerCount};
-     } catch (error) {
-       throw new Error(`Error fetching message count: ${error}`);
-     }
-   };
+async function rabbitMQ_createChannelAsync({ channelName, rabbit_mq_url }: { channelName: string, rabbit_mq_url: string }, logger: ILogger) {
+    await createConnectionAsync({ channelName, rabbit_mq_url }, logger)
+    return _channel;
+}
+
+const getInfoAsync = async ({ channelName, rabbit_mq_url }: { channelName: string, rabbit_mq_url: string }, logger: ILogger): Promise<IRabbitMqConnectionInfo> => {
+    const channel = await rabbitMQ_createChannelAsync({ channelName, rabbit_mq_url }, logger);
+    try {
+        const { messageCount, consumerCount } = await channel.checkQueue(channelName);
+        return { messageCount, consumerCount };
+    } catch (error) {
+        throw new Error(`Error fetching message count: ${error}`);
+    }
+};
 
 
- async function createConnectionAsync({channelName,  rabbit_mq_url}:{channelName:string, rabbit_mq_url: string}, logger: ILogger) {
+async function createConnectionAsync({ channelName, rabbit_mq_url }: { channelName: string, rabbit_mq_url: string }, logger: ILogger) {
     if (!_connection || !_channel) {
         try {
             _connection = await amqp.connect(rabbit_mq_url || '');
@@ -40,8 +40,8 @@ let _channel: Channel;
             setTimeout(createConnectionAsync, 30 * 1000);
         }
     }
-    if(_connection && _channel) {
-        await _channel.assertQueue(channelName, {});
+    if (_connection && _channel) {
+        await _channel.assertQueue(channelName, { durable: true });
 
         // important don't remove this 1 - infinite loop
         _channel.prefetch(1);
@@ -49,9 +49,9 @@ let _channel: Channel;
     return _connection;
 }
 
- async function subscribeAsync({ channelName, rabbit_mq_url}:{channelName:string, rabbit_mq_url: string}, callback: (data: IRabbitMqMessage, logger: ILogger) => Promise<any>, logger: ILogger) {
+async function subscribeAsync({ channelName, rabbit_mq_url }: { channelName: string, rabbit_mq_url: string }, callback: (data: IRabbitMqMessage, logger: ILogger) => Promise<any>, logger: ILogger) {
     try {
-        const connection = await createConnectionAsync({rabbit_mq_url, channelName: channelName}, logger);
+        const connection = await createConnectionAsync({ rabbit_mq_url, channelName: channelName }, logger);
         if (connection) {
             _channel.consume(
                 channelName,
@@ -71,22 +71,31 @@ let _channel: Channel;
                             callback(obj, messageLogger)
                                 .then(async (res: any[]) => {
                                     messageLogger.log('rabbit mq response', res);
-                                   
+
                                     if (res.length > 1 && res[1]) {
-                                        sendAgain( channelName, body, messageLogger);
+                                        sendAgainWithDelay(channelName, body, messageLogger, () => {
+                                            _channel.ack(msg);
+                                        });
                                     }
-                                    _channel.ack(msg);
+                                    else {
+                                        _channel.ack(msg);
+                                    }
                                 })
                                 .catch(async (ex) => {
                                     logger.log('error in rabbit mq subscribe ', ex);
-                                    sendAgain( channelName, body, messageLogger);
-                                    _channel.ack(msg);
-                                }).finally(() =>{
+                                    sendAgainWithDelay(channelName, body, messageLogger, () => {
+                                        _channel.ack(msg);
+                                    });
+
+                                }).finally(() => {
                                     logMemoryUsage(messageLogger);
                                     messageLogger.log('-----------------------------------')
                                 });
                         } else {
-                            _channel.ack(msg);
+                            logger.log('error parse JSON in rabbit mq subscribe ');
+                                sendAgainWithDelay(channelName, body, messageLogger, () => {
+                                    _channel.ack(msg);
+                                });
                         }
                     }
                 },
@@ -100,21 +109,23 @@ let _channel: Channel;
     }
 }
 
-function sendAgain( channelName: string, body: Buffer, logger: ILogger) {
+function sendAgainWithDelay(channelName: string, body: Buffer, logger: ILogger, callback: () => void) {
     logger.log('rabbit mq will send again same message after 1 seccond = ', `${body}`);
-   
-    setTimeout(() => {
+
+    setTimeout( () => {
         _channel.sendToQueue(channelName, body, {
             persistent: true, // Ensure the message is durable
         });
+        
+        callback();
     }, 1000);
 }
 
 
- const sendDataAsync = async <T = any, >({ channelName, rabbit_mq_url}:{channelName:string, rabbit_mq_url: string}, methodName: keyof IDownloadServerRabbitMq | keyof IStatisticServerRabbitMq, methodArgumentsJson: T, logger: ILogger): Promise<IQueryReturn<boolean>> => {
-    await createConnectionAsync({channelName,  rabbit_mq_url}, logger);
+const sendDataAsync = async <T = any,>({ channelName, rabbit_mq_url }: { channelName: string, rabbit_mq_url: string }, methodName: keyof IDownloadServerRabbitMq | keyof IStatisticServerRabbitMq, methodArgumentsJson: T, logger: ILogger): Promise<IQueryReturn<boolean>> => {
+    await createConnectionAsync({ channelName, rabbit_mq_url }, logger);
 
-    const data : IRabbitMqMessage = {
+    const data: IRabbitMqMessage = {
         msg: {
             methodName,
             methodArgumentsJson
@@ -123,8 +134,8 @@ function sendAgain( channelName: string, body: Buffer, logger: ILogger) {
     if (_channel) {
         logger.log('Rabbit MQ Data send:', data);
         // don't add await - this method should call in paralell
-        _channel.sendToQueue(channelName, Buffer.from(JSON.stringify(data)));
-      
+        _channel.sendToQueue(channelName, Buffer.from(JSON.stringify(data)), { persistent: true });
+
         return [true];
     } else {
         logger.log('channel is null');

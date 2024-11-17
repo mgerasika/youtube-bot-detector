@@ -15,7 +15,7 @@ const getPool = (): typeof Pool => {
         database: ENV.database,
         password: ENV.password,
         port: ENV.port,
-        max: 10,
+        max: 100,
         idleTimeoutMillis: 30000,
         connectionTimeoutMillis: 2000,
     });

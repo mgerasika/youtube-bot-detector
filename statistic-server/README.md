@@ -19,7 +19,7 @@ sudo docker push mgerasika/youtube-bot-statistic:v10
 docker pull mgerasika/youtube-bot-statistic:v10
 docker run --network=host --restart=always --env PORT=8099 -v /home:/home -d \
   -p $port:8044 \
-  --env RABBIT_MQ=amqp://test:test@178.210.131.101:5672 \
+  --env RABBIT_MQ=amqp://test:Zxc123=-@178.210.131.101:5672 \
   --env API_SERVER_URL=http://178.210.131.101:8007 \
   --env REDIS_URL=redis://178.210.131.101:6379 \
   --name youtube-bot-statistic \

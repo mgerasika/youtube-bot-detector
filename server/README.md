@@ -45,15 +45,20 @@ docker run --name pgadmin4 -p 5050:80 \
     -e 'PGADMIN_DEFAULT_PASSWORD=Zxc123=-' \
     -d dpage/pgadmin4
 
+
 docker run -d --name rabbitmq \
   -p 5672:5672 -p 15672:15672 \
   -e RABBITMQ_DEFAULT_USER=test \
-  -e RABBITMQ_DEFAULT_PASS=test \
-  -v rabbitmq-data:/var/lib/rabbitmq \
+  -e RABBITMQ_DEFAULT_PASS=Zxc123=- \
+  -v /media/mgerasika/ssd13/rabbit_mq_data:/var/lib/rabbitmq \
   rabbitmq:management
 
 
-docker run -d --name redis-stack -p 6379:6379 -p 8001:8001 redis/redis-stack:latest
+docker run -d --name redis-stack \
+  -p 6379:6379 -p 8001:8001 \
+  -v /media/mgerasika/ssd13/redis_data:/data \
+  redis/redis-stack:latest
+
 
 
 
