@@ -11,12 +11,12 @@ sudo docker cp postgres:/var/lib/postgresql/data /media/mgerasika/ssd11/postgres
 
 
 
-sudo docker tag youtube-bot-server mgerasika/youtube-bot-server:v10
+sudo docker tag youtube-bot-server mgerasika/youtube-bot-server:v11
 sudo docker login
-sudo docker push mgerasika/youtube-bot-server:v10
+sudo docker push mgerasika/youtube-bot-server:v11
 
 # on another pc
-docker pull mgerasika/youtube-bot-server:v10
+docker pull mgerasika/youtube-bot-server:v11
 docker run --network=host --restart=always --env PORT=8077 -v /home:/home -d \
     -p $port:8077 \ 
     --env DB_USER=test \
@@ -24,10 +24,10 @@ docker run --network=host --restart=always --env PORT=8077 -v /home:/home -d \
     --env DB_OWNER_USER=postgres \
     --env DB_OWNER_PASSWORD=homeassistant \
     --env DB_HOST=192.168.0.106 \
-    --env RABBIT_MQ=amqp://test:test@178.210.131.101:5672 \   
+    --env RABBIT_MQ=amqp://test:Zxc123=-@178.210.131.101:5672 \   
     --env REDIS_URL=redis://178.210.131.101:6379 \
     --name youtube-bot-server \
-  mgerasika/youtube-bot-server:v10
+  mgerasika/youtube-bot-server:v11
 
 
 

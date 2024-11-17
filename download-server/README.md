@@ -8,7 +8,7 @@ sudo docker push mgerasika/youtube-bot-downloader:v11
 docker pull mgerasika/youtube-bot-downloader:v11
 docker run --network=host --restart=always --env PORT=8099 -v /home:/home -d \
   -p $port:8099 \
-  --env RABBIT_MQ=amqp://test:test@178.210.131.101:5672 \
+  --env RABBIT_MQ=amqp://test:Zxc123=-@178.210.131.101:5672 \
   --env API_SERVER_URL=http://178.210.131.101:8007 \
   --env REDIS_URL=redis://178.210.131.101:6379 \
   --name youtube-bot-downloader \
