@@ -14,6 +14,7 @@ import { httpOptions } from '@common/create-express-app';
 import { IExpressRequest } from '@common/interfaces/express.interface';
 import {startCronJob} from '@common/services/cron.service'
 import { toQuery } from '@common/utils/to-query.util';
+import { telegramBot } from './telegram.service';
 export * from './controller/all-controllers';
 
 const mainLogger = createLogger();
@@ -52,6 +53,8 @@ if (ENV.rabbit_mq_url) {
 // startCronJob('channelToStatisticAsync', '0 0 */2 * *', async () => {
 //     await allServices.task.channelToStatisticAsync(mainLogger);
 // }, mainLogger)
+
+telegramBot.subscribe(mainLogger);
 
 startCronJob('server-info', '*/10 * * * *', async () => {
     const [serverInfo, serverInfoError] = await allServices.serverInfo.getServerInfoAsync(mainLogger)

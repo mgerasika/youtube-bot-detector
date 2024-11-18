@@ -11,9 +11,9 @@ sudo docker cp postgres:/var/lib/postgresql/data /media/mgerasika/ssd11/postgres
 
 
 
-sudo docker tag youtube-bot-server mgerasika/youtube-bot-server:v11
+sudo docker tag youtube-bot-server mgerasika/youtube-bot-server:v12
 sudo docker login
-sudo docker push mgerasika/youtube-bot-server:v11
+sudo docker push mgerasika/youtube-bot-server:v12
 
 # on another pc
 docker run --network=host \
@@ -36,6 +36,10 @@ mgerasika/youtube-bot-server:v11
 docker run --restart=always --env PORT=8077 --env DB_USER=test --env DB_PASSWORD=test --env DB_OWNER_USER=postgres --env DB_OWNER_PASSWORD=homeassistant --env DB_HOST=192.168.0.106 --env RABBIT_MQ=amqp://test:Zxc123=-@178.210.131.101:5672 --env REDIS_URL=redis://178.210.131.101:6379 -v /c/home:/home -d -p 8077:8077 --name youtube-bot-server mgerasika/youtube-bot-server:v11
 
 
+# postgress data folders
+/media/mgerasika/ssd13/postgres_data
+/media/mgerasika/ssd13/postgres_data_master
+/media/mgerasika/baracuda/postgres_data
 
 docker run -p 5433:5432 \
   --name postgres \
@@ -44,13 +48,10 @@ docker run -p 5433:5432 \
   --restart always \
   -d postgres
 
-
-
 docker run --restart always --name pgadmin4 -p 5050:80 \
     -e 'PGADMIN_DEFAULT_EMAIL=mgerasika@gmail.com' \
     -e 'PGADMIN_DEFAULT_PASSWORD=Zxc123=-' \
     -d dpage/pgadmin4
-
 
 sudo chown -R 999:999 /media/mgerasika/ssd13/rabbit_mq_data
 docker run  --restart always  -d --name rabbitmq \
@@ -60,7 +61,6 @@ docker run  --restart always  -d --name rabbitmq \
   -v /media/mgerasika/ssd13/rabbit_mq_data:/var/lib/rabbitmq \
   rabbitmq:management
 
-
 docker run --restart always -d --name redis-stack \
   -p 6379:6379 -p 8001:8001 \
   -v /media/mgerasika/ssd13/redis_data:/data \
@@ -69,3 +69,25 @@ docker run --restart always -d --name redis-stack \
 
 
 
+
+
+lsblk -f
+// remember id b8dc6576-7fca-4a40-a17a-e16e9a469244
+sudo mkdir -p /media/mgerasika/baracuda
+sudo nano /etc/fstab
+add next line
+UUID=b8dc6576-7fca-4a40-a17a-e16e9a469244 /media/mgerasika/baracuda ext4 defaults 0 2
+systemctl daemon-reload
+
+
+
+docker-compose up -d master
+docker exec -it postgres-master psql -U postgres -c "CREATE ROLE replication_user REPLICATION LOGIN ENCRYPTED PASSWORD 'homeassistant';"
+
+
+sudo rsync -av --progress /media/mgerasika/ssd13/postgres_data/ /media/mgerasika/ssd13/postgres_data_master/
+sudo rsync -av --progress /media/mgerasika/ssd13/postgres_data/ /media/mgerasika/baracuda/postgres_data/
+
+docker-compose up -d
+
+sudo /usr/lib/postgresql/17/bin/pg_resetwal -f /media/mgerasika/ssd13/postgres_data_master/
