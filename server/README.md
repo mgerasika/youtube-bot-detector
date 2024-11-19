@@ -83,11 +83,22 @@ systemctl daemon-reload
 
 docker-compose up -d master
 docker exec -it postgres-master psql -U postgres -c "CREATE ROLE replication_user REPLICATION LOGIN ENCRYPTED PASSWORD 'homeassistant';"
+docker exec -it postgres-master psql -U postgres -c "CREATE ROLE replication_user WITH REPLICATION LOGIN PASSWORD 'homeassistant';"
 
 
 sudo rsync -av --progress /media/mgerasika/ssd13/postgres_data/ /media/mgerasika/ssd13/postgres_data_master/
 sudo rsync -av --progress /media/mgerasika/ssd13/postgres_data/ /media/mgerasika/baracuda/postgres_data/
+sudo rsync -av --progress /media/mgerasika/ssd13/postgres_data_master/ /media/mgerasika/baracuda/postgres_data/
 
 docker-compose up -d
+docker exec -it postgres-slave pg_basebackup -h postgres-master -p 5432 -D /var/lib/postgresql/data -U replication_user -Fp -Xs -P
 
+
+docker-compose down
+docker-compose up --build
+
+
+
+# reset broken data
 sudo /usr/lib/postgresql/17/bin/pg_resetwal -f /media/mgerasika/ssd13/postgres_data_master/
+sudo /usr/lib/postgresql/17/bin/pg_resetwal -f  /media/mgerasika/baracuda/postgres_data/
