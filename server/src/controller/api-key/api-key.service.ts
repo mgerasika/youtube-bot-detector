@@ -1,6 +1,6 @@
 import { ApiKeyDto, IApiKeyDto, } from '@server/dto/api-key.dto';
 import { IAsyncPromiseResult, } from '@common/interfaces/async-promise-result.interface';
-import { mutationAsync, queryAsync, } from '@server/sql/sql-async.util';
+import { sqlMutationAsync, sqlQueryAsync, } from '@server/sql/sql-async.util';
 import { sql_escape, } from '@server/sql/sql.util';
 import { typeOrmMutationAsync, typeOrmQueryAsync, } from '@server/sql/type-orm-async.util';
 import { ILogger, } from '@common/utils/create-logger.utils';
@@ -17,7 +17,7 @@ export interface IYoutubeKeyInfo {
 }
 const getActiveKeyInfoAsync = async (logger: ILogger): IAsyncPromiseResult<IYoutubeKeyInfo> => {
 
-    const [list, listError] = await queryAsync<IYoutubeKeyInfo[]>(async (client) => {
+    const [list, listError] = await sqlQueryAsync<IYoutubeKeyInfo[]>(async (client) => {
         const { rows } = await client.query<IYoutubeKeyInfo[]>(` 
            SELECT 
     (SELECT COUNT(*) 
@@ -52,7 +52,7 @@ const getActiveApiKeyAsync = async (old_key: string | undefined, old_status: str
     logger.log('OLD_KEY', old_key, old_status)
     if (old_key) {
         // update old key, set expired to NOW()
-        const [, updateError] = await mutationAsync<IApiKeyDto[]>(async (client) => {
+        const [, updateError] = await sqlMutationAsync<IApiKeyDto[]>(async (client) => {
             const { rows } = await client.mutation<IApiKeyDto[]>(`UPDATE public.api_key
                 SET expired=NOW(),
                 status=${sql_escape(old_status) || null}
@@ -63,7 +63,7 @@ const getActiveApiKeyAsync = async (old_key: string | undefined, old_status: str
             return [, updateError];
         }
     }
-    const [list, listError] = await queryAsync<IApiKeyDto[]>(async (client) => {
+    const [list, listError] = await sqlQueryAsync<IApiKeyDto[]>(async (client) => {
         const { rows } = await client.query<IApiKeyDto[]>(`SELECT * FROM api_key 
 WHERE status = 'active' AND (expired < NOW() AND NOW() - expired > INTERVAL '24 hours') OR (expired IS NULL AND status = 'active');`);
         return rows;
@@ -74,7 +74,7 @@ WHERE status = 'active' AND (expired < NOW() AND NOW() - expired > INTERVAL '24 
     const apiKeyObj = list && list.length > 0 ? getRandomElement(list) : undefined;
     if (apiKeyObj) {
         // reset apiKey after 1 hour (set expired to NULL)
-        const [, updateError] = await mutationAsync<void>(async (client) => {
+        const [, updateError] = await sqlMutationAsync<void>(async (client) => {
             await client.mutation<void>(`UPDATE public.api_key
                 SET expired=NULL
                 WHERE youtube_key = ${sql_escape(apiKeyObj.youtube_key)};`);

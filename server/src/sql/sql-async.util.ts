@@ -2,27 +2,9 @@ const { Pool } = require('pg');
 import { ENV, } from '@server/env';
 import { IAsyncPromiseResult, } from '@common/interfaces/async-promise-result.interface';
 import { ILogger, } from '@common/utils/create-logger.utils';
-import {parseConnectionString} from '@common/utils/parse-connection-string.util'
-// create a new PostgreSQL pool with your database configuration
-let _pool: typeof Pool | undefined = undefined;
-
-const getPool = (): typeof Pool => {
-    const connectionProps = parseConnectionString(ENV.db_master || '')
-    if (_pool) {
-        return _pool;
-    }
-    _pool = new Pool({
-        user: connectionProps.user,
-        host: connectionProps.host,
-        database: connectionProps.database,
-        password: connectionProps.password,
-        port: connectionProps.port,
-        max: 100,
-        idleTimeoutMillis: 30000,
-        connectionTimeoutMillis: 2000,
-    });
-    return _pool;
-};
+import { getSqlPool } from './sql-pool';
+import { EDbType } from '@server/enum/db-type.enum';
+import { log } from 'console';
 
 interface IPg {
     query: <T>(sql: string) => {rows:T}
@@ -69,10 +51,10 @@ class MutationClientAdapter {
 	}
 }
 
-export async function queryAsync<T>(callback: (client: QueryClientAdapter) => Promise<T>, logger: ILogger): IAsyncPromiseResult<T> {
+export async function sqlQueryAsync<T>(callback: (client: QueryClientAdapter) => Promise<T>, logger: ILogger): IAsyncPromiseResult<T> {
     let client;
     try {
-        client = await getPool().connect();
+        client = await getSqlPool(EDbType.slave).connect();
         const data = (await callback(new QueryClientAdapter(client, logger)  )) as T;
         client?.release();
         return [data];
@@ -82,10 +64,10 @@ export async function queryAsync<T>(callback: (client: QueryClientAdapter) => Pr
     }
 }
 
-export async function mutationAsync<T>(callback: (client: MutationClientAdapter) => Promise<T>, logger: ILogger): IAsyncPromiseResult<T> {
+async function sqlMutationInternalAsync<T>( type: EDbType, callback: (client: MutationClientAdapter) => Promise<T>, logger: ILogger): IAsyncPromiseResult<T> {
     let client;
     try {
-        client = await getPool().connect();
+        client = await getSqlPool(type).connect();
         const data = (await callback(new MutationClientAdapter(client, logger)  )) as T;
         client?.release();
         return [data];
@@ -93,4 +75,9 @@ export async function mutationAsync<T>(callback: (client: MutationClientAdapter)
         client?.release();
         return [, String(ex || '')];
     }
+}
+
+export async function sqlMutationAsync<T>(callback: (client: MutationClientAdapter) => Promise<T>, logger: ILogger): IAsyncPromiseResult<T> {
+    await sqlMutationInternalAsync(EDbType.master, callback, logger)
+    return await sqlMutationInternalAsync(EDbType.slave, callback, logger)
 }

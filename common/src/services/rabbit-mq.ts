@@ -31,7 +31,7 @@ async function createConnectionAsync({ channelName, rabbit_mq_url }: { channelNa
         try {
             _connection = await amqp.connect(rabbit_mq_url || '');
             if (_connection) {
-                logger.log('Connected to Rabbit MQ');
+                logger.log('Connected to Rabbit MQ', channelName);
                 _channel = await _connection.createChannel();
             }
         } catch (error) {

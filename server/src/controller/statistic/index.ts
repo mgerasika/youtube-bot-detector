@@ -5,7 +5,7 @@ import { getStatisticInfoAsync, } from "./statistic-info";
 import { IStatisticDto, StatisticDto, } from "@server/dto/statistic.dto";
 import { IAsyncPromiseResult, } from "@common/interfaces/async-promise-result.interface";
 import { ILogger, } from "@common/utils/create-logger.utils";
-import { queryAsync, } from "@server/sql/sql-async.util";
+import { sqlQueryAsync, } from "@server/sql/sql-async.util";
 import {ICollection} from '@common/interfaces/collection.interface'
 import { getStatisticByChannelForOneAsync } from "./statistic-by-channel-for-one";
 
@@ -13,7 +13,7 @@ export interface IStatisticInternalInfo {
     all_keys:number;
 }
 const getStatisticInternalInfoAsync = async (logger: ILogger): IAsyncPromiseResult<IStatisticInternalInfo> => {
-    const [list, listError] = await queryAsync<IStatisticInternalInfo[]>(async (client) => {
+    const [list, listError] = await sqlQueryAsync<IStatisticInternalInfo[]>(async (client) => {
         const { rows } = await client.query<IStatisticInternalInfo[]>(` 
            SELECT 
             (SELECT COUNT(*)      FROM statistic    )::int AS all_keys;`);
@@ -29,7 +29,7 @@ const getStatisticInternalInfoAsync = async (logger: ILogger): IAsyncPromiseResu
 }
 
 const getStatisticListAsync = async ( logger: ILogger) : IAsyncPromiseResult<StatisticDto[]>=> {
-    return await queryAsync<StatisticDto[]>(async (client) => {
+    return await sqlQueryAsync<StatisticDto[]>(async (client) => {
         const { rows } = await client.query<StatisticDto[]>(`select * from statistic order by comment_count desc`);
         return rows;
     }, logger);
@@ -37,7 +37,7 @@ const getStatisticListAsync = async ( logger: ILogger) : IAsyncPromiseResult<Sta
 
 // WHERE (hash is null OR (uploaded_at_time > NOW() - INTERVAL '96 hours')) and comment_count >= 25 
 const getStatisticWithoutHashListAsync = async (page_size:number, page: number, logger: ILogger) : IAsyncPromiseResult<ICollection<StatisticDto>>=> {
-    return await queryAsync<ICollection<StatisticDto>>(async (client) => {
+    return await sqlQueryAsync<ICollection<StatisticDto>>(async (client) => {
         const { rows } = await client.query<(StatisticDto & {total_count: number})[]>(`
           SELECT 
             s.*, 

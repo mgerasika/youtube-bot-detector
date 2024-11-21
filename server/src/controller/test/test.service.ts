@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { IAsyncPromiseResult } from '@common/interfaces/async-promise-result.interface';
 import { ILogger } from '@common/utils/create-logger.utils';
-import { queryAsync } from '@server/sql/sql-async.util';
+import { sqlQueryAsync } from '@server/sql/sql-async.util';
 import { sql_escape } from '@server/sql/sql.util';
 import { huggingFaceAsync } from './hugging-face.service';
 import { oneByOneAsync } from '@common/utils/one-by-one-async.util';
@@ -83,7 +83,7 @@ export const getComments = async (logger: ILogger): IAsyncPromiseResult<unknown>
     logger.log('getComments start');
 
     const id = 'UCfppUojvDPTw1u2FjoEMMug'
-    const [comment, commentError] = await queryAsync<any>(async (client) => {
+    const [comment, commentError] = await sqlQueryAsync<any>(async (client) => {
         const {rows} = await client.query<any>(`SELECT STRING_AGG(text, '\n') AS combined_text
         FROM (
             SELECT text

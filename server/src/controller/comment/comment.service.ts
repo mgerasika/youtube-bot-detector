@@ -1,5 +1,5 @@
 import { IAsyncPromiseResult, } from "@common/interfaces/async-promise-result.interface";
-import { queryAsync, } from "@server/sql/sql-async.util";
+import { sqlQueryAsync, } from "@server/sql/sql-async.util";
 import { sql_and, sql_where, } from "@server/sql/sql.util";
 import { typeOrmMutationAsync, typeOrmQueryAsync, } from "@server/sql/type-orm-async.util";
 import { ILogger, } from "@common/utils/create-logger.utils";
@@ -9,7 +9,7 @@ export interface ICommentInfo {
     all_keys:number;
 }
 const getCommentsInfoAsync = async (logger: ILogger): IAsyncPromiseResult<ICommentInfo> => {
-    const [list, listError] = await queryAsync<ICommentInfo[]>(async (client) => {
+    const [list, listError] = await sqlQueryAsync<ICommentInfo[]>(async (client) => {
         const { rows } = await client.query<ICommentInfo[]>(` 
            SELECT 
             (SELECT COUNT(*)      FROM comment    )::int AS all_keys;`);
@@ -25,7 +25,7 @@ const getCommentsInfoAsync = async (logger: ILogger): IAsyncPromiseResult<IComme
 }
 
 const getLastCommentDateAsync = async ({video_id}: {video_id?:string}, logger: ILogger) : IAsyncPromiseResult<Date | undefined>=> {
-    return await queryAsync<Date | undefined>(async (client) => {
+    return await sqlQueryAsync<Date | undefined>(async (client) => {
         const data = await client.query<{published_at_time:Date}[]>(`SELECT published_at_time from comment ${sql_where('video_id', video_id)} ORDER BY published_at_time DESC LIMIT 1`);
         let res = data?.rows?.length ? data.rows[0].published_at_time : undefined;
         if(!res) {
@@ -36,7 +36,7 @@ const getLastCommentDateAsync = async ({video_id}: {video_id?:string}, logger: I
     }, logger);
 };
   const getCommentListAllAsync = async ({comment_id, author_id}: {comment_id?:string, author_id?: string}, logger: ILogger) : IAsyncPromiseResult<ICommentDto[]>=> {
-    return await queryAsync<ICommentDto[]>(async (client) => {
+    return await sqlQueryAsync<ICommentDto[]>(async (client) => {
         const { rows } = await client.query<ICommentDto[]>(`SELECT * from comment ${sql_where('id', comment_id)} ${sql_and('author_id', author_id)} order by published_at_time DESC limit 100`);
         return rows;
     }, logger);
@@ -44,7 +44,7 @@ const getLastCommentDateAsync = async ({video_id}: {video_id?:string}, logger: I
 
 
  const getAutorsIds = async (logger: ILogger) : IAsyncPromiseResult<string[]>=> {
-    return await queryAsync<string[]>(async (client) => {
+    return await sqlQueryAsync<string[]>(async (client) => {
         const { rows } = await client.query<{author_id:string}[]>(`SELECT DISTINCT author_id
 FROM comment
 WHERE author_id IS NOT NULL

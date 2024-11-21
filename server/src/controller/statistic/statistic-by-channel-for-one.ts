@@ -1,5 +1,5 @@
 import { IAsyncPromiseResult, } from '@common/interfaces/async-promise-result.interface';
-import { queryAsync, } from '@server/sql/sql-async.util';
+import { sqlQueryAsync, } from '@server/sql/sql-async.util';
 import { sql_escape, } from '@server/sql/sql.util';
 import { ILogger, } from '@common/utils/create-logger.utils';
 
@@ -17,7 +17,7 @@ export interface IStatisticByChannelForOne {
     frequency_tick: number;
 }
 export const getStatisticByChannelForOneAsync = async (author_id: string, logger: ILogger): IAsyncPromiseResult<IStatisticByChannelForOne> => {
-    const [list, error] = await queryAsync<IStatisticByChannelForOne[]>(async (client) => {
+    const [list, error] = await sqlQueryAsync<IStatisticByChannelForOne[]>(async (client) => {
         const { rows } = await client.query<IStatisticByChannelForOne[]>(`
             SELECT 
     *,

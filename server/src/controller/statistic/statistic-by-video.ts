@@ -1,6 +1,6 @@
 import { IApiKeyDto, } from '@server/dto/api-key.dto';
 import { IAsyncPromiseResult, } from '@common/interfaces/async-promise-result.interface';
-import { queryAsync, } from '@server/sql/sql-async.util';
+import { sqlQueryAsync, } from '@server/sql/sql-async.util';
 import { sql_escape, } from '@server/sql/sql.util';
 import { ILogger, } from '@common/utils/create-logger.utils';
 
@@ -20,7 +20,7 @@ export interface IStatisticByVideo {
 
 
 export const getStatisticByVideoAsync = async (video_id: string, logger: ILogger): IAsyncPromiseResult<IStatisticByVideo[]> => {
-    const [list, error] = await queryAsync<IStatisticByVideo[]>(async (client) => {
+    const [list, error] = await sqlQueryAsync<IStatisticByVideo[]>(async (client) => {
         const { rows } = await client.query<IStatisticByVideo[]>(`SELECT 
     *,
     ROUND(comment_count::numeric / GREATEST(published_at_diff, 1), 2)::float AS frequency,

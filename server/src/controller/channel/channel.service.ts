@@ -1,6 +1,6 @@
 import { ChannelDto, IChannelDto, } from "@server/dto/channel.dto";
 import { IAsyncPromiseResult, } from "@common/interfaces/async-promise-result.interface";
-import { queryAsync, } from "@server/sql/sql-async.util";
+import { sqlQueryAsync, } from "@server/sql/sql-async.util";
 import { sql_and, sql_escape, sql_where, } from "@server/sql/sql.util";
 import { typeOrmMutationAsync, typeOrmQueryAsync, } from "@server/sql/type-orm-async.util";
 import { ILogger, } from "@common/utils/create-logger.utils";
@@ -10,7 +10,7 @@ export interface IChannelInfo {
     all_keys:number;
 }
 const getChannelsInfoAsync = async (logger: ILogger): IAsyncPromiseResult<IChannelInfo> => {
-    const [list, listError] = await queryAsync<IChannelInfo[]>(async (client) => {
+    const [list, listError] = await sqlQueryAsync<IChannelInfo[]>(async (client) => {
         const { rows } = await client.query<IChannelInfo[]>(` 
            SELECT 
             (SELECT COUNT(*)      FROM channel    )::int AS all_keys;`);
@@ -26,7 +26,7 @@ const getChannelsInfoAsync = async (logger: ILogger): IAsyncPromiseResult<IChann
 }
 
   const getChannelListAllAsync = async ({channel_id, is_scannable}: {channel_id?:string, is_scannable?:boolean}, logger: ILogger) : IAsyncPromiseResult<IChannelDto[]>=> {
-    return await queryAsync<IChannelDto[]>(async (client) => {
+    return await sqlQueryAsync<IChannelDto[]>(async (client) => {
         const { rows } = await client.query<IChannelDto[]>(`select * from channel ${sql_where('id', channel_id)} ${sql_and('is_scannable', String(is_scannable))}`);
         return rows;
     }, logger);
@@ -68,7 +68,7 @@ const existAsync = async (ids: string[], logger: ILogger) : IAsyncPromiseResult<
 
 const existAsyncForGroup = async (ids: string[], logger: ILogger) : IAsyncPromiseResult<string[]> => {
     const idsStr = ids.map(id => sql_escape(id)).join(',')
-    return await queryAsync<string[]>(async (client) => {
+    return await sqlQueryAsync<string[]>(async (client) => {
         const { rows } = await client.query<{id:string}[]>(`SELECT id
             FROM channel
             WHERE id IN (${idsStr});`);

@@ -5,7 +5,7 @@ dotenv.config(); // Load environment variables from .env
 import { ENV, RABBIT_MQ_DOWNLOAD_ENV, RABBIT_MQ_STATISTIC_ENV, } from '@server/env';
 
 import { allServices, } from './controller/all-services';
-import { typeOrmQueryAsync, } from './sql/type-orm-async.util';
+import { typeOrmQueryAsync, typeOrmQueryInternalAsync, } from './sql/type-orm-async.util';
 import {rabbitMqService,} from '@common/services/rabbit-mq'
 import https from 'https';
 import { createLogger, } from '@common/utils/create-logger.utils';
@@ -15,6 +15,7 @@ import { IExpressRequest } from '@common/interfaces/express.interface';
 import {startCronJob} from '@common/services/cron.service'
 import { toQuery } from '@common/utils/to-query.util';
 import { telegramBot } from './telegram.service';
+import { EDbType } from './enum/db-type.enum';
 export * from './controller/all-controllers';
 
 const mainLogger = createLogger();
@@ -27,7 +28,8 @@ app.get('/', (_req: IExpressRequest, res: { send: (arg0: string) => void; }) => 
 if (process.env.NODE_ENV === 'development') {
     // sync database
     mainLogger.log('before sync orm')
-    typeOrmQueryAsync(() => Promise.resolve(['']), mainLogger);
+    typeOrmQueryInternalAsync( EDbType.master, () => Promise.resolve(['']), mainLogger);
+    typeOrmQueryInternalAsync( EDbType.slave, () => Promise.resolve(['']), mainLogger);
     mainLogger.log('after sync orm')
 }
 

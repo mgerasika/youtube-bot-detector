@@ -9,38 +9,20 @@ import { CommentDto, } from '@server/dto/comment.dto';
 import { StatisticDto, } from '@server/dto/statistic.dto';
 import { ServerInfoDto } from '@server/dto/server-info.dto';
 import { parseConnectionString } from '@common/utils/parse-connection-string.util';
+import { getTypeormPool } from './typeorm-pool';
+import { EDbType } from '@server/enum/db-type.enum';
 
-const IS_DEBUG = ENV.node_env === 'development';
 
-let _dataSource: DataSource | undefined = undefined;
-const getDataSource = (): DataSource => {
-    const connectionProps = parseConnectionString(ENV.db_master || '')
-    if (_dataSource) {
-        return _dataSource;
-    }
-    _dataSource = new DataSource({
-        type: 'postgres',
-        username: IS_DEBUG ? ENV.db_owner_user : connectionProps.user,
-        password: IS_DEBUG ? ENV.db_owner_password : connectionProps.password,
-        host: connectionProps.host,
-        database: connectionProps.database,
-        port: connectionProps.port,
-        entities: [ApiKeyDto, ChannelDto, VideoDto, CommentDto, StatisticDto, ServerInfoDto],
-        synchronize: true,
-        poolSize: 10,
-        logging: false,
-    });
-    return _dataSource;
-};
 
 type QueryClient = {
     getRepository<Entity extends ObjectLiteral>(target: EntityTarget<Entity>): Pick<Repository<Entity>, 'findOne'>;
 }
-export async function typeOrmQueryAsync<T>(callback: (client: QueryClient) => IAsyncPromiseResult<T>, logger: ILogger): IAsyncPromiseResult<T> {
-    let client = getDataSource();
+
+export async function typeOrmQueryInternalAsync<T>(type: EDbType, callback: (client: QueryClient) => IAsyncPromiseResult<T>, logger: ILogger): IAsyncPromiseResult<T> {
+    let client = getTypeormPool(type);
     try {
         if (!client.isInitialized) {
-            client = await getDataSource().initialize();
+            client = await client.initialize();
         }
         if (!client.isInitialized) {
             return [, 'Client is not Initialized'];
@@ -51,17 +33,21 @@ export async function typeOrmQueryAsync<T>(callback: (client: QueryClient) => IA
         logger.log('typeOrm error ', error);
         return [, 'error in sql ' + (error as unknown as {detail:string})?.detail];
     }
+}
+
+export async function typeOrmQueryAsync<T>(callback: (client: QueryClient) => IAsyncPromiseResult<T>, logger: ILogger): IAsyncPromiseResult<T> {
+   return await typeOrmQueryInternalAsync<T>(EDbType.slave, callback, logger)
 }
 
 
 type MutationClient = {
     getRepository<Entity extends ObjectLiteral>(target: EntityTarget<Entity>): Pick<Repository<Entity>, 'save'>;
 }
-export async function typeOrmMutationAsync<T>(callback: (client: MutationClient) => IAsyncPromiseResult<T>, logger: ILogger): IAsyncPromiseResult<T> {
-    let client = getDataSource();
+export async function typeOrmMutationInternalAsync<T>(type: EDbType, callback: (client: MutationClient) => IAsyncPromiseResult<T>, logger: ILogger): IAsyncPromiseResult<T> {
+    let client = getTypeormPool(type);
     try {
         if (!client.isInitialized) {
-            client = await getDataSource().initialize();
+            client = await client.initialize();
         }
         if (!client.isInitialized) {
             return [, 'Client is not Initialized'];
@@ -72,4 +58,8 @@ export async function typeOrmMutationAsync<T>(callback: (client: MutationClient)
         logger.log('typeOrm error ', error);
         return [, 'error in sql ' + (error as unknown as {detail:string})?.detail];
     }
+}
+export async function typeOrmMutationAsync<T>(callback: (client: MutationClient) => IAsyncPromiseResult<T>, logger: ILogger): IAsyncPromiseResult<T> {
+    await typeOrmMutationInternalAsync(EDbType.master, callback, logger);
+    return await typeOrmMutationInternalAsync(EDbType.slave, callback, logger);
 }
