@@ -1,8 +1,6 @@
 import { IAsyncPromiseResult, } from '@common/interfaces/async-promise-result.interface';
 import { toQuery, } from '@common/utils/to-query.util';
 import { api, } from '@server/api.generated';
-import { processYoutubeErrorAsync, } from '@server/youtube';
-import { AxiosError, } from 'axios';
 import { google, } from 'googleapis';
 import { ILogger, } from '@common/utils/create-logger.utils';
 import { IScanReturn, } from '@common/interfaces/rabbitm-mq-return';

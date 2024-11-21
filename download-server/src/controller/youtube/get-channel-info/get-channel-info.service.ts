@@ -1,10 +1,8 @@
 import { AxiosError, } from 'axios';
 import { IAsyncPromiseResult, } from '@common/interfaces/async-promise-result.interface';
 import { toQuery, } from '@common/utils/to-query.util';
-import { getYoutube, isQuotaError, processYoutubeErrorAsync, } from '@server/youtube';
+import { getYoutubeApi, } from '@server/youtube';
 import { ILogger, } from '@common/utils/create-logger.utils';
-import { groupArray, } from '@common/utils/group-array.util';
-import { oneByOneAsync, } from '@common/utils/one-by-one-async.util';
 
 export interface IGetChannelInfoBody {
     channelId: string;
@@ -30,7 +28,7 @@ export const getChannelInfoAsync = async (
 ): IAsyncPromiseResult<IChannelInfo[] | undefined> => {
     logger.log('getChannelInfoAsync start', body)
 
-    const [youtube, youtubeError] = await getYoutube(undefined, undefined, logger);
+    const [youtube, youtubeError] = await getYoutubeApi(undefined, undefined, logger);
     if (!youtube || youtubeError) {
         return [, youtubeError];
     }
@@ -54,11 +52,8 @@ export const getChannelInfoAsync = async (
         })
     );
 
-    if(isQuotaError(responseError as AxiosError, logger)) {
-        
-    }
     if (responseError) {
-        return await processYoutubeErrorAsync(responseError as AxiosError, logger);
+        return [,responseError]
     }
 
     if (response?.data.items && response.data.items.length > 0) {

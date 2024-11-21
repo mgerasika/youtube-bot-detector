@@ -37,7 +37,7 @@ async function createConnectionAsync({ channelName, rabbit_mq_url }: { channelNa
         } catch (error) {
             logger.log('createConnection rabbitMQ error', error);
             _connection = undefined;
-            setTimeout(createConnectionAsync, 30 * 1000);
+            setTimeout(() => createConnectionAsync({channelName, rabbit_mq_url}, logger), 30 * 1000);
         }
     }
     if (_connection && _channel) {
@@ -106,7 +106,7 @@ async function subscribeAsync({ channelName, rabbit_mq_url }: { channelName: str
     } catch (error) {
         logger.log('known error', error);
 
-        setTimeout(subscribeAsync, 30 * 1000);
+        setTimeout(() => subscribeAsync({channelName, rabbit_mq_url}, callback,  logger), 30 * 1000);
     }
 }
 

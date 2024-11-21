@@ -4,7 +4,7 @@ import { ENV, } from '@server/env';
 import { IAsyncPromiseResult, } from '@common/interfaces/async-promise-result.interface';
 import { ICollection, } from '@common/interfaces/collection';
 import { toQuery, } from '@common/utils/to-query.util';
-import { getYoutube, isQuotaError, processYoutubeErrorAsync, } from '@server/youtube';
+import { getYoutubeApi, } from '@server/youtube';
 import { ILogger, } from '@common/utils/create-logger.utils';
 
 export interface IGetVideosBody {
@@ -22,7 +22,7 @@ export interface IShortVideoInfo {
 export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody, logger: ILogger): IAsyncPromiseResult<ICollection<IShortVideoInfo>> => {
     logger.log('getVideosAsync start', channelId, publishedAt)
 
-    const [youtube, youtubeError] = await getYoutube(undefined,undefined, logger);
+    const [youtube, youtubeError] = await getYoutubeApi(undefined,undefined, logger);
     if(!youtube || youtubeError) {
         return [, youtubeError];
     }
@@ -38,12 +38,9 @@ export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody, l
     }));
     logger.log('after get channels from youtube', channelResponse?.data?.items?.length)
     
-    if(isQuotaError(channelError as AxiosError, logger)) {
-        
-    }
-    if (channelError) {
-        return await processYoutubeErrorAsync(channelError as AxiosError, logger);
-    }
+    if(channelError) {
+        return [,logger.log(channelError)]
+     }
 
     if (!channelResponse?.data.items || channelResponse.data.items.length === 0) {
         return [, 'No channel found'];
@@ -60,7 +57,7 @@ export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody, l
 
     do {
         // Fetch the videos from the uploads playlist
-        const [youtube, youtubeError] = await getYoutube(undefined,undefined, logger);
+        const [youtube, youtubeError] = await getYoutubeApi(undefined,undefined, logger);
         if(!youtube || youtubeError) {
             return [, youtubeError];
         }
@@ -72,12 +69,9 @@ export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody, l
             ...(nextPageToken ? { pageToken: nextPageToken } : undefined),
         }));
 
-        if(isQuotaError(playListError as AxiosError, logger)) {
-        
-        }
-        if (playListError) {
-            return await processYoutubeErrorAsync(playListError as AxiosError, logger);
-        }
+        if(playListError) {
+            return [,logger.log(playListError)]
+         }
 
         if (!playlistItemsResponse?.data.items || playlistItemsResponse.data.items.length === 0) {
             return [, 'No videos found'];
@@ -121,22 +115,19 @@ export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody, l
 }
 
 async function getVideoStatsisticItems(videoIds:string[], logger: ILogger): IAsyncPromiseResult<youtube_v3.Schema$Video[]> {
-    const [youtube, youtubeError] = await getYoutube(undefined,undefined, logger);
+    const [youtube, youtubeError] = await getYoutubeApi(undefined,undefined, logger);
     if(!youtube || youtubeError) {
         return [, youtubeError];
     }
 
-    const [res, error] = await toQuery( () => youtube.videos.list({
+    const [res, videosError] = await toQuery( () => youtube.videos.list({
       part: ['statistics'],
       id: videoIds,
     }));
 
-    if(isQuotaError(error as AxiosError, logger)) {
-        
-    }
-    if (error) {
-        return await processYoutubeErrorAsync(error as AxiosError, logger);
-    }
+    if(videosError) {
+        return [,logger.log(videosError)]
+     }
 
     return [res?.data?.items || []]
   }
