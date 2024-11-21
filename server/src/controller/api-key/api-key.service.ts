@@ -23,7 +23,7 @@ const getActiveKeyInfoAsync = async (logger: ILogger): IAsyncPromiseResult<IYout
     (SELECT COUNT(*) 
      FROM api_key 
      WHERE status = 'active' 
-     AND ((expired < NOW() AND NOW() - expired > INTERVAL '24 hours') 
+     AND ((expired < NOW() AND NOW() - expired > INTERVAL '25 hours') 
           OR (expired IS NULL AND status = 'active'))
     )::int AS active_not_expired_keys,
     (SELECT COUNT(*) 
@@ -65,7 +65,7 @@ const getActiveApiKeyAsync = async (old_key: string | undefined, old_status: str
     }
     const [list, listError] = await sqlQueryAsync<IApiKeyDto[]>(async (client) => {
         const { rows } = await client.query<IApiKeyDto[]>(`SELECT * FROM api_key 
-WHERE status = 'active' AND (expired < NOW() AND NOW() - expired > INTERVAL '24 hours') OR (expired IS NULL AND status = 'active');`);
+WHERE status = 'active' AND (expired < NOW() AND NOW() - expired > INTERVAL '25 hours') OR (expired IS NULL AND status = 'active');`);
         return rows;
     }, logger);
     if (listError) {

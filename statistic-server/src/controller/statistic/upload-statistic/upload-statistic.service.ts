@@ -9,8 +9,8 @@ import { redisService, } from '@common/services/redis';
 import { cryptoService, } from '@common/services/crypto.service';
 import { IFirebaseFile, } from '../../../../../common/src/model/statistic-server.model';
 
-// 24 hours
-const CACHE_TIME_IN_SECCONDS = 24*60*60
+// 25 hours
+const CACHE_TIME_IN_SECCONDS = 25*60*60
 export const uploadStatisticAsync = async (
     body: IUploadStatisticBody,
     logger: ILogger

@@ -18,12 +18,14 @@ class QueryClientAdapter {
 
 	query<T>(sql: string): {rows:T} {
 		// this._logger.log('sql=' + sql)
-        const lowerSql = sql.toLowerCase();
+        const lowerSql = sql.toLowerCase().trim();
         if(lowerSql.startsWith('insert ') || lowerSql.startsWith('updatae ') || lowerSql.startsWith('delete ')) {
-            throw 'not possible insert/update/delete in query'
+            this._logger.log('sql', lowerSql)
+            throw 'not possible insert/update/delete in query' 
         }
         if(!lowerSql.startsWith('select ') ) {
-            throw 'select should start only from select word'
+            this._logger.log('sql', lowerSql)
+            throw 'select should start only from select word' 
         }
 		return this._original.query(sql);
 	}
@@ -39,11 +41,13 @@ class MutationClientAdapter {
 
 	mutation<T>(sql: string): {rows:T} {
 		// this._logger.log('sql=' + sql)
-        const lowerSql = sql.toLowerCase();
+        const lowerSql = sql.toLowerCase().trim();
         if(lowerSql.startsWith('select ') ) {
+            this._logger.log('sql', lowerSql)
             throw 'mutation can not start from select word'
         }
         if(!lowerSql.startsWith('insert into') && !lowerSql.startsWith('update') && !lowerSql.startsWith('delete') ) {
+            this._logger.log('sql', lowerSql)
             throw 'mutation should start only from specific words - insert into, update, delete'
         }
 		return this._original.query(sql);

@@ -4,7 +4,7 @@ import { ENV, } from '@server/env';
 import { IAsyncPromiseResult, } from '@common/interfaces/async-promise-result.interface';
 import { ICollection, } from '@common/interfaces/collection';
 import { toQuery, } from '@common/utils/to-query.util';
-import { getYoutube, processYoutubeErrorAsync, } from '@server/youtube';
+import { getYoutube, isQuotaError, processYoutubeErrorAsync, } from '@server/youtube';
 import { ILogger, } from '@common/utils/create-logger.utils';
 
 export interface IGetVideosBody {
@@ -38,6 +38,9 @@ export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody, l
     }));
     logger.log('after get channels from youtube', channelResponse?.data?.items?.length)
     
+    if(isQuotaError(channelError as AxiosError, logger)) {
+        
+    }
     if (channelError) {
         return await processYoutubeErrorAsync(channelError as AxiosError, logger);
     }
@@ -69,6 +72,9 @@ export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody, l
             ...(nextPageToken ? { pageToken: nextPageToken } : undefined),
         }));
 
+        if(isQuotaError(playListError as AxiosError, logger)) {
+        
+        }
         if (playListError) {
             return await processYoutubeErrorAsync(playListError as AxiosError, logger);
         }
@@ -125,6 +131,9 @@ async function getVideoStatsisticItems(videoIds:string[], logger: ILogger): IAsy
       id: videoIds,
     }));
 
+    if(isQuotaError(error as AxiosError, logger)) {
+        
+    }
     if (error) {
         return await processYoutubeErrorAsync(error as AxiosError, logger);
     }

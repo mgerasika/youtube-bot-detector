@@ -4,7 +4,7 @@ import { IAsyncPromiseResult, } from '@common/interfaces/async-promise-result.in
 import { ICollection, } from '@common/interfaces/collection';
 import { toQuery, } from '@common/utils/to-query.util';
 import { ILogger, } from '@common/utils/create-logger.utils';
-import { getYoutube, processYoutubeErrorAsync, } from '@server/youtube';
+import { getYoutube, isQuotaError, processYoutubeErrorAsync, } from '@server/youtube';
 import {removeDuplicatesByKey} from '@common/utils/remove-duplicates'
 
 export interface IGetCommentsBody {
@@ -47,7 +47,9 @@ export const getCommentsAsync = async ({videoId, publishedAt}: IGetCommentsBody,
             pageToken: nextPageToken || undefined,
             textFormat: 'plainText', // Retrieve comments as plain text
         }));
-
+        if(isQuotaError(commentsError as AxiosError, logger)) {
+        
+        }
         if(commentsError) {
            return await processYoutubeErrorAsync(commentsError as AxiosError, logger);
         }

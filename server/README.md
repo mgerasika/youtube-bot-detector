@@ -1,25 +1,25 @@
 # postgress backup - restore example
 ## backup database
-sudo PGPASSWORD=test pg_dump -U test -h 192.168.0.106 -p 5433 -F c -b -v -f /mnt/hdd1/backup/youtube-bot-filter-backup-$(date +\%Y-\%m-\%d-\%H:\%M).dump youtube-bot-filter
+sudo PGPASSWORD=test pg_dump -U test -h 192.168.0.106 -p 5433 -F c -b -v -f /mnt/hdd1/backup/youtube-bot-filter-backup-$(date +\%Y-\%m-\%d).dump youtube-bot-filter
 
 
 docker run --rm -v /mnt/hdd1/backup:/backup -e PGPASSWORD=test postgres:17 pg_dump \
-  -U test -h 192.168.0.106 -p 5433 -F c -b -v -f /backup/youtube-bot-filter-backup-$(date +%Y-%m-%d-%H:%M).dump youtube-bot-filter
+  -U test -h 192.168.0.106 -p 5433 -F c -b -v -f /backup/youtube-bot-filter-backup-$(date +%Y-%m-%d).dump youtube-bot-filter
+
 
 ## restore database
-pg_restore -U test -h 192.168.0.16 -p 5433 -d youtube-bot-filter -v /mnt/hdd1/backup/youtube-bot-filter-backup-2024-11-21-09:48.dump 
+pg_restore -U test -h 192.168.0.16 -p 5433 -d youtube-bot-filter -v /mnt/hdd1/backup/youtube-bot-filter-backup-2024-11-21.dump 
 
-pg_restore -U test -h 192.168.0.16 -p 5434 -d youtube-bot-filter -v /mnt/hdd1/backup/youtube-bot-filter-backup-2024-11-21-09:48.dump 
+pg_restore -U test -h 192.168.0.16 -p 5434 -d youtube-bot-filter -v /mnt/hdd1/backup/youtube-bot-filter-backup-2024-11-21.dump 
 
 over docker
 
 docker run --rm -v /mnt/hdd1/backup:/backup -e PGPASSWORD=test postgres:17 pg_restore \
-  -U test -h 192.168.0.16 -p 5433 -d youtube-bot-filter -v /backup/youtube-bot-filter-backup-2024-11-21-09:48.dump
-
+  -U test -h 192.168.0.16 -p 5433 -d youtube-bot-filter -v /backup/youtube-bot-filter-backup-2024-11-21.dump
 
 
 docker run --rm -v /mnt/hdd1/backup:/backup -e PGPASSWORD=test postgres:17 pg_restore \
-  -U test -h 192.168.0.16 -p 5434 -d youtube-bot-filter -v /backup/youtube-bot-filter-backup-2024-11-21-09:48.dump
+  -U test -h 192.168.0.16 -p 5434 -d youtube-bot-filter -v /backup/youtube-bot-filter-backup-2024-11-21.dump
 
 
 

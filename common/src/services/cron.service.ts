@@ -4,7 +4,6 @@ import cron from 'node-cron';
 
 export const startCronJob = async (jobName: string, period: string, callback:  () => void, logger: ILogger) => {
     logger.log(`Start cron job = [${jobName}]`)
-    // Schedule a task to run every 24 hours at midnight (00:00)
     cron.schedule(period, async () => {
         
         // Your cron job logic here

@@ -1,7 +1,7 @@
 import { AxiosError, } from 'axios';
 import { IAsyncPromiseResult, } from '@common/interfaces/async-promise-result.interface';
 import { toQuery, } from '@common/utils/to-query.util';
-import { getYoutube, processYoutubeErrorAsync, } from '@server/youtube';
+import { getYoutube, isQuotaError, processYoutubeErrorAsync, } from '@server/youtube';
 import { ILogger, } from '@common/utils/create-logger.utils';
 import { IShortVideoInfo, } from '../get-videos/get-videos.service';
 
@@ -28,6 +28,10 @@ export const getVideoInfoAsync = async (body: IGetVideoInfoBody, logger: ILogger
         id: [body.videoId || ''],
     }));
     logger.log('after request video info in youtube')
+
+    if(isQuotaError(responseError as AxiosError, logger)) {
+        
+    }
     if (responseError) {
        return await processYoutubeErrorAsync(responseError as AxiosError, logger);
     }

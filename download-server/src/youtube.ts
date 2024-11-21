@@ -56,3 +56,14 @@ export async function processYoutubeErrorAsync<T>(youtubeError: AxiosError , log
     }
 
 }
+
+export  function isQuotaError<T>(youtubeError: AxiosError , logger: ILogger ): boolean {
+    // youtube error Permission denied: Consumer 'api_key:AIzaSyCjWKCsfOwQItGPfrZ80uANaD3-JgU3eIY' has been suspended.
+    const msg = String(youtubeError || '');
+    logger.log('youtube error', msg)
+    if(msg.includes('youtube quota')) {
+       return true;
+    }
+   return false;
+
+}

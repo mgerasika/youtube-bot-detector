@@ -73,7 +73,7 @@ FROM (
             statistic AS s1 ON comment.author_id = s1.channel_id
         WHERE 
             comment.video_id = ${sql_escape(video_id)}
-            AND (s1.uploaded_at_time < NOW() - INTERVAL '24 hours' OR s1.channel_id IS NULL OR s1.hash is NULL)
+            AND (s1.uploaded_at_time < NOW() - INTERVAL '25 hours' OR s1.channel_id IS NULL OR s1.hash is NULL)
     ) AS t1
 ) AS t2;
 `);
