@@ -4,7 +4,7 @@ import { RABBIT_MQ_DOWNLOAD_ENV, RABBIT_MQ_STATISTIC_ENV, } from '@server/env';
 import { ILogger, } from '@common/utils/create-logger.utils';
 import { IUploadStatisticBody } from '@common/model/statistic-server.model';
 import { allServices } from '../all-services';
-import { sqlAsync } from '@server/sql/sql-async.util';
+import { mutationAsync, queryAsync } from '@server/sql/sql-async.util';
 import fs from 'fs';
 import path from 'path';
 import { oneByOneAsync } from '@common/utils/one-by-one-async.util';
@@ -16,8 +16,8 @@ const channelToStatisticAsync = async (logger: ILogger): IAsyncPromiseResult<str
     const sqlFilePath = path.join(__dirname, 'channel-to-statistic.sql');
     const sql = fs.readFileSync(sqlFilePath, 'utf8');
     logger.log('start insert missed channels into statistic')
-    const [data, error] = await sqlAsync<string>(async (client) => {
-        const { rows } = await client.query<string>(sql);
+    const [data, error] = await mutationAsync<string>(async (client) => {
+        const { rows } = await client.mutation<string>(sql);
         return rows;
     }, logger);
     if (error) {

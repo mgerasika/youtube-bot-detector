@@ -1,11 +1,11 @@
-import { typeOrmAsync, } from "@server/sql/type-orm-async.util";
+import { typeOrmMutationAsync, typeOrmQueryAsync, } from "@server/sql/type-orm-async.util";
 import { getStatisticByChannelAsync, } from "./statistic-by-channel";
 import { getStatisticByVideoAsync, } from "./statistic-by-video";
 import { getStatisticInfoAsync, } from "./statistic-info";
 import { IStatisticDto, StatisticDto, } from "@server/dto/statistic.dto";
 import { IAsyncPromiseResult, } from "@common/interfaces/async-promise-result.interface";
 import { ILogger, } from "@common/utils/create-logger.utils";
-import { sqlAsync, } from "@server/sql/sql-async.util";
+import { queryAsync, } from "@server/sql/sql-async.util";
 import {ICollection} from '@common/interfaces/collection.interface'
 import { getStatisticByChannelForOneAsync } from "./statistic-by-channel-for-one";
 
@@ -13,7 +13,7 @@ export interface IStatisticInternalInfo {
     all_keys:number;
 }
 const getStatisticInternalInfoAsync = async (logger: ILogger): IAsyncPromiseResult<IStatisticInternalInfo> => {
-    const [list, listError] = await sqlAsync<IStatisticInternalInfo[]>(async (client) => {
+    const [list, listError] = await queryAsync<IStatisticInternalInfo[]>(async (client) => {
         const { rows } = await client.query<IStatisticInternalInfo[]>(` 
            SELECT 
             (SELECT COUNT(*)      FROM statistic    )::int AS all_keys;`);
@@ -29,7 +29,7 @@ const getStatisticInternalInfoAsync = async (logger: ILogger): IAsyncPromiseResu
 }
 
 const getStatisticListAsync = async ( logger: ILogger) : IAsyncPromiseResult<StatisticDto[]>=> {
-    return await sqlAsync<StatisticDto[]>(async (client) => {
+    return await queryAsync<StatisticDto[]>(async (client) => {
         const { rows } = await client.query<StatisticDto[]>(`select * from statistic order by comment_count desc`);
         return rows;
     }, logger);
@@ -37,17 +37,20 @@ const getStatisticListAsync = async ( logger: ILogger) : IAsyncPromiseResult<Sta
 
 // WHERE (hash is null OR (uploaded_at_time > NOW() - INTERVAL '96 hours')) and comment_count >= 25 
 const getStatisticWithoutHashListAsync = async (page_size:number, page: number, logger: ILogger) : IAsyncPromiseResult<ICollection<StatisticDto>>=> {
-    return await sqlAsync<ICollection<StatisticDto>>(async (client) => {
+    return await queryAsync<ICollection<StatisticDto>>(async (client) => {
         const { rows } = await client.query<(StatisticDto & {total_count: number})[]>(`
-            WITH total AS (
-                SELECT COUNT(*) AS total_count FROM statistic 
-                WHERE (hash is null) and comment_count >= 25
-            )
-            SELECT *, total.total_count
-            FROM statistic, total
-            WHERE (hash is null) and comment_count >= 25
-            ORDER BY comment_count desc
-            LIMIT ${page_size} OFFSET (${page} ) * ${page_size}`);
+          SELECT 
+            s.*, 
+            (
+                SELECT COUNT(*) 
+                FROM statistic 
+                WHERE hash IS NULL AND comment_count >= 25
+            ) AS total_count
+        FROM statistic AS s
+        WHERE s.hash IS NULL AND s.comment_count >= 25
+        ORDER BY s.comment_count DESC
+        LIMIT ${page_size} OFFSET (${page}) * ${page_size};
+        `);
 
         return {
             page:page,
@@ -63,7 +66,7 @@ const getStatisticWithoutHashListAsync = async (page_size:number, page: number, 
 };
 
 const getStatisticDetailsAsync = async (channel_id: string, logger: ILogger): IAsyncPromiseResult<IStatisticDto> => {
-    return typeOrmAsync<StatisticDto>(async (client) => {
+    return typeOrmQueryAsync<StatisticDto>(async (client) => {
         const entity = await client.getRepository(StatisticDto).findOne({ where: { channel_id } });
         if (!entity) {
             return [, 'entity not found'];
@@ -73,7 +76,7 @@ const getStatisticDetailsAsync = async (channel_id: string, logger: ILogger): IA
 };
 
  const postStatisticAsync = async (statistic: IStatisticDto[], logger: ILogger) : IAsyncPromiseResult<IStatisticDto[]> => {
-    return typeOrmAsync<StatisticDto[]>(async (client) => {
+    return typeOrmMutationAsync<StatisticDto[]>(async (client) => {
         return [await client.getRepository(StatisticDto).save(statistic)];
     }, logger);
 };

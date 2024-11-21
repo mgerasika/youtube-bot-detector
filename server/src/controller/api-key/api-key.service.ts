@@ -1,8 +1,8 @@
 import { ApiKeyDto, IApiKeyDto, } from '@server/dto/api-key.dto';
 import { IAsyncPromiseResult, } from '@common/interfaces/async-promise-result.interface';
-import { sqlAsync, } from '@server/sql/sql-async.util';
+import { mutationAsync, queryAsync, } from '@server/sql/sql-async.util';
 import { sql_escape, } from '@server/sql/sql.util';
-import { typeOrmAsync, } from '@server/sql/type-orm-async.util';
+import { typeOrmMutationAsync, typeOrmQueryAsync, } from '@server/sql/type-orm-async.util';
 import { ILogger, } from '@common/utils/create-logger.utils';
 import { RABBIT_MQ_DOWNLOAD_ENV, } from '@server/env';
 import { rabbitMqService, } from '@common/services/rabbit-mq'
@@ -17,7 +17,7 @@ export interface IYoutubeKeyInfo {
 }
 const getActiveKeyInfoAsync = async (logger: ILogger): IAsyncPromiseResult<IYoutubeKeyInfo> => {
 
-    const [list, listError] = await sqlAsync<IYoutubeKeyInfo[]>(async (client) => {
+    const [list, listError] = await queryAsync<IYoutubeKeyInfo[]>(async (client) => {
         const { rows } = await client.query<IYoutubeKeyInfo[]>(` 
            SELECT 
     (SELECT COUNT(*) 
@@ -52,8 +52,8 @@ const getActiveApiKeyAsync = async (old_key: string | undefined, old_status: str
     logger.log('OLD_KEY', old_key, old_status)
     if (old_key) {
         // update old key, set expired to NOW()
-        const [, updateError] = await sqlAsync<IApiKeyDto[]>(async (client) => {
-            const { rows } = await client.query<IApiKeyDto[]>(`UPDATE public.api_key
+        const [, updateError] = await mutationAsync<IApiKeyDto[]>(async (client) => {
+            const { rows } = await client.mutation<IApiKeyDto[]>(`UPDATE public.api_key
                 SET expired=NOW(),
                 status=${sql_escape(old_status) || null}
                 WHERE youtube_key = ${sql_escape(old_key)}`);
@@ -63,7 +63,7 @@ const getActiveApiKeyAsync = async (old_key: string | undefined, old_status: str
             return [, updateError];
         }
     }
-    const [list, listError] = await sqlAsync<IApiKeyDto[]>(async (client) => {
+    const [list, listError] = await queryAsync<IApiKeyDto[]>(async (client) => {
         const { rows } = await client.query<IApiKeyDto[]>(`SELECT * FROM api_key 
 WHERE status = 'active' AND (expired < NOW() AND NOW() - expired > INTERVAL '24 hours') OR (expired IS NULL AND status = 'active');`);
         return rows;
@@ -74,8 +74,8 @@ WHERE status = 'active' AND (expired < NOW() AND NOW() - expired > INTERVAL '24 
     const apiKeyObj = list && list.length > 0 ? getRandomElement(list) : undefined;
     if (apiKeyObj) {
         // reset apiKey after 1 hour (set expired to NULL)
-        const [, updateError] = await sqlAsync<void>(async (client) => {
-            await client.query<void>(`UPDATE public.api_key
+        const [, updateError] = await mutationAsync<void>(async (client) => {
+            await client.mutation<void>(`UPDATE public.api_key
                 SET expired=NULL
                 WHERE youtube_key = ${sql_escape(apiKeyObj.youtube_key)};`);
         }, logger);
@@ -101,7 +101,7 @@ const addYoutubeKey = async (email: string, key: string, logger: ILogger): IAsyn
 };
 
 const postApiKey = async (data: IApiKeyDto, logger: ILogger): IAsyncPromiseResult<IApiKeyDto> => {
-    return typeOrmAsync<ApiKeyDto>(async (client) => {
+    return typeOrmMutationAsync<ApiKeyDto>(async (client) => {
         return [await client.getRepository(ApiKeyDto).save(data)];
     }, logger);
 };

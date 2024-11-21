@@ -1,7 +1,6 @@
 import { ApiKeyDto, IApiKeyDto, } from '@server/dto/api-key.dto';
 import { IAsyncPromiseResult, } from '@common/interfaces/async-promise-result.interface';
 
-import { sqlAsync, } from '@server/sql/sql-async.util';
 import { sql_escape, } from '@server/sql/sql.util';
 import { ENV, } from '@server/env';
 import { ILogger, } from '@common/utils/create-logger.utils';

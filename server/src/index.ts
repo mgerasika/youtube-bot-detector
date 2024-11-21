@@ -5,7 +5,7 @@ dotenv.config(); // Load environment variables from .env
 import { ENV, RABBIT_MQ_DOWNLOAD_ENV, RABBIT_MQ_STATISTIC_ENV, } from '@server/env';
 
 import { allServices, } from './controller/all-services';
-import { typeOrmAsync, } from './sql/type-orm-async.util';
+import { typeOrmQueryAsync, } from './sql/type-orm-async.util';
 import {rabbitMqService,} from '@common/services/rabbit-mq'
 import https from 'https';
 import { createLogger, } from '@common/utils/create-logger.utils';
@@ -27,7 +27,7 @@ app.get('/', (_req: IExpressRequest, res: { send: (arg0: string) => void; }) => 
 if (process.env.NODE_ENV === 'development') {
     // sync database
     mainLogger.log('before sync orm')
-    typeOrmAsync(() => Promise.resolve(['']), mainLogger);
+    typeOrmQueryAsync(() => Promise.resolve(['']), mainLogger);
     mainLogger.log('after sync orm')
 }
 
