@@ -10,7 +10,7 @@ export interface IServerInfoDto {
 
 @Entity('server_info')
 export class ServerInfoDto implements IServerInfoDto {
-    @PrimaryColumn({ type: 'varchar', length: 255 })
+    @PrimaryColumn({ type: 'varchar', length: 255,  primaryKeyConstraintName:"pk_server_info_id" })
     id!: string;
     
     @Column({ nullable: true, type: 'text'})

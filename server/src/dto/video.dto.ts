@@ -16,7 +16,7 @@ export interface IVideoDto {
 
 @Entity('video')
 export class VideoDto implements IVideoDto {
-    @PrimaryColumn({ type: 'varchar', length: 255 })
+    @PrimaryColumn({ type: 'varchar', length: 255, primaryKeyConstraintName:"pk_video_id" })
     id!: string;
 
     @Column({ nullable: false, type: 'date'})

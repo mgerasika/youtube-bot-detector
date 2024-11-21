@@ -16,7 +16,7 @@ export class ApiKeyDto implements IApiKeyDto {
     @Column({ nullable: false, type: 'text'})
     email!: string;
     
-    @PrimaryColumn('text')
+    @PrimaryColumn({type:'text', name: 'youtube_key', nullable: false, primaryKeyConstraintName:"pk_youtube_key_id"})
     youtube_key!: string;
 
     @Column({ nullable: true, type: 'text'})

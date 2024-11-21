@@ -15,7 +15,7 @@ export interface ICommentDto {
 
 @Entity('comment')
 export class CommentDto implements ICommentDto {
-    @PrimaryColumn({ type: 'varchar', length: 255 })
+    @PrimaryColumn({ type: 'varchar', length: 255,  primaryKeyConstraintName:"pk_comment_id" })
     id!: string;
 
     @Column({ nullable: false, type: 'date'})
