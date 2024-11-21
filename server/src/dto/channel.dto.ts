@@ -24,7 +24,7 @@ export interface IChannelDto {
 
 @Entity('channel')
 export class ChannelDto implements IChannelDto {
-    @PrimaryColumn({ type: 'varchar', length: 255 })
+    @PrimaryColumn({ type: 'varchar', length: 255,  primaryKeyConstraintName:"pk_channel_id"  })
     id!: string;
 
     @Column({ nullable: false, type: 'text'})

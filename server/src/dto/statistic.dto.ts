@@ -18,7 +18,7 @@ export interface IStatisticDto {
 
 @Entity('statistic')
 export class StatisticDto implements IStatisticDto {
-    @PrimaryColumn({ type: 'varchar', length: 255 })
+    @PrimaryColumn({ type: 'varchar', length: 255,  primaryKeyConstraintName:"pk_statistic_channel_id" })
     channel_id!: string;
 
     @OneToOne(() => ChannelDto)
