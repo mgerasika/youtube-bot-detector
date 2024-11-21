@@ -12,8 +12,6 @@ import { parseConnectionString } from '@common/utils/parse-connection-string.uti
 import { getTypeormPool } from './typeorm-pool';
 import { EDbType } from '@server/enum/db-type.enum';
 
-
-
 type QueryClient = {
     getRepository<Entity extends ObjectLiteral>(target: EntityTarget<Entity>): Pick<Repository<Entity>, 'findOne'>;
 }
@@ -43,7 +41,7 @@ export async function typeOrmQueryAsync<T>(callback: (client: QueryClient) => IA
 type MutationClient = {
     getRepository<Entity extends ObjectLiteral>(target: EntityTarget<Entity>): Pick<Repository<Entity>, 'save'>;
 }
-export async function typeOrmMutationInternalAsync<T>(type: EDbType, callback: (client: MutationClient) => IAsyncPromiseResult<T>, logger: ILogger): IAsyncPromiseResult<T> {
+async function typeOrmMutationInternalAsync<T>(type: EDbType, callback: (client: MutationClient) => IAsyncPromiseResult<T>, logger: ILogger): IAsyncPromiseResult<T> {
     let client = getTypeormPool(type);
     try {
         if (!client.isInitialized) {

@@ -24,6 +24,18 @@ app.get('/', (req, res) => {
 
 const port = process.env.PORT || 8009;
 if (ENV.rabbit_mq_url) {
+    // deprecated
+    rabbitMqService.subscribeAsync({
+        channelName: 'youtube-bot-filter-queue-v3', 
+        rabbit_mq_url: 'amqp://test:Zxc123=-@192.168.0.106:5672'},async (data, logger) => {
+        if (data.msg) {
+            const method = (downloadServerService as unknown as Record<string,Function>)[data.msg.methodName] as Function;
+            if(method) {
+                return await method.call(downloadServerService, data.msg.methodArgumentsJson, logger);
+            }
+        }
+        return Promise.resolve();
+    }, mainLogger);
     rabbitMqService.subscribeAsync({channelName: ENV.rabbit_mq_download_channel_name, rabbit_mq_url: ENV.rabbit_mq_url},async (data, logger) => {
         if (data.msg) {
             const method = (downloadServerService as unknown as Record<string,Function>)[data.msg.methodName] as Function;

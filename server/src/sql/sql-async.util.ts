@@ -4,7 +4,6 @@ import { IAsyncPromiseResult, } from '@common/interfaces/async-promise-result.in
 import { ILogger, } from '@common/utils/create-logger.utils';
 import { getSqlPool } from './sql-pool';
 import { EDbType } from '@server/enum/db-type.enum';
-import { log } from 'console';
 
 interface IPg {
     query: <T>(sql: string) => {rows:T}

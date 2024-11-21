@@ -4,8 +4,8 @@ export const ENV = {
     one_by_one_timeout: 0,
     api_server_url: process.env.API_SERVER_URL,
     redis_url: process.env.REDIS_URL || '',
-    rabbit_mq_download_channel_name: 'youtube-bot-filter-queue-v3',
-    rabbit_mq_statistic_channel_name: 'youtube-bot-statistic-v3',
+    rabbit_mq_download_channel_name: 'youtube-bot-filter-queue-v4',
+    rabbit_mq_statistic_channel_name: 'youtube-bot-statistic-v4',
 };
 
 
