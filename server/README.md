@@ -1,7 +1,27 @@
 # postgress backup - restore example
+## backup database
+sudo PGPASSWORD=test pg_dump -U test -h 192.168.0.106 -p 5433 -F c -b -v -f /mnt/hdd1/backup/youtube-bot-filter-backup-$(date +\%Y-\%m-\%d-\%H:\%M).dump youtube-bot-filter
 
-sudo PGPASSWORD=test pg_dump -U test -h 192.168.0.106 -p 5433 -F c -b -v -f /home/mgerasika/Documents/backup/youtube-bot-filter-backup-$(date +\%Y-\%m-\%d-\%H:\%M).dump youtube-bot-filter
-pg_restore -U test -h 192.168.0.106 -p 5433 -d youtube-bot-filter -v /home/mgerasika/Documents/backup/youtube-bot-filter-backup-6.11.24.dump 
+
+docker run --rm -v /mnt/hdd1/backup:/backup -e PGPASSWORD=test postgres:17 pg_dump \
+  -U test -h 192.168.0.106 -p 5433 -F c -b -v -f /backup/youtube-bot-filter-backup-$(date +%Y-%m-%d-%H:%M).dump youtube-bot-filter
+
+## restore database
+pg_restore -U test -h 192.168.0.16 -p 5433 -d youtube-bot-filter -v /mnt/hdd1/backup/youtube-bot-filter-backup-2024-11-21-09:48.dump 
+
+pg_restore -U test -h 192.168.0.16 -p 5434 -d youtube-bot-filter -v /mnt/hdd1/backup/youtube-bot-filter-backup-2024-11-21-09:48.dump 
+
+over docker
+
+docker run --rm -v /mnt/hdd1/backup:/backup -e PGPASSWORD=test postgres:17 pg_restore \
+  -U test -h 192.168.0.16 -p 5433 -d youtube-bot-filter -v /backup/youtube-bot-filter-backup-2024-11-21-09:48.dump
+
+
+
+docker run --rm -v /mnt/hdd1/backup:/backup -e PGPASSWORD=test postgres:17 pg_restore \
+  -U test -h 192.168.0.16 -p 5434 -d youtube-bot-filter -v /backup/youtube-bot-filter-backup-2024-11-21-09:48.dump
+
+
 
 # how tag image and upload to docker.io
 
@@ -37,8 +57,8 @@ docker run --restart=always --env PORT=8077 --env DB_USER=test --env DB_PASSWORD
 /media/mgerasika/baracuda/postgres_data
 
 ## permissions
-sudo mkdir -p /media/mgerasika/ssd11/postgres_data
-sudo chown -R mgerasika:mgerasika /media/mgerasika/ssd11/postgres_data
+sudo mkdir -p /mnt/hdd1/backup
+sudo chown -R mgerasika:mgerasika /mnt/hdd1/backup
 
 ## several postgress instances for hdd1 and hdd2
 
@@ -72,18 +92,19 @@ docker run --restart always --name pgadmin4 -p 5050:80 \
     -d dpage/pgadmin4
 
 ## rabbitmq
-sudo chown -R 999:999 /media/mgerasika/ssd13/rabbit_mq_data
+sudo chown -R 999:999 /mnt/hdd1/rabbit_mq_data
 docker run  --restart always  -d --name rabbitmq \
   -p 5672:5672 -p 15672:15672 \
   -e RABBITMQ_DEFAULT_USER=test \
   -e RABBITMQ_DEFAULT_PASS=Zxc123=- \
-  -v /media/mgerasika/ssd13/rabbit_mq_data:/var/lib/rabbitmq \
+  -v /mnt/hdd1/rabbit_mq_data:/var/lib/rabbitmq \
   rabbitmq:management
 
 ## redis
+sudo chown -R 999:999 /mnt/hdd1/redis_data
 docker run --restart always -d --name redis-stack \
   -p 6379:6379 -p 8001:8001 \
-  -v /media/mgerasika/ssd13/redis_data:/data \
+  -v /mnt/hdd1/redis_data:/data \
   redis/redis-stack:latest
 
 

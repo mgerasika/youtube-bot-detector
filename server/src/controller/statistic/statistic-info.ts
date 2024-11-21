@@ -6,8 +6,6 @@ import { ENV, } from '@server/env';
 import { ILogger, } from '@common/utils/create-logger.utils';
 import { getStatisticByChannelAsync, } from './statistic-by-channel';
 import { rabbitMqService, } from '@common/services/rabbit-mq'
-import { redisService, } from '@common/services/redis'
-import { toQuery } from '@common/utils/to-query.util';
 import { apiKey, IYoutubeKeyInfo } from '../api-key/api-key.service';
 import { allServices } from '../all-services';
 import { IVideoInfo } from '../video/video.service';

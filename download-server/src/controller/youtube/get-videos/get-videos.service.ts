@@ -57,7 +57,11 @@ export const getVideosAsync = async ({channelId, publishedAt}: IGetVideosBody, l
 
     do {
         // Fetch the videos from the uploads playlist
-        
+        const [youtube, youtubeError] = await getYoutube(undefined,undefined, logger);
+        if(!youtube || youtubeError) {
+            return [, youtubeError];
+        }
+
         const [playlistItemsResponse, playListError] = await toQuery(() => youtube.playlistItems.list({
             part: ['snippet', 'id', 'status'],
             playlistId: uploadsPlaylistId,

@@ -26,10 +26,7 @@ export interface IShortCommentInfo {
 export const getCommentsAsync = async ({videoId, publishedAt}: IGetCommentsBody, logger: ILogger): IAsyncPromiseResult<ICollection<IShortCommentInfo>> => {
     logger.log('getCommentsAsync start', videoId, publishedAt)
 
-    const [youtube, youtubeError] = await getYoutube(undefined,undefined, logger);
-    if(!youtube || youtubeError) {
-        return [, logger.log(youtubeError)];
-    }
+    
 
     logger.log('start call youtube api by videoId and publishedAt', videoId, publishedAt)
    
@@ -39,6 +36,10 @@ export const getCommentsAsync = async ({videoId, publishedAt}: IGetCommentsBody,
     const publishedAtDate = publishedAt ? new Date(publishedAt) : new Date(1970);
     logger.log('publishedAtDate for filtering', publishedAtDate, publishedAt)
     do {
+        const [youtube, youtubeError] = await getYoutube(undefined,undefined, logger);
+        if(!youtube || youtubeError) {
+            return [, logger.log(youtubeError)];
+        }
         const [commentResponse, commentsError] = await toQuery(() => youtube.commentThreads.list({
             part: ['snippet', 'id', 'replies'],
             videoId: videoId,

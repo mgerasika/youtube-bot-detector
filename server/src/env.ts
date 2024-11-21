@@ -5,7 +5,6 @@ export const ENV = {
     db_owner_password: process.env.DB_OWNER_PASSWORD,
     node_env: process.env.NODE_ENV,
     rabbit_mq_url: process.env.RABBIT_MQ || '',
-    redis_url: process.env.REDIS_URL || '',
     rabbit_mq_download_channel_name: 'youtube-bot-filter-queue-v4',
     rabbit_mq_statistic_channel_name: 'youtube-bot-statistic-v4',
 };
