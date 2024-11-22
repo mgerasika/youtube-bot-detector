@@ -34,6 +34,7 @@ export const getChannelInfoAsync = async (
     }
 
     const ids = body.channelId.includes(',') ? body.channelId.split(',') : [body.channelId || ''];
+    logger.log('before channels list')
     const [response, responseError] = await toQuery(() =>
         youtube.channels.list({
             part: [
@@ -51,11 +52,10 @@ export const getChannelInfoAsync = async (
             id: ids,
         })
     );
-
     if (responseError) {
         return [,responseError]
     }
-
+    logger.log('after channels list count = ', response?.data?.items?.length)
     if (response?.data.items && response.data.items.length > 0) {
         const res = response.data.items.map((channel): IChannelInfo => {
             return {

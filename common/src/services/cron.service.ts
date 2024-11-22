@@ -10,7 +10,7 @@ export const startCronJob = async (jobName: string, period: string, callback:  (
         // For example, you could call another function or API
         logger.log(`----------Cron job start executing = [${jobName}]--`);
         try {
-        await callback();
+            await callback();
         }
         catch(ex) {
             logger.log('Cron job error ', ex)

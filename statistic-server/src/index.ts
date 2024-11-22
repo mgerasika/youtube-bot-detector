@@ -15,6 +15,7 @@ import { app } from './express-app';
 import {startCronJob} from '@common/services/cron.service'
 import { toQuery } from '@common/utils/to-query.util';
 import { api } from './api.generated';
+import {COMMON_CONST} from '@common/const'
 
 const mainLogger = createLogger();
 mainLogger.log('ENV=', ENV);
@@ -42,7 +43,7 @@ if(ENV.redis_url) {
     });
 }
 
-startCronJob('server-info', '*/10 * * * *', async () => {
+startCronJob('server-info', `*/${COMMON_CONST.SERVER_INFO_UPDATE_MINUTES} * * * *`, async () => {
     const [serverInfo, serverInfoError] = await allServices.serverInfo.getServerInfoAsync(mainLogger)
     if(serverInfoError) {
         mainLogger.log('cron job serverInfo error ', serverInfoError)

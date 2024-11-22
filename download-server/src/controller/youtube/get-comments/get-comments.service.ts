@@ -40,6 +40,7 @@ export const getCommentsAsync = async ({videoId, publishedAt}: IGetCommentsBody,
         if(!youtube || youtubeError) {
             return [, logger.log(youtubeError)];
         }
+        logger.log('start call comments thread nextPageToken = ', nextPageToken)
         const [commentResponse, commentsError] = await toQuery(() => youtube.commentThreads.list({
             part: ['snippet', 'id', 'replies'],
             videoId: videoId,

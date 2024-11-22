@@ -17,6 +17,7 @@ import { toQuery } from '@common/utils/to-query.util';
 import { telegramBot } from './telegram.service';
 import { EDbType } from './enum/db-type.enum';
 export * from './controller/all-controllers';
+import {COMMON_CONST} from '@common/const'
 
 const mainLogger = createLogger();
 mainLogger.log('ENV=', ENV);
@@ -36,14 +37,6 @@ if (process.env.NODE_ENV === 'development') {
 const port = process.env.PORT || 8007;
 const ports = process.env.PORTS || 8008;
 if (ENV.rabbit_mq_url) {
-    // rabbitMQ_subscribeAsync((data) => {
-    //     if (data.setupBody) {
-    //         logger.log('Recived here')
-    //     }
-    //     return Promise.resolve('empty');
-    // });
-
-    
     rabbitMqService.createConnectionAsync(RABBIT_MQ_DOWNLOAD_ENV, mainLogger); 
     rabbitMqService.createConnectionAsync(RABBIT_MQ_STATISTIC_ENV, mainLogger); 
 }
@@ -58,7 +51,7 @@ if (ENV.rabbit_mq_url) {
 
 telegramBot.subscribe(mainLogger);
 
-startCronJob('server-info', '*/10 * * * *', async () => {
+startCronJob('server-info', `*/${COMMON_CONST.SERVER_INFO_UPDATE_MINUTES} * * * *`, async () => {
     const [serverInfo, serverInfoError] = await allServices.serverInfo.getServerInfoAsync(mainLogger)
     if(serverInfoError) {
         mainLogger.log('cron job serverInfo error ', serverInfoError)

@@ -7,17 +7,20 @@ import { logMemoryUsage } from '../utils/log-memory.utils';
 import { IStatisticServerRabbitMq } from '@common/interfaces/statisic-server-rabbit-mq.interface';
 import { IRabbitMqConnectionInfo } from '../model/rabbit-mq-connection-Info.interface';
 
-let _connection: Connection | undefined;
-let _channel: Channel;
+const _connections: Record<string, Connection | undefined> = {};
+const _channels: Record<string, Channel | undefined> = {};
 
-async function rabbitMQ_createChannelAsync({ channelName, rabbit_mq_url }: { channelName: string, rabbit_mq_url: string }, logger: ILogger) {
+async function getChannelAsync({ channelName, rabbit_mq_url }: { channelName: string, rabbit_mq_url: string }, logger: ILogger): Promise<Channel | undefined> {
     await createConnectionAsync({ channelName, rabbit_mq_url }, logger)
-    return _channel;
+    return _channels[channelName];
 }
 
 const getInfoAsync = async ({ channelName, rabbit_mq_url }: { channelName: string, rabbit_mq_url: string }, logger: ILogger): Promise<IRabbitMqConnectionInfo> => {
-    const channel = await rabbitMQ_createChannelAsync({ channelName, rabbit_mq_url }, logger);
+    const channel = await getChannelAsync({ channelName, rabbit_mq_url }, logger);
     try {
+        if (!channel) {
+            throw 'channel is null';
+        }
         const { messageCount, consumerCount } = await channel.checkQueue(channelName);
         return { messageCount, consumerCount };
     } catch (error) {
@@ -26,34 +29,39 @@ const getInfoAsync = async ({ channelName, rabbit_mq_url }: { channelName: strin
 };
 
 
-async function createConnectionAsync({ channelName, rabbit_mq_url }: { channelName: string, rabbit_mq_url: string }, logger: ILogger) {
-    if (!_connection || !_channel) {
+async function createConnectionAsync({ channelName, rabbit_mq_url }: { channelName: string, rabbit_mq_url: string }, logger: ILogger): Promise<Connection | undefined> {
+    if (!_connections[channelName] || !_channels[channelName]) {
         try {
-            _connection = await amqp.connect(rabbit_mq_url || '');
-            if (_connection) {
+            const conn = _connections[channelName] = await amqp.connect(rabbit_mq_url || '');
+            if (conn) {
                 logger.log('Connected to Rabbit MQ', channelName);
-                _channel = await _connection.createChannel();
+                _channels[channelName] = await conn.createChannel();
             }
         } catch (error) {
             logger.log('createConnection rabbitMQ error', error);
-            _connection = undefined;
-            setTimeout(() => createConnectionAsync({channelName, rabbit_mq_url}, logger), 30 * 1000);
+            _connections[channelName] = undefined;
+            setTimeout(() => createConnectionAsync({ channelName, rabbit_mq_url }, logger), 30 * 1000);
         }
     }
-    if (_connection && _channel) {
-        await _channel.assertQueue(channelName, { durable: true });
+    const connection = _connections[channelName];
+    const channel = _channels[channelName];
+    if (connection && channel) {
+        await channel.assertQueue(channelName, { durable: true });
 
         // important don't remove this 1 - infinite loop
-        _channel.prefetch(1);
+        channel.prefetch(1);
     }
-    return _connection;
+    return connection;
 }
 
 async function subscribeAsync({ channelName, rabbit_mq_url }: { channelName: string, rabbit_mq_url: string }, callback: (data: IRabbitMqMessage, logger: ILogger) => Promise<any>, logger: ILogger) {
-    try {
-        const connection = await createConnectionAsync({ rabbit_mq_url, channelName: channelName }, logger);
-        if (connection) {
-            _channel.consume(
+
+    const connection = await createConnectionAsync({ rabbit_mq_url, channelName: channelName }, logger);
+    const channel = await getChannelAsync({ channelName, rabbit_mq_url }, logger);
+    if (connection && channel) {
+
+        try {
+            channel.consume(
                 channelName,
                 (msg: ConsumeMessage | null) => {
                     const messageLogger = createLogger();
@@ -75,50 +83,53 @@ async function subscribeAsync({ channelName, rabbit_mq_url }: { channelName: str
 
                                     if (res.length > 1 && res[1]) {
                                         sendAgainWithDelay(channelName, body, messageLogger, () => {
-                                            _channel.ack(msg);
+                                            channel.ack(msg);
                                         });
                                     }
                                     else {
-                                        _channel.ack(msg);
+                                        channel.ack(msg);
                                     }
                                 })
                                 .catch(async (ex) => {
                                     logger.log('error in rabbit mq subscribe ', ex);
                                     sendAgainWithDelay(channelName, body, messageLogger, () => {
-                                        _channel.ack(msg);
+                                        channel.ack(msg);
                                     });
 
                                 }).finally(() => {
                                     logMemoryUsage(messageLogger);
-                                    
+
                                 });
                         } else {
                             logger.log('error parse JSON in rabbit mq subscribe ');
-                                sendAgainWithDelay(channelName, body, messageLogger, () => {
-                                    _channel.ack(msg);
-                                });
+                            sendAgainWithDelay(channelName, body, messageLogger, () => {
+                                channel.ack(msg);
+                            });
                         }
                     }
                 },
                 { noAck: false },
             );
-        }
-    } catch (error) {
-        logger.log('known error', error);
+        } catch (error) {
+            logger.log('known error', error);
 
-        setTimeout(() => subscribeAsync({channelName, rabbit_mq_url}, callback,  logger), 30 * 1000);
+            setTimeout(() => subscribeAsync({ channelName, rabbit_mq_url }, callback, logger), 30 * 1000);
+        }
     }
 }
 
 function sendAgainWithDelay(channelName: string, body: Buffer, logger: ILogger, callback: () => void) {
     logger.log('rabbit mq will send again same message after 1 seccond = ', `${body}`);
 
-    setTimeout( () => {
-        _channel.sendToQueue(channelName, body, {
-            persistent: true, // Ensure the message is durable
-        });
-        
-        callback();
+    setTimeout(() => {
+        const channel = _channels[channelName];
+        if (channel) {
+            channel.sendToQueue(channelName, body, {
+                persistent: true, // Ensure the message is durable
+            });
+
+            callback();
+        }
     }, 1000);
 }
 
@@ -132,10 +143,12 @@ const sendDataAsync = async <T = any,>({ channelName, rabbit_mq_url }: { channel
             methodArgumentsJson
         }
     }
-    if (_channel) {
+
+    const channel = _channels[channelName];
+    if (channel) {
         logger.log('Rabbit MQ Data send:', data);
         // don't add await - this method should call in paralell
-        _channel.sendToQueue(channelName, Buffer.from(JSON.stringify(data)), { persistent: true });
+        channel.sendToQueue(channelName, Buffer.from(JSON.stringify(data)), { persistent: true });
 
         return [true];
     } else {

@@ -6,6 +6,7 @@ export interface IServerInfoDto {
     name: string;
     ip:string;
     memory_info:IMemoryInfo;
+    updated_at_time?: Date;
 }
 
 @Entity('server_info')
@@ -21,5 +22,8 @@ export class ServerInfoDto implements IServerInfoDto {
 
     @Column({ nullable: true, type: 'jsonb'})
     memory_info!: IMemoryInfo;
+
+    @Column({ nullable: true, type: 'timestamptz'})
+    updated_at_time?: Date;
    
 }

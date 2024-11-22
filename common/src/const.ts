@@ -1,0 +1,3 @@
+export const COMMON_CONST = {
+    SERVER_INFO_UPDATE_MINUTES : 10,
+}
