@@ -68,7 +68,7 @@ export const testAsync = async (logger: ILogger): IAsyncPromiseResult<unknown> =
             'fullScanChannelInfoAsync',
             {
                 channelId: channel.channelId,
-                ignoreCommentsLastDate:true,
+                ignoreCommentsLastDate:false,
                 ignoreVideoLastDate: true,
             } ,
             logger

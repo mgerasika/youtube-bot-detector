@@ -8,18 +8,18 @@ docker run --rm -v /mnt/hdd1/backup:/backup -e PGPASSWORD=test postgres:17 pg_du
 
 
 ## restore database
-pg_restore -U test -h 192.168.0.16 -p 5433 -d youtube-bot-filter -v /mnt/hdd1/backup/youtube-bot-filter-backup-2024-11-21.dump 
-
 pg_restore -U test -h 192.168.0.16 -p 5434 -d youtube-bot-filter -v /mnt/hdd1/backup/youtube-bot-filter-backup-2024-11-21.dump 
+
+pg_restore -U test -h 192.168.0.16 -p 5435 -d youtube-bot-filter -v /mnt/hdd1/backup/youtube-bot-filter-backup-2024-11-21.dump 
 
 over docker
 
 docker run --rm -v /mnt/hdd1/backup:/backup -e PGPASSWORD=test postgres:17 pg_restore \
-  -U test -h 192.168.0.16 -p 5433 -d youtube-bot-filter -v /backup/youtube-bot-filter-backup-2024-11-21.dump
+  -U test -h 192.168.0.16 -p 5434 -d youtube-bot-filter -v /backup/youtube-bot-filter-backup-2024-11-21.dump
 
 
 docker run --rm -v /mnt/hdd1/backup:/backup -e PGPASSWORD=test postgres:17 pg_restore \
-  -U test -h 192.168.0.16 -p 5434 -d youtube-bot-filter -v /backup/youtube-bot-filter-backup-2024-11-21.dump
+  -U test -h 192.168.0.16 -p 5435 -d youtube-bot-filter -v /backup/youtube-bot-filter-backup-2024-11-21.dump
 
 
 
@@ -62,14 +62,14 @@ sudo chown -R mgerasika:mgerasika /mnt/hdd1/backup
 
 ## several postgress instances for 192.168.0.16
 
-docker run -p 5433:5432 \
+docker run -p 5434:5432 \
   --name postgres_1 \
   -e POSTGRES_PASSWORD=homeassistant \
   -v /mnt/hdd1/postgres_data:/var/lib/postgresql/data \
   --restart always \
   -d postgres
 
-docker run -p 5434:5432 \
+docker run -p 5435:5432 \
   --name postgres_2 \
   -e POSTGRES_PASSWORD=homeassistant \
   -v /mnt/hdd2/postgres_data:/var/lib/postgresql/data \
