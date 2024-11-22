@@ -60,7 +60,7 @@ docker run --restart=always --env PORT=8077 --env DB_USER=test --env DB_PASSWORD
 sudo mkdir -p /mnt/hdd1/backup
 sudo chown -R mgerasika:mgerasika /mnt/hdd1/backup
 
-## several postgress instances for hdd1 and hdd2
+## several postgress instances for 192.168.0.16
 
 docker run -p 5433:5432 \
   --name postgres_1 \
@@ -76,12 +76,19 @@ docker run -p 5434:5432 \
   --restart always \
   -d postgres  
 
-## postgress single instance  
+## several postgress instances for 192.168.0.106
 
-docker run -p 5433:5432 \
-  --name postgres \
+docker run -p 5434:5432 \
+  --name postgres_1 \
   -e POSTGRES_PASSWORD=homeassistant \
-  -v /media/mgerasika/ssd13/postgres_data:/var/lib/postgresql/data \
+  -v /media/mgerasika/Documents/postgres_data:/var/lib/postgresql/data \
+  --restart always \
+  -d postgres
+
+docker run -p 5435:5432 \
+  --name postgres_2 \
+  -e POSTGRES_PASSWORD=homeassistant \
+  -v /mnt/ssd1/postgres_data:/var/lib/postgresql/data \
   --restart always \
   -d postgres
 
@@ -111,7 +118,8 @@ docker run --restart always -d --name redis-stack \
 # mount disc example
 lsblk -f
 // remember id of your drive for example b8dc6576-7fca-4a40-a17a-e16e9a469244
-sudo mkdir -p /media/mgerasika/baracuda
+sudo mkdir -p /mnt/baracuda
+sudo mkdir -p /mnt/ssd1
 sudo nano /etc/fstab
 add next line
 UUID=b8dc6576-7fca-4a40-a17a-e16e9a469244 /media/mgerasika/baracuda ext4 defaults 0 2
