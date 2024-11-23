@@ -49,6 +49,15 @@ mgerasika/youtube-bot-server:v11
 ## for windows
 docker run --restart=always --env PORT=8077 --env DB_USER=test --env DB_PASSWORD=test --env DB_OWNER_USER=postgres --env DB_OWNER_PASSWORD=homeassistant --env DB_HOST=192.168.0.106 --env RABBIT_MQ=amqp://test:Zxc123=-@178.210.131.101:5672 --env REDIS_URL=redis://178.210.131.101:6379 -v /c/home:/home -d -p 8077:8077 --name youtube-bot-server mgerasika/youtube-bot-server:v11
 
+## portainer and home assitant together
+docker stop portainer
+docker rm portainer
+docker pull portainer/portainer-ce:latest
+docker tag portainer/portainer-ce:latest p0rtainer
+
+docker run -d -p 9000:9000 --name=p0rtainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data p0rtainer
+
+docker rmi portainer/portainer-ce
 
 # docker - postgress pgadmin rabbitmq redis
 

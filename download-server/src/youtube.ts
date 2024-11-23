@@ -6,7 +6,6 @@ import { toQuery, } from '@common/utils/to-query.util';
 import { ILogger, } from '@common/utils/create-logger.utils';
 import { resolveWithDealyAsync, } from '@common/utils/resolve-with-delay.util';
 import { GaxiosPromise } from 'googleapis/build/src/apis/abusiveexperiencereport';
-import { Tracing } from 'trace_events';
 
 let _youtubeInstance: youtube_v3.Youtube | undefined;
 let _quota = 0;
@@ -25,7 +24,7 @@ interface IYoutubeReturn {
     },
 }
 
-async function getYoutubeInstance(oldKey: string | undefined, oldStatus: string | undefined, logger: ILogger): IAsyncPromiseResult<youtube_v3.Youtube | undefined> {
+async function getYoutubeInstanceAsync(oldKey: string | undefined, oldStatus: string | undefined, logger: ILogger): IAsyncPromiseResult<youtube_v3.Youtube | undefined> {
     if (oldKey || !_youtubeInstance) {
         _youtubeInstance = undefined;
         logger.log('start request new youtube key oldKey ', oldKey, 'oldStatus', oldStatus, ' oldquota = ', _quota)
@@ -43,10 +42,13 @@ async function getYoutubeInstance(oldKey: string | undefined, oldStatus: string 
                 version: 'v3',
                 auth: key?.data.youtube_key || '',
             });
+
+            logger.log('found new youtube key, but resolve with delay')
+            return await resolveWithDealyAsync([_youtubeInstance], 1000, logger);
         }
     }
     const key = _youtubeInstance?.youtube?.context?._options?.auth
-    logger.log('youtubeKey', key, 'quota', _quota)
+    logger.log('youtubeKey', key, 'quota = ', _quota)
 
     if (!_youtubeInstance) {
         return [, 'empty ']
@@ -56,18 +58,18 @@ async function getYoutubeInstance(oldKey: string | undefined, oldStatus: string 
 
 }
 
-const RETRIES_COUNT = 1;
+const RETRIES_COUNT = 3;
 export async function getYoutubeApi(oldKey: string | undefined, oldStatus: string | undefined, logger: ILogger): IAsyncPromiseResult<IYoutubeReturn | undefined> {
     const res: IYoutubeReturn = {
         channels: {
             list: async (args) => {
                 return await processRecursiveAsync(args, async (args) => {
-                    const [youtube, error] = await getYoutubeInstance(oldKey, oldStatus, logger);
+                    const [youtube, error] = await getYoutubeInstanceAsync(oldKey, oldStatus, logger);
                     if (!youtube || error) {
                         throw 'youtube error ' + error;
                     }
                     _quota++;
-                    logger.log('Increase quota, start call youtube.v3 api')
+                    logger.log('Increase quota, start call channels list youtube.v3 api quota = ', _quota)
                     return await youtube.channels.list(args)
                 }, logger, RETRIES_COUNT)
             }
@@ -75,12 +77,12 @@ export async function getYoutubeApi(oldKey: string | undefined, oldStatus: strin
         commentThreads: {
             list: async (args) => {
                 return await processRecursiveAsync(args, async (args) => {
-                    const [youtube, error] = await getYoutubeInstance(oldKey, oldStatus, logger);
+                    const [youtube, error] = await getYoutubeInstanceAsync(oldKey, oldStatus, logger);
                     if (!youtube || error) {
                         throw 'youtube error ' + error;
                     }
                     _quota++;
-                    logger.log('Increase quota, start call youtube.v3 api')
+                    logger.log('Increase quota, start call commentThreads list youtube.v3 api i quota = ', _quota)
                     return await youtube.commentThreads.list(args)
                 }, logger, RETRIES_COUNT)
             }
@@ -88,12 +90,12 @@ export async function getYoutubeApi(oldKey: string | undefined, oldStatus: strin
         videos: {
             list: async (args) => {
                 return await processRecursiveAsync(args, async (args) => {
-                    const [youtube, error] = await getYoutubeInstance(oldKey, oldStatus, logger);
+                    const [youtube, error] = await getYoutubeInstanceAsync(oldKey, oldStatus, logger);
                     if (!youtube || error) {
                         throw 'youtube error ' + error;
                     }
                     _quota++;
-                    logger.log('Increase quota, start call youtube.v3 api')
+                    logger.log('Increase quota, start call videos list youtube.v3 api i quota = ', _quota)
                     return await youtube.videos.list(args)
                 }, logger, RETRIES_COUNT)
             }
@@ -101,12 +103,12 @@ export async function getYoutubeApi(oldKey: string | undefined, oldStatus: strin
         playlistItems: {
             list: async (args) => {
                 return await processRecursiveAsync(args, async (args) => {
-                    const [youtube, error] = await getYoutubeInstance(oldKey, oldStatus, logger);
+                    const [youtube, error] = await getYoutubeInstanceAsync(oldKey, oldStatus, logger);
                     if (!youtube || error) {
                         throw 'youtube error ' + error;
                     }
                     _quota++;
-                    logger.log('Increase quota, start call youtube.v3 api')
+                    logger.log('Increase quota, start call playlistItems list youtube.v3 api i quota = ', _quota)
                     return await youtube.playlistItems.list(args)
                 }, logger, RETRIES_COUNT)
             }
@@ -142,16 +144,17 @@ const processRecursiveAsync = async <TArg, TRet>(
                 } as unknown as TRet
             }
         }
-        //  'Error: The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.  '
-        else if (retriesCount > 0 && msg.includes('>quota</a>')) {
+        //  Error: Permission denied: Consumer 'api_key:AIzaSyD_-FxHLGdeTNxt4ytG-Ce8-vJPsmXMzNs' has been suspended.
+        //  Error: The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.
+        else if (retriesCount > 0 && (msg.includes('>quota</a>') || msg.includes('has been suspended'))) {
             logger.log('request new youtube key', youtubeError, 'quota', _quota)
             let status = 'active';
-            if (msg.includes('suspended')) {
+            if (msg.includes('has been suspended')) {
                 status = 'suspended'
             }
             logger.log('new youtube key status', status)
             const oldKey = _youtubeInstance?.youtube.context._options.auth
-            const [, seccondError] = await getYoutubeInstance(oldKey as string, status, logger);
+            const [, seccondError] = await getYoutubeInstanceAsync(oldKey as string, status, logger);
             if(seccondError) {
                 throw seccondError;
             }
