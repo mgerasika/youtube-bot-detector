@@ -74,32 +74,18 @@ sudo chown -R mgerasika:mgerasika /mnt/hdd1/backup
 docker run -p 5434:5432 \
   --name postgres_1 \
   -e POSTGRES_PASSWORD=homeassistant \
-  -v /mnt/hdd1/postgres_data:/var/lib/postgresql/data \
-  --restart always \
-  -d postgres
-
-docker run -p 5435:5432 \
-  --name postgres_2 \
-  -e POSTGRES_PASSWORD=homeassistant \
-  -v /mnt/hdd2/postgres_data:/var/lib/postgresql/data \
-  --restart always \
-  -d postgres  
-
-## several postgress instances for 192.168.0.106
-
-docker run -p 5434:5432 \
-  --name postgres_1 \
-  -e POSTGRES_PASSWORD=homeassistant \
-  -v /media/mgerasika/Documents/postgres_data:/var/lib/postgresql/data \
-  --restart always \
-  -d postgres
-
-docker run -p 5435:5432 \
-  --name postgres_2 \
-  -e POSTGRES_PASSWORD=homeassistant \
   -v /mnt/ssd1/postgres_data:/var/lib/postgresql/data \
   --restart always \
   -d postgres
+
+docker run -p 5435:5432 \
+  --name postgres_2 \
+  -e POSTGRES_PASSWORD=homeassistant \
+  -v /mnt/postgres_data:/var/lib/postgresql/data \
+  --restart always \
+  -d postgres  
+
+
 
 ## pgadmin4
 docker run --restart always --name pgadmin4 -p 5050:80 \
@@ -127,6 +113,7 @@ docker run --restart always -d --name redis-stack \
 # mount disc example
 lsblk -f
 // remember id of your drive for example b8dc6576-7fca-4a40-a17a-e16e9a469244
+fe49f782-7104-47c5-9709-143ca926a275 ssd1
 sudo mkdir -p /mnt/baracuda
 sudo mkdir -p /mnt/ssd1
 sudo nano /etc/fstab
@@ -135,6 +122,8 @@ UUID=b8dc6576-7fca-4a40-a17a-e16e9a469244 /media/mgerasika/baracuda ext4 default
 b0d3d1f9-0e46-4ee6-acfe-8cbb4bd7bcdc /mnt/hdd2 ext4 defaults 0 2
 39f36beb-140b-464c-8f94-93c21de5d66f /mnt/wd_12gb ext4 defaults 0 2
 systemctl daemon-reload
+sudo mount -a
+
 
 # postgres replication example
 

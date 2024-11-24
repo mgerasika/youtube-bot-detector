@@ -24,6 +24,16 @@ interface IYoutubeReturn {
     },
 }
 
+// Custom fetch implementation with timeout
+const fetchWithTimeout = (url: RequestInfo, options: RequestInit, timeout: number = 10000): Promise<any> => {
+    return Promise.race([
+      fetch(url, options),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Request timed out')), timeout)
+      ),
+    ]);
+  };
+
 async function getYoutubeInstanceAsync(oldKey: string | undefined, oldStatus: string | undefined, logger: ILogger): IAsyncPromiseResult<youtube_v3.Youtube | undefined> {
     if (oldKey || !_youtubeInstance) {
         _youtubeInstance = undefined;
@@ -41,6 +51,7 @@ async function getYoutubeInstanceAsync(oldKey: string | undefined, oldStatus: st
             _youtubeInstance = google.youtube({
                 version: 'v3',
                 auth: key?.data.youtube_key || '',
+                fetchImplementation: (url, options) => fetchWithTimeout(url, options as RequestInit, 10000),
             });
 
             logger.log('found new youtube key, but resolve with delay')
@@ -128,6 +139,7 @@ const processRecursiveAsync = async <TArg, TRet>(
 ): GaxiosPromise<TRet> => {
     logger.log('processRecursiveAsync start')
     const [response, youtubeError] = await toQuery(() => callback(arg));
+    logger.log('processRecursiveAsync after callback')
     if (youtubeError) {
         const msg = String(youtubeError || '');
         logger.log('youtube error in processRecursive', msg)
