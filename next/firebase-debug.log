@@ -1,0 +1,94 @@
+[debug] [2024-11-24T18:31:05.035Z] ----------------------------------------------------------------------
+[debug] [2024-11-24T18:31:05.038Z] Command:       /home/mgerasika/.nvm/versions/node/v18.19.1/bin/node /home/mgerasika/.nvm/versions/node/v18.19.1/bin/firebase deploy
+[debug] [2024-11-24T18:31:05.039Z] CLI Version:   13.27.0
+[debug] [2024-11-24T18:31:05.039Z] Platform:      linux
+[debug] [2024-11-24T18:31:05.039Z] Node Version:  v18.19.1
+[debug] [2024-11-24T18:31:05.040Z] Time:          Sun Nov 24 2024 20:31:05 GMT+0200 (Eastern European Standard Time)
+[debug] [2024-11-24T18:31:05.040Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-11-24T18:31:05.126Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-11-24T18:31:05.126Z] > authorizing via signed-in user (mgerasika@gmail.com)
+[debug] [2024-11-24T18:31:05.126Z] [iam] checking project youtube-bot-landing for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2024-11-24T18:31:05.128Z] Checked if tokens are valid: true, expires at: 1732476499356
+[debug] [2024-11-24T18:31:05.128Z] Checked if tokens are valid: true, expires at: 1732476499356
+[debug] [2024-11-24T18:31:05.129Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions [none]
+[debug] [2024-11-24T18:31:05.129Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions x-goog-quota-user=projects/youtube-bot-landing
+[debug] [2024-11-24T18:31:05.129Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-11-24T18:31:05.974Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions 200
+[debug] [2024-11-24T18:31:05.974Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-11-24T18:31:05.975Z] Checked if tokens are valid: true, expires at: 1732476499356
+[debug] [2024-11-24T18:31:05.975Z] Checked if tokens are valid: true, expires at: 1732476499356
+[debug] [2024-11-24T18:31:05.976Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing [none]
+[debug] [2024-11-24T18:31:06.265Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing 200
+[debug] [2024-11-24T18:31:06.265Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing {"projectId":"youtube-bot-landing","projectNumber":"913230354604","displayName":"youtube-bot-landing","name":"projects/youtube-bot-landing","resources":{"hostingSite":"bot-landing-6a052"},"state":"ACTIVE","etag":"1_85323392-a224-4905-8741-d1d0e356816f"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2024-11-24T18:31:30.832Z] Checked if tokens are valid: true, expires at: 1732476499356
+[debug] [2024-11-24T18:31:30.834Z] Checked if tokens are valid: true, expires at: 1732476499356
+[debug] [2024-11-24T18:31:30.834Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 [none]
+[debug] [2024-11-24T18:31:32.215Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 200
+[debug] [2024-11-24T18:31:32.215Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 {"name":"projects/youtube-bot-landing/sites/bot-landing-6a052","defaultUrl":"https://bot-landing-6a052.web.app","type":"DEFAULT_SITE"}
+[info]    ▲ Next.js 15.0.2
+
+[info] 
+
+[info]    Creating an optimized production build ...
+
+[info]  ✓ Compiled successfully
+
+[info]    Linting and checking validity of types ...
+
+[info]  ⨯ ESLint: Plugin "react-hooks" was conflicted between ".eslintrc.json » eslint-config-next/core-web-vitals » /mnt/wd_12gb/git/youtube-bot-detector/next/node_modules/eslint-config-next/index.js » plugin:react-hooks/recommended" and "../.eslintrc.json".
+
+[info]    Collecting page data ...
+
+[info]    Generating static pages (0/7) ...
+
+[info]    Generating static pages (1/7) 
+
+[info]    Generating static pages (3/7) 
+
+[info]    Generating static pages (5/7) 
+
+[info]  ✓ Generating static pages (7/7)
+
+[info]    Finalizing page optimization ...
+
+[info]    Collecting build traces ...
+
+[info] 
+
+[info] Route (app)                              Size     First Load JS
+┌ ○ /                                    50.7 kB         157 kB
+├ ○ /_not-found                          897 B           100 kB
+├ ƒ /api/scan/full-by-video              139 B          99.7 kB
+└ ƒ /api/statistic/info                  139 B          99.7 kB
++ First Load JS shared by all            99.5 kB
+  ├ chunks/215-fe81613dd35fe2a4.js       45.1 kB
+  ├ chunks/4bd1b696-62d35ffb5495865e.js  52.6 kB
+  └ other shared chunks (total)          1.85 kB
+
+
+[info] 
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+[info] 
+
+[info] Building a Cloud Function to run this application. This is needed due to:
+[info]  • non-static component /api/scan/full-by-video/route
+[info]  • non-static component /api/statistic/info/route
+[info] 
+[debug] [2024-11-24T18:33:13.044Z] Checked if tokens are valid: true, expires at: 1732476499356
+[debug] [2024-11-24T18:33:13.045Z] Checked if tokens are valid: true, expires at: 1732476499356
+[debug] [2024-11-24T18:33:13.045Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 [none]
+[debug] [2024-11-24T18:33:14.181Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 200
+[debug] [2024-11-24T18:33:14.181Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 {"name":"projects/youtube-bot-landing/sites/bot-landing-6a052","defaultUrl":"https://bot-landing-6a052.web.app","type":"DEFAULT_SITE"}

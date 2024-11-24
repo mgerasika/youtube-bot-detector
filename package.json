@@ -4,7 +4,9 @@
   "author": "",
   "license": "MIT",
   "scripts": {
+    
     "codegen": "npx lerna run codegen",
+    "i": "npx lerna run i",
     "validate": "npx lerna run validate",
     "lint": "npx lerna run lint",
     "lint:fix": "npx lerna run lint:fix"
@@ -22,7 +24,7 @@
   },
   "dependencies": {
     "axios": "^1.7.7",
-    "husky": "^9.1.6",
+    "husky": "^9.1.7",
     "os": "^0.1.2",
     "swagger-to-typescript2": "^0.1.32",
     "typescript-to-swagger": "^0.1.37"

@@ -4,6 +4,7 @@
     "description": "",
     "main": "dist/src/index.js",
     "scripts": {
+        "i": "yarn",
         "validate": "tsc && yarn lint:fix",
         "lint": "eslint -c ../.eslintrc.json 'src/**/*.{ts,tsx}'",
         "lint:fix": "eslint -c ../.eslintrc.json 'src/**/*.{ts,tsx}' --fix"

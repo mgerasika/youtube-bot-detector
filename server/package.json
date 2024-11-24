@@ -4,6 +4,7 @@
     "description": "",
     "main": "dist/src/index.js",
     "scripts": {
+        "i": "yarn",
         "build": "npx tsc && node scripts/copy-sql.js",
         "start": "node  --max-old-space-size=4096  dist/server/src/index.js",
         "dev": "nodemon",

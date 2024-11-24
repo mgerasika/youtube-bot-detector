@@ -8,6 +8,7 @@
     }
   },
   "scripts": {
+    "i": "yarn",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -19,6 +20,7 @@
     "@emotion/react": "^11.13.3",
     "axios": "^1.7.7",
     "babel-plugin-twin": "^1.1.0",
+    "firebase-tools": "^13.27.0",
     "next": "15.0.2",
     "node-cache": "^5.1.2",
     "prettier": "^3.3.3",

@@ -4,6 +4,7 @@
     "description": "",
     "main": "dist/statistic-server/src/index.js",
     "scripts": {
+        "i": "yarn",
         "build": "npx tsc",
         "start": "node  --max-old-space-size=4096  dist/statistic-server/src/index.js",
         "dev": "nodemon",
