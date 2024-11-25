@@ -156,9 +156,10 @@ const processRecursiveAsync = async <TArg, TRet>(
                 } as unknown as TRet
             }
         }
+        //  Error: API key expired. Please renew the API key
         //  Error: Permission denied: Consumer 'api_key:AIzaSyD_-FxHLGdeTNxt4ytG-Ce8-vJPsmXMzNs' has been suspended.
         //  Error: The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.
-        else if (retriesCount > 0 && (msg.includes('>quota</a>') || msg.includes('has been suspended'))) {
+        else if (retriesCount > 0 && (msg.includes('>quota</a>') ||  msg.includes('key expired'))) {
             logger.log('request new youtube key', youtubeError, 'quota', _quota)
             let status = 'active';
             if (msg.includes('has been suspended')) {

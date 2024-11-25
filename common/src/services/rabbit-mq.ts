@@ -119,7 +119,7 @@ async function subscribeAsync({ channelName, rabbit_mq_url }: { channelName: str
 }
 
 function sendAgainWithDelay(channelName: string, body: Buffer, logger: ILogger, callback: () => void) {
-    logger.log('rabbit mq will send again same message after 1 seccond = ', `${body}`);
+    logger.log('rabbit mq will send again same message after 10 secconds = ', `${body}`);
 
     setTimeout(() => {
         const channel = _channels[channelName];
@@ -130,7 +130,7 @@ function sendAgainWithDelay(channelName: string, body: Buffer, logger: ILogger, 
 
             callback();
         }
-    }, 1000);
+    }, 10*1000);
 }
 
 
