@@ -6,16 +6,32 @@ import { IApiKeyDto, } from "@server/dto/api-key.dto";
 import { createLogger, } from "@common/utils/create-logger.utils";
 
 
-interface IGetRequest extends IExpressRequest {
+interface IListRequest extends IExpressRequest {
+    query : {
+        status: string;
+    }
+}
+
+interface IListResponse extends IExpressResponse<IApiKeyDto[], void> {}
+
+app.get(API_URL.api.apiKey.toString(), async (req: IListRequest, res: IListResponse) => {
+    const logger = createLogger();
+    const [data, error] = await allServices.apiKey.getKeysAsync(req.query.status, logger);
+    if (error) {
+        return res.status(400).send( error);
+    }
+    return res.send(data);
+});
+
+interface IGetActiveRequest extends IExpressRequest {
     query: {
         old_key?: string;
         old_status?: string;
     }
 }
+interface IGetActiveResponse extends IExpressResponse<IApiKeyDto, void> {}
 
-interface IGetResponse extends IExpressResponse<IApiKeyDto, void> {}
-
-app.get(API_URL.api.apiKey.active.toString(), async (req: IGetRequest, res: IGetResponse) => {
+app.get(API_URL.api.apiKey.active.toString(), async (req: IGetActiveRequest, res: IGetActiveResponse) => {
     const logger = createLogger();
     const [data, error] = await allServices.apiKey.getActiveApiKeyAsync(req.query.old_key as string, req.query.old_status, logger);
     if (error) {

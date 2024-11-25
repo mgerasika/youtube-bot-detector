@@ -6,7 +6,7 @@ import { getSqlPool } from './sql-pool';
 import { EDbType } from '@server/enum/db-type.enum';
 
 interface IPg {
-    query: <T>(sql: string) => {rows:T}
+    query: <T>(sql: string) => Promise<{rows:T}>
 }
 class QueryClientAdapter {
 	_original: IPg = {} as IPg;  
@@ -16,7 +16,7 @@ class QueryClientAdapter {
         this._logger = logger;
 	}
 
-	query<T>(sql: string): {rows:T} {
+	query<T>(sql: string): Promise<{rows:T}> {
 		// this._logger.log('sql=' + sql)
         const lowerSql = sql.toLowerCase().trim();
         if(lowerSql.startsWith('insert ') || lowerSql.startsWith('updatae ') || lowerSql.startsWith('delete ')) {
@@ -39,7 +39,7 @@ class MutationClientAdapter {
         this._logger = logger;
 	}
 
-	mutation<T>(sql: string): {rows:T} {
+	mutation<T>(sql: string): Promise<{rows:T}> {
 		// this._logger.log('sql=' + sql)
         const lowerSql = sql.toLowerCase().trim();
         if(lowerSql.startsWith('select ') ) {

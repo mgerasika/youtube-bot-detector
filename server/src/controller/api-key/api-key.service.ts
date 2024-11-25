@@ -1,7 +1,7 @@
 import { ApiKeyDto, IApiKeyDto, } from '@server/dto/api-key.dto';
 import { IAsyncPromiseResult, } from '@common/interfaces/async-promise-result.interface';
 import { sqlMutationAsync, sqlQueryAsync, } from '@server/sql/sql-async.util';
-import { sql_escape, } from '@server/sql/sql.util';
+import { sql_escape, sql_where, } from '@server/sql/sql.util';
 import { typeOrmMutationAsync, typeOrmQueryAsync, } from '@server/sql/type-orm-async.util';
 import { ILogger, } from '@common/utils/create-logger.utils';
 import { RABBIT_MQ_DOWNLOAD_ENV, } from '@server/env';
@@ -47,6 +47,20 @@ const getActiveKeyInfoAsync = async (logger: ILogger): IAsyncPromiseResult<IYout
         return [, logger.log('sql activeKey not found')]
     }
     return [list[0]]
+}
+
+const getKeysAsync = async (status: string, logger: ILogger): IAsyncPromiseResult<IApiKeyDto[]> => {
+    const [list, listError] = await sqlQueryAsync<IApiKeyDto[]>(async (client) => {
+        const { rows } = await client.query<IApiKeyDto[]>(`SELECT * from api_key ${sql_where('status', status)}`);
+        return rows;
+    }, logger);
+    if (listError) {
+        return [, logger.log(listError)]
+    }
+    if (!list?.length) {
+        return [, logger.log('sql keys error')]
+    }
+    return [list]
 }
 const getActiveApiKeyAsync = async (old_key: string | undefined, old_status: string | undefined, logger: ILogger): IAsyncPromiseResult<IApiKeyDto> => {
     logger.log('OLD_KEY', old_key, old_status)
@@ -112,6 +126,7 @@ function getRandomElement(arr: IApiKeyDto[]) {
 }
 
 export const apiKey = {
+    getKeysAsync,
     getActiveApiKeyAsync,
     getActiveKeyInfoAsync,
     postApiKey,
