@@ -4,11 +4,11 @@ import { app } from "@server/express-app";
 import { allServices, } from "../all-services";
 import { memoryCache, } from "@common/utils/memory-cache";
 import { createLogger, } from "@common/utils/create-logger.utils";
-import { IStatisticByChannel, } from "./statistic-by-channel";
+import { IStatisticByChannelDetailed, } from "./statistic-by-channel-detailed";
 import { IStatisticInfo, } from "./statistic-info";
 import { getStatisticByVideoAsync, IStatisticByVideo, } from "./statistic-by-video";
 import { IStatisticDto, } from "@server/dto/statistic.dto";
-import { IStatisticByChannelForOne } from "./statistic-by-channel-for-one";
+import { IStatisticByChannel } from "./statistic-by-channel";
 
 interface IStatisticInfoRequest extends IExpressRequest {
 }
@@ -25,14 +25,14 @@ app.get(API_URL.api.statistic.info.toString(), memoryCache(1), async (req: IStat
 });
 
 
-interface IStatisticByChannelRequest extends IExpressRequest {
+interface IStatisticByChannelDetailedRequest extends IExpressRequest {
     query: {
         channel_id?: string;
     };
 }
 
-interface IStatisticByChannelResponse extends IExpressResponse<IStatisticByChannel, void> {}
-app.get(API_URL.api.statistic.byChannel.toString(),memoryCache(1), async (req: IStatisticByChannelRequest, res: IStatisticByChannelResponse) => {
+interface IStatisticByChannelDetailedResponse extends IExpressResponse<IStatisticByChannelDetailed, void> {}
+app.get(API_URL.api.statistic.byChannelDetailed.toString(),memoryCache(1), async (req: IStatisticByChannelDetailedRequest, res: IStatisticByChannelDetailedResponse) => {
     const logger = createLogger();
     const [data, error] = await allServices.statistic.getStatisticByChannelAsync(req.query.channel_id || '', logger);
     if (error) {
@@ -44,14 +44,14 @@ app.get(API_URL.api.statistic.byChannel.toString(),memoryCache(1), async (req: I
 
 
 
-interface IStatisticByChannelForOneRequest extends IExpressRequest {
+interface IStatisticByChannelRequest extends IExpressRequest {
     query: {
         channel_id?: string;
     };
 }
 
-interface IStatisticByChannelForOneResponse extends IExpressResponse<IStatisticByChannelForOne, void> {}
-app.get(API_URL.api.statistic.byChannelForOne.toString(),memoryCache(1), async (req: IStatisticByChannelForOneRequest, res: IStatisticByChannelForOneResponse) => {
+interface IStatisticByChannelResponse extends IExpressResponse<IStatisticByChannel, void> {}
+app.get(API_URL.api.statistic.byChannel.toString(),memoryCache(1), async (req: IStatisticByChannelRequest, res: IStatisticByChannelResponse) => {
     const logger = createLogger();
     const [data, error] = await allServices.statistic.getStatisticByChannelForOneAsync(req.query.channel_id || '', logger);
     if (error) {

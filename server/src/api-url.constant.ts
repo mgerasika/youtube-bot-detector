@@ -26,8 +26,8 @@ interface IApiUrl {
 
             statistic: {
                 info: IUrlItem,
+                byChannelDetailed: IUrlItem,
                 byChannel: IUrlItem,
-                byChannelForOne: IUrlItem,
                 byVideo: IUrlItem,
                 id: (id?: string) => IUrlItem;
             };
@@ -69,8 +69,8 @@ export const API_URL = createUrls<IApiUrl>({
             },
             statistic: {
                 info: EMPTY_URL_ITEM,
+                byChannelDetailed: EMPTY_URL_ITEM,
                 byChannel: EMPTY_URL_ITEM,
-                byChannelForOne: EMPTY_URL_ITEM,
                 byVideo: EMPTY_URL_ITEM,
                 id: (id?: string) => EMPTY_URL_ITEM,
             },

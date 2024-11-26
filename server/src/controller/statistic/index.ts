@@ -1,5 +1,5 @@
 import { typeOrmMutationAsync, typeOrmQueryAsync, } from "@server/sql/type-orm-async.util";
-import { getStatisticByChannelAsync, } from "./statistic-by-channel";
+import { getStatisticByChannelDetailedAsync, } from "./statistic-by-channel-detailed";
 import { getStatisticByVideoAsync, } from "./statistic-by-video";
 import { getStatisticInfoAsync, } from "./statistic-info";
 import { IStatisticDto, StatisticDto, } from "@server/dto/statistic.dto";
@@ -7,7 +7,7 @@ import { IAsyncPromiseResult, } from "@common/interfaces/async-promise-result.in
 import { ILogger, } from "@common/utils/create-logger.utils";
 import { sqlQueryAsync, } from "@server/sql/sql-async.util";
 import {ICollection} from '@common/interfaces/collection.interface'
-import { getStatisticByChannelForOneAsync } from "./statistic-by-channel-for-one";
+import { getStatisticByChannelAsync } from "./statistic-by-channel";
 
 export interface IStatisticInternalInfo {
     all_keys:number;
@@ -85,10 +85,10 @@ export const statistic = {
     getStatisticInternalInfoAsync,
     getStatisticDetailsAsync,
     postStatisticAsync,
-    getStatisticByChannelAsync,
+    getStatisticByChannelAsync: getStatisticByChannelDetailedAsync,
     getStatisticByVideoAsync,
     getStatisticInfoAsync,
     getStatisticListAsync,
     getStatisticWithoutHashListAsync,
-    getStatisticByChannelForOneAsync
+    getStatisticByChannelForOneAsync: getStatisticByChannelAsync
 }

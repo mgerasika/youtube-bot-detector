@@ -4,7 +4,7 @@ import { IAsyncPromiseResult, } from '@common/interfaces/async-promise-result.in
 import { sql_escape, } from '@server/sql/sql.util';
 import { ENV, } from '@server/env';
 import { ILogger, } from '@common/utils/create-logger.utils';
-import { getStatisticByChannelAsync, } from './statistic-by-channel';
+import { getStatisticByChannelDetailedAsync, } from './statistic-by-channel-detailed';
 import { rabbitMqService, } from '@common/services/rabbit-mq'
 import { apiKey, IYoutubeKeyInfo } from '../api-key/api-key.service';
 import { allServices } from '../all-services';
