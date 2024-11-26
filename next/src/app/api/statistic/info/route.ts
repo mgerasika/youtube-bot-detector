@@ -1,10 +1,9 @@
 import { api } from '@/api.generated';
-import { type NextRequest } from 'next/server'
 
 let _cache: object | undefined = undefined;
 let _lastDate: Date | undefined = undefined
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const diff = _lastDate ? ((new Date().getTime() - _lastDate.getTime())/1000) : Number.MAX_SAFE_INTEGER
   _lastDate = new Date()
   if(diff > 60) {

@@ -1,18 +1,21 @@
 For deploy new image:
 sh build.sh
-sudo docker tag youtube-bot-downloader mgerasika/youtube-bot-downloader:v13
+sudo docker tag youtube-bot-downloader mgerasika/youtube-bot-downloader:v14
 sudo docker login
-sudo docker push mgerasika/youtube-bot-downloader:v13
+sudo docker push mgerasika/youtube-bot-downloader:v14
 
 # on another pc
-docker pull mgerasika/youtube-bot-downloader:v12
+docker pull mgerasika/youtube-bot-downloader:v14
 docker run --network=host --restart=always --env PORT=8099 -v /home:/home -d \
   -p $port:8099 \
-  --env RABBIT_MQ=amqp://test:Zxc123=-@178.210.131.101:5672 \
+  --env RABBIT_MQ=amqp://test:Zxc123=-@192.168.0.16:5672 \
   --env API_SERVER_URL=http://178.210.131.101:8077 \
-  --env REDIS_URL=redis://178.210.131.101:6379 \
+  --env REDIS_URL=redis://192.168.0.16:6379 \
   --name youtube-bot-downloader \
-  mgerasika/youtube-bot-downloader:v12
+  mgerasika/youtube-bot-downloader:v14
+
+# for windows 
+docker pull mgerasika/youtube-bot-downloader:v14; docker run --network=host --restart=always -e PORT=8097 -v C:\home:/home -p 8097:8097 -e RABBIT_MQ=amqp://test:Zxc123=-@192.168.0.16:5672 -e API_SERVER_URL=http://178.210.131.101:8077 -e REDIS_URL=redis://192.168.0.16:6379 --name youtube-bot-downloader-3 mgerasika/youtube-bot-downloader:v14
 
 
 @NBCNews UCeY0bbntWzzVIaj2z3QigXg
@@ -133,38 +136,4 @@ AIzaSyBqNTI-Bl2nygATNe8ClpZcJIwC_BZnU5E
 
 zeniksuchiy@gmail.com
 AIzaSyCn4gmzqulpmg55J9hj9qW_v2tnBtUfTKo
-
-
-INSERT INTO public.api_key(
-    email, youtube_key, status
-)
-VALUES
-    ('yt.bot.detector01@gmail.com', 'AIzaSyDYshEhg5V5lsGY6G2MS4NeZyyEPRxa934', 'active'),
-    ('maxpetrovich1999lv@gmail.com', 'AIzaSyAYMusX10yefDxcWHc3TNgTHYqtBOqlx20', 'active'),
-    ('olenapos2001@gmail.com', 'AIzaSyBrdR-bGAhIgMlANcPElJkvomu0ZEhsctQ', 'active'),
-    ('fednestew@gmail.com', 'AIzaSyDysDn8aoLgA6V29ocs732cVS-GGOgyaL4', 'active'),
-    ('ronstewmanh@gmail.com', 'AIzaSyA7s5mtLk3_PjNMxqUxpCz6q8ZCzw1AmA8', 'active'),
-    ('salvagorortex@gmail.com', 'AIzaSyAF_kfnmcWbHhKeRf2Std18T1nMt0LaXPo', 'active'),
-    ('omendolacroc@gmail.com', 'AIzaSyD3nMYNckt5oZrP-ZD-36qNBsY5rjTNBeE', 'active'),
-    ('mariamenholia@gmail.com', 'AIzaSyDy6aB24a28Gt1lOaBzFMMSTzrnJ9urEQg', 'active'),
-    ('veronbercus@gmail.com', 'AIzaSyAUvxiX-TLNgwom82M0wFDmeOdg1EmcPtY', 'active'),
-    ('zharzetkomprew@gmail.com', 'AIzaSyAeaJiSCVS-W1wfUEFZGco6ubR6Bw3RoXw', 'active'),
-    ('aserikgopier@gmail.com', 'AIzaSyArgpuQTxiobjSlsyNdG1BWJYpHFEwAjp8', 'active'),
-    ('rebenarohos@gmail.com', 'AIzaSyBzuYaEqvHK6Okdxf-jrQ1Uo6ZbzNmwH3E', 'active'),
-    ('feranizulie@gmail.com', 'AIzaSyAbIXno9hZYpod8IdnmgYlxDNdnb_nIUbE', 'active'),
-    ('pereradviktor@gmail.com', 'AIzaSyDifm2V1ve1gS1rtHsa_AehUsd9xiS8lNQ', 'active'),
-    ('gugyxeroxin@gmail.com', 'AIzaSyD-b-poiRrvsr7OB9deUIJIzBDX_HShZNs', 'active'),
-    ('reserwcosta@gmail.com', 'AIzaSyDZjdud4lIXiBkBixcNs-p4EsVh8HqSznQ', 'active'),
-    ('dupitcusit@gmail.com', 'AIzaSyBF6HRwXeyWS-ceBWVmwZB6AbTtgmpsV8U', 'active'),
-    ('nickdipick@gmail.com', 'AIzaSyDiFNb1VrnhkUJlkgfIrN4qJBwfJSiW9Sg', 'active'),
-    ('durandaamanda@gmail.com', 'AIzaSyBtTM9tl8uXkIqEf8IlcA5HzeOXH8dlIe0', 'active'),
-    ('pukachzrewio@gmail.com', 'AIzaSyDDve5a7TRqy84acocmf8qiAAiHWH0M8z8', 'active'),
-    ('orenapetrova@gmail.com', 'AIzaSyAO2Xm_veE2PLgM27aXy5m2-pa6g83XPB0', 'active'),
-    ('kakalakitina@gmail.com', 'AIzaSyBupl4vJHzNWT8OEjnvtfgONvzOEwUQ7CE', 'active'),
-    ('mamaspasin@gmail.com', 'AIzaSyBqNTI-Bl2nygATNe8ClpZcJIwC_BZnU5E', 'active'),
-    ('zeniksuchiy@gmail.com', 'AIzaSyCn4gmzqulpmg55J9hj9qW_v2tnBtUfTKo', 'active')
-ON CONFLICT (youtube_key)
-DO UPDATE SET
-    email = EXCLUDED.email,
-    status = EXCLUDED.status;
 

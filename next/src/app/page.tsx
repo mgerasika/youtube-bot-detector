@@ -1,20 +1,10 @@
-import Image from "next/image";
 import {Statistic} from '../features/statistic';
-import { SocialIcon } from "react-social-icons";
 import { Footer } from "@/features/footer";
 import { Button } from "@/features/button";
-import { GetStaticProps } from "next";
-import axios from "axios";
-import { IStatisticInfo } from "@/api.generated";
-import { getStaticProps } from "next/dist/build/templates/pages";
-import { ENV } from "../../env";
 import { getStatisticInfoAsync } from "@/api/get-statistic-info";
 import { YouTubeEmbed } from "@/features/youtube-embeded";
 
-interface IProps {
-  commentsCount: number;
-  channelsCount: number;
-}
+
 export default async function Home() {
   const {channelsCount, commentsCount} = await getStatisticInfoAsync();
   return (

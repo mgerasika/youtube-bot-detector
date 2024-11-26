@@ -9,8 +9,8 @@
         "start": "node  --max-old-space-size=4096  dist/statistic-server/src/index.js",
         "dev": "nodemon",
         "validate": "tsc && yarn lint:fix",
-        "lint": "eslint -c ../.eslintrc.json 'src/**/*.{ts,tsx}'",
-        "lint:fix": "eslint -c ../.eslintrc.json 'src/**/*.{ts,tsx}' --fix",
+        "lint": "npx eslint -c ../.eslintrc.json 'src/**/*.{ts,tsx}'",
+        "lint:fix": "npx eslint -c ../.eslintrc.json 'src/**/*.{ts,tsx}' --fix",
         "codegen": "npx ts-node scripts/codegen-spec.ts && npx ts-node scripts/codegen-ts.ts"
     },
     "author": "",

@@ -1,6 +1,5 @@
-import { google, youtube_v3, } from 'googleapis';
+import { google, youtube_v3 } from 'googleapis';
 import { IAsyncPromiseResult, } from '@common/interfaces/async-promise-result.interface';
-import { AxiosError, } from 'axios';
 import { api, } from './api.generated';
 import { toQuery, } from '@common/utils/to-query.util';
 import { ILogger, } from '@common/utils/create-logger.utils';
@@ -25,7 +24,7 @@ interface IYoutubeReturn {
 }
 
 // Custom fetch implementation with timeout
-const fetchWithTimeout = (url: RequestInfo, options: RequestInit, timeout: number = 10000): Promise<any> => {
+const fetchWithTimeout = (url: RequestInfo, options: RequestInit, timeout: number = 10000): Promise<unknown> => {
     return Promise.race([
       fetch(url, options),
       new Promise((_, reject) =>
@@ -47,11 +46,11 @@ async function getYoutubeInstanceAsync(oldKey: string | undefined, oldStatus: st
         if (key?.data.youtube_key.length) {
             logger.log('reset youtube quota', _quota)
             _quota = 0;
-            // eslint-disable-next-line require-atomic-updates
             _youtubeInstance = google.youtube({
                 version: 'v3',
                 auth: key?.data.youtube_key || '',
-                fetchImplementation: (url, options) => fetchWithTimeout(url, options as RequestInit, 10000),
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                fetchImplementation: (url, options) => fetchWithTimeout(url, options as RequestInit, 10000) as unknown as Promise<any>,
             });
 
             logger.log('found new youtube key, but resolve with delay')
@@ -147,7 +146,7 @@ const processRecursiveAsync = async <TArg, TRet>(
             return {
                 config: {},
                 headers: {},
-                request: {} as any,
+                request: {} as XMLHttpRequest,
                 status: 200,
                 statusText: '',
                 data: {

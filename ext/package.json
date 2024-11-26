@@ -25,8 +25,8 @@
     "build": "yarn run build:chrome && yarn run build:firefox && yarn run build:opera",
     "codegen": "npx babel-node-ts --config-file ./scripts/custom-babel-config.js scripts/codegen.js",
     "validate": "tsc && yarn lint:fix",
-    "lint": "eslint -c ../.eslintrc.json 'src/**/*.{ts,tsx}'",
-    "lint:fix": "eslint -c ../.eslintrc.json 'src/**/*.{ts,tsx}' --fix",
+    "lint": "npx eslint -c ../.eslintrc.json 'src/**/*.{ts,tsx}'",
+    "lint:fix": "npx eslint -c ../.eslintrc.json 'src/**/*.{ts,tsx}' --fix",
     "dev": "yarn dev:chrome"
   },
   "dependencies": {

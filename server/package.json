@@ -10,8 +10,8 @@
         "dev": "nodemon",
         "codegen": "npx ts-node scripts/codegen-spec.ts",
         "validate": "tsc && yarn lint:fix",
-        "lint": "eslint -c ../.eslintrc.json 'src/**/*.{ts,tsx}'",
-        "lint:fix": "eslint -c ../.eslintrc.json 'src/**/*.{ts,tsx}' --fix",
+        "lint": "npx eslint -c ../.eslintrc.json 'src/**/*.{ts,tsx}'",
+        "lint:fix": "npx eslint -c ../.eslintrc.json 'src/**/*.{ts,tsx}' --fix",
         "deploy": "firebase deploy"
     },
     "author": "",
