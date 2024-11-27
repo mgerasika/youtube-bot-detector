@@ -5,9 +5,6 @@ import { ILogger, } from '@common/utils/create-logger.utils';
 import {  IFullScanChannelInfoBody, IFullScanVideoInfoBody, } from '@common/model/download-server.model';
 
 const getFullScanByVideoAsync = async (video_id: string,logger: ILogger): IAsyncPromiseResult<string> => {
-    // temporary disable untill scan finished
-    return ['']
-
     // no need await here
     rabbitMqService.sendDataAsync<IFullScanVideoInfoBody>(
         RABBIT_MQ_DOWNLOAD_ENV,
@@ -23,9 +20,6 @@ const getFullScanByVideoAsync = async (video_id: string,logger: ILogger): IAsync
 };
 
 const getFullScanByChannelAsync = async (channel_id: string, logger: ILogger): IAsyncPromiseResult<string> => {
-    // temporary disable untill scan finished
-    return ['']
-
     // no need await here
     rabbitMqService.sendDataAsync<IFullScanChannelInfoBody>(
         RABBIT_MQ_DOWNLOAD_ENV,

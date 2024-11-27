@@ -1,4 +1,3 @@
--- Step 2: Insert the data into the new table
 INSERT INTO statistic (
     channel_id,
     channel_url,

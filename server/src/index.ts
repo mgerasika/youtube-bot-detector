@@ -46,9 +46,13 @@ startCronJob('rescanChannelsAsync', '0 0 * * *', async () => {
     await allServices.task.rescanChannelsAsync(mainLogger);
 }, mainLogger)
 
-// startCronJob('channelToStatisticAsync', '0 0 */2 * *', async () => {
-//     await allServices.task.channelToStatisticAsync(mainLogger);
-// }, mainLogger)
+// every 2 days
+startCronJob('channelToStatisticAsync and statisticToFirebaseAsync', '0 0 */2 * *', async () => {
+    await allServices.task.channelToStatisticAsync(mainLogger);
+    await allServices.task.statisticToFirebaseAsync(mainLogger);
+}, mainLogger)
+
+
 
 telegramBot.subscribe(mainLogger);
 
