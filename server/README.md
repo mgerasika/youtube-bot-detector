@@ -81,7 +81,7 @@ docker run -p 5434:5432 \
 docker run -p 5435:5432 \
   --name postgres_2 \
   -e POSTGRES_PASSWORD=homeassistant \
-  -v /mnt/postgres_data:/var/lib/postgresql/data \
+  -v /mnt/ssd2/postgres_data:/var/lib/postgresql/data \
   --restart always \
   -d postgres  
 
@@ -114,6 +114,8 @@ docker run --restart always -d --name redis-stack \
 lsblk -f
 // remember id of your drive for example b8dc6576-7fca-4a40-a17a-e16e9a469244
 fe49f782-7104-47c5-9709-143ca926a275 ssd1
+2234e6fe-47c5-4ce5-a29c-d999a80d4793 ssd2
+lsblk -f
 sudo mkdir -p /mnt/baracuda
 sudo mkdir -p /mnt/ssd1
 sudo nano /etc/fstab

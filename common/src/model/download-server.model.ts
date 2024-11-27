@@ -14,6 +14,7 @@ export interface IFullScanChannelInfoBody {
 
 export interface IScanChannelInfoBody {
     channelIds: string[];
+    skipRedisValidation?: boolean;
 }
 
 export interface IScanVideosBody {

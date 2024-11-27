@@ -58,6 +58,11 @@ async function typeOrmMutationInternalAsync<T>(type: EDbType, callback: (client:
     }
 }
 export async function typeOrmMutationAsync<T>(callback: (client: MutationClient) => IAsyncPromiseResult<T>, logger: ILogger): IAsyncPromiseResult<T> {
+    const dt1 = new Date();
     await typeOrmMutationInternalAsync(EDbType.master, callback, logger);
-    return await typeOrmMutationInternalAsync(EDbType.slave, callback, logger);
+    const dt2 = new Date();
+    const res = await typeOrmMutationInternalAsync(EDbType.slave, callback, logger);
+    const dt3 = new Date();
+    logger.log('typeOrmExecutionTime on master/slave', (dt2.getTime() - dt1.getTime()) + 'ms', (dt3.getTime() - dt2.getTime()) + 'ms');
+    return res;
 }

@@ -41,9 +41,10 @@ if (ENV.rabbit_mq_url) {
     rabbitMqService.createConnectionAsync(RABBIT_MQ_STATISTIC_ENV, mainLogger); 
 }
 
-// startCronJob('rescanChannelsAsync', '0 0 * * *', async () => {
-//     await allServices.task.rescanChannelsAsync(mainLogger);
-// }, mainLogger)
+// every 24 hours
+startCronJob('rescanChannelsAsync', '0 0 * * *', async () => {
+    await allServices.task.rescanChannelsAsync(mainLogger);
+}, mainLogger)
 
 // startCronJob('channelToStatisticAsync', '0 0 */2 * *', async () => {
 //     await allServices.task.channelToStatisticAsync(mainLogger);

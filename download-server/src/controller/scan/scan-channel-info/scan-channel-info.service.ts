@@ -15,7 +15,7 @@ export const scanChannelInfoAsync = async (
 ): IAsyncPromiseResult<IScanReturn> => {
     logger.log('scanChannelInfoAsync start')
 
-    const [missedInDb, errorInFilter] = await filterAuthorIdsAsync(body.channelIds, logger);
+    const [missedInDb, errorInFilter] = await filterAuthorIdsAsync(body.channelIds, !!body.skipRedisValidation, logger);
     if(errorInFilter) {
         return [,errorInFilter]
     }
@@ -66,20 +66,25 @@ export const scanChannelInfoAsync = async (
 };
 
 
-export async function filterAuthorIdsAsync(ids:string[], logger: ILogger): IAsyncPromiseResult<string[]> {
-    const missedInRedis: string[] = [];
-    logger.log('start filterAuthorIdsAsync')
-    await oneByOneAsync(ids, async (id) => {
-        const available = await redisService.existsAsync(redisService.getMessageId('channel',id));
-        if ( !available) {
-            missedInRedis.push(id);
-        }
-    });
-    logger.log('after redis check one by one')
+export async function filterAuthorIdsAsync(ids:string[], skipRedisValidation: boolean, logger: ILogger): IAsyncPromiseResult<string[]> {
+    let missedInRedis: string[] = [];
+    if(!skipRedisValidation) {
+        logger.log('start filterAuthorIdsAsync')
+        await oneByOneAsync(ids, async (id) => {
+            const available = await redisService.existsAsync(redisService.getMessageId('channel',id));
+            if ( !available) {
+                missedInRedis.push(id);
+            }
+        });
+        logger.log('after redis check one by one')
 
-    if(missedInRedis.length == 0) {
-        logger.log('no new authors after redis validation, already added in another thread ')
-        return [[]];
+        if(missedInRedis.length == 0) {
+            logger.log('no new authors after redis validation, already added in another thread ')
+            return [[]];
+        }
+    }
+    else {
+        missedInRedis = ids;
     }
 
     logger.log('before exist request')

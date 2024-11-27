@@ -81,6 +81,11 @@ async function sqlMutationInternalAsync<T>( type: EDbType, callback: (client: Mu
 }
 
 export async function sqlMutationAsync<T>(callback: (client: MutationClientAdapter) => Promise<T>, logger: ILogger): IAsyncPromiseResult<T> {
+    const dt1 = new Date();
     await sqlMutationInternalAsync(EDbType.master, callback, logger)
-    return await sqlMutationInternalAsync(EDbType.slave, callback, logger)
+    const dt2 = new Date();
+    const res = await sqlMutationInternalAsync(EDbType.slave, callback, logger)
+    const dt3 = new Date();
+    logger.log('sqlMutationAsync on master/slave', (dt2.getTime() - dt1.getTime()) + 'ms', (dt3.getTime() - dt2.getTime()) + 'ms');
+    return res;
 }

@@ -72,49 +72,28 @@ export const getChannelInfoAsync = async (
             };
         });
         // api don't return deleted, so return empty object
-        if (res.length < ids.length) {
-            const deletedChannels = ids.filter(id => !res.find(f => f.channelId === id)).map((id): IChannelInfo => {
-                return {
-                    title: 'deleted',
-                    channelId: id,
-                    publishedAt: new Date(1970).toISOString(),
-                    authorUrl: undefined,
-                    viewCount: undefined,
-                    subscriberCount: undefined,
-                    hasHiddenSubscriberCount: undefined,
-                    videoCount: undefined,
-                    photo: undefined,
-                    is_deleted: true
-                }
-            })
-            while (deletedChannels.length) {
-                const deleted = deletedChannels.pop();
-                if (deleted) {
-                    res.push(deleted)
-                }
+        const deletedChannels = ids.filter(id => !res.find(f => f.channelId === id)).map((id): IChannelInfo => {
+            return {
+                title: 'deleted',
+                channelId: id,
+                publishedAt: new Date(1970).toISOString(),
+                authorUrl: undefined,
+                viewCount: undefined,
+                subscriberCount: undefined,
+                hasHiddenSubscriberCount: undefined,
+                videoCount: undefined,
+                photo: undefined,
+                is_deleted: true
+            }
+        })
+        while (deletedChannels.length) {
+            const deleted = deletedChannels.pop();
+            if (deleted) {
+                res.push(deleted)
+                logger.log('added deleted ', deleted.channelId)
             }
         }
         return [res];
-    } else {
-        logger.log('No channel found for the provided name, probadly deleted', ids);
-        // implement this https://www.youtube.com/channel/UC-gIX2RdnTumzuxmMWPo0uw
-        if (ids.length === 1) {
-            const deletedChannels = ids.map((id): IChannelInfo => {
-                return {
-                    title: 'deleted',
-                    channelId: id,
-                    publishedAt: new Date(1970).toISOString(),
-                    authorUrl: undefined,
-                    viewCount: undefined,
-                    subscriberCount: undefined,
-                    hasHiddenSubscriberCount: undefined,
-                    videoCount: undefined,
-                    photo: undefined,
-                    is_deleted: true
-                }
-            })
-            return [deletedChannels]
-        }
     }
     logger.log('getChannelInfoAsync end')
     return [,];

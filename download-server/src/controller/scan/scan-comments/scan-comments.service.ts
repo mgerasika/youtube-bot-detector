@@ -1,18 +1,15 @@
-import { ENV, RABBIT_MQ_DOWNLOAD_ENV, } from '@server/env';
 import { IAsyncPromiseResult, } from '@common/interfaces/async-promise-result.interface';
 import { api, } from '@server/api.generated';
 
 import { groupArray, } from '@common/utils/group-array.util';
 import { oneByOneAsync, } from '@common/utils/one-by-one-async.util';
 import { toQuery, } from '@common/utils/to-query.util';
-import { getCommentsAsync, IShortCommentInfo, } from '@server/controller/youtube/get-comments/get-comments.service';
+import { IShortCommentInfo, } from '@server/controller/youtube/get-comments/get-comments.service';
 import { getUniqueKeys, } from '@common/utils/get-unique-keys.util';
-import { createLogger, ILogger, } from '@common/utils/create-logger.utils';
+import { ILogger, } from '@common/utils/create-logger.utils';
 import { allServices, } from '@server/controller/all-services';
-import { IScanCommentsBody, IScanChannelInfoBody, IScanCommentsReturn, } from '@common/model/download-server.model';
-import { rabbitMqService, } from '@common/services/rabbit-mq'
+import { IScanCommentsBody, IScanCommentsReturn, } from '@common/model/download-server.model';
 import { redisService, } from '@common/services/redis'
-import { IScanReturn, } from '@common/interfaces/rabbitm-mq-return';
 import { filterAuthorIdsAsync, } from '../scan-channel-info/scan-channel-info.service';
 
 // scan all comments by videoId
@@ -52,7 +49,7 @@ export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger
     const uniqueAuthorIds = getUniqueKeys(comments, 'authorChannelId');
     logger.log('uniqueAuthorIds = ', uniqueAuthorIds.length)
 
-    const [missedIds, missedIdsError] = await filterAuthorIdsAsync(uniqueAuthorIds, logger);
+    const [missedIds, missedIdsError] = await filterAuthorIdsAsync(uniqueAuthorIds, false, logger);
     logger.log('missedAuthorsIds = ', missedIds?.length)
     if (missedIdsError) {
         return [, missedIdsError]
@@ -77,7 +74,7 @@ export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger
     }
     logger.log('start push to database comments (after channels)', comments.length)
 
-    let groupLength = 256;
+    let groupLength = 512;
     do {
         const groupedComments = groupArray(comments, groupLength);
         logger.log('Try post to db comments group length = ' + groupLength)
@@ -128,6 +125,20 @@ export const postGroupOfCommentsToDbAsync = async (video_id: string,groupedComme
         }
         if (apiError) {
             logger.log('some error in forEach', apiError);
+            //    config.response error in sql Key (author_id)=(UCkbLbvQ9vD_em9_G-4Jh8wA) is not present in table "channel". 0.01s
+            logger.log('config.response', apiError?.response?.data)
+            if(apiError?.response?.data.includes('is not present in table')) {
+                const authorId = getAuthorId(apiError?.response?.data, logger)
+                if(authorId) {
+                    // sometimes strange errors happens and object exist in redis but not exist in database, so ignore redis validation here
+                    logger.log("before scan misssed channel ", authorId)
+                    await allServices.scan.scanChannelInfoAsync({channelIds:[authorId], skipRedisValidation: true}, logger)
+                    logger.log("after scan misssed channel ")
+                }
+                else {
+                    logger.log("author id not found")
+                }
+            }
             cancel(apiError)
         }
     });
@@ -137,3 +148,21 @@ export const postGroupOfCommentsToDbAsync = async (video_id: string,groupedComme
     return [{ hasChanges: true, message: 'Post comments to db success' }]
 
 };
+
+function getAuthorId(errorMessage: string, logger: ILogger) : string | undefined{
+
+    // Regular expression to extract the author_id
+    const regex = /Key \(author_id\)=\(([^)]+)\)/;
+    const match = errorMessage.match(regex);
+    
+    if (match) {
+      const authorId = match[1]; // Capture group 1 contains the author_id
+      logger.log("Extracted author_id:", authorId);
+      return authorId;
+    } else {
+        logger.log("author_id not found in the error message");
+    }
+    
+}
+
+
