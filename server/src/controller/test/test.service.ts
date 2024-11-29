@@ -14,10 +14,10 @@ import { RABBIT_MQ_DOWNLOAD_ENV } from '@server/env';
 
 const youtubeChannels = [
     
-    { username: "@CNN", channelId: "UCupvZG-5ko_eiXAupbDfxWw" },
-    { username: "@NBCNews", channelId: "UCeY0bbntWzzVIaj2z3QigXg" },
-    { username: "@CBSNews", channelId: "UC8p1vwvWtl6T73JiExfWs1g" },
-    { username: "@FoxNews", channelId: "UCXIJgqnII2ZOINSWNOGFThA" },
+    // { username: "@CNN", channelId: "UCupvZG-5ko_eiXAupbDfxWw" },
+    // { username: "@NBCNews", channelId: "UCeY0bbntWzzVIaj2z3QigXg" },
+    // { username: "@CBSNews", channelId: "UC8p1vwvWtl6T73JiExfWs1g" },
+    // { username: "@FoxNews", channelId: "UCXIJgqnII2ZOINSWNOGFThA" },
     
     { username: "@tsn", channelId: "UCXoJ8kY9zpLBEz-8saaT3ew" },
     { username: "@УкраїнськаПравда", channelId: "UChparf_xrUZ_CJGQY5g4aEg" },

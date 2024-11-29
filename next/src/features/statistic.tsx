@@ -1,15 +1,18 @@
+/* eslint-disable react/react-in-jsx-scope */
 /** @jsxImportSource @emotion/react */
 'use client'
 
 import { IStatisticInfo } from "@/api.generated";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
 
 interface IProps {
     commentsCount: number;
     channelsCount: number;
 }
 export function Statistic({commentsCount, channelsCount}: IProps) {
+    const { t } = useTranslation('common');
     const [statistic, setStatistic] = useState<IStatisticInfo | null>(null);
 
     const fetchStatisticWithTimeout = useCallback(() => {
@@ -28,6 +31,7 @@ export function Statistic({commentsCount, channelsCount}: IProps) {
     return (
         <div className="text-center font-[family-name:var(--font-geist-mono)]">
             <h1 tw="md:text-5xl [font-size:28px] font-mono text-red-500 font-bold">Youtube Bot Detector</h1>
+            <h1>{t('welcome')}</h1>
             <p tw="text-center">chrome додаток для пошуку ботів у youtube коментах</p>
             <p tw="mt-8 text-base">
                 Уже оброблено більше ніж

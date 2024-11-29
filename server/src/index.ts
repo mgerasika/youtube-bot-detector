@@ -41,17 +41,11 @@ if (ENV.rabbit_mq_url) {
     rabbitMqService.createConnectionAsync(RABBIT_MQ_STATISTIC_ENV, mainLogger); 
 }
 
-// every 24 hours
-startCronJob('rescanChannelsAsync', '0 0 * * *', async () => {
+startCronJob('rescanChannelsAsync & channelToStatisticAsync & statisticToFirebaseAsync', '0 * * * *', async () => {
     await allServices.task.rescanChannelsAsync(mainLogger);
-}, mainLogger)
-
-// every 2 days
-startCronJob('channelToStatisticAsync and statisticToFirebaseAsync', '0 0 */2 * *', async () => {
     await allServices.task.channelToStatisticAsync(mainLogger);
     await allServices.task.statisticToFirebaseAsync(mainLogger);
 }, mainLogger)
-
 
 
 telegramBot.subscribe(mainLogger);

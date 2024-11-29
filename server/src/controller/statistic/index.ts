@@ -44,10 +44,10 @@ const getStatisticWithoutHashListAsync = async (page_size:number, page: number, 
             (
                 SELECT COUNT(*) 
                 FROM statistic 
-                WHERE hash IS NULL AND comment_count >= 25
+                WHERE hash IS NULL AND comment_count >= 100
             ) AS total_count
         FROM statistic AS s
-        WHERE s.hash IS NULL AND s.comment_count >= 25
+        WHERE s.hash IS NULL AND s.comment_count >= 100
         ORDER BY s.comment_count DESC
         LIMIT ${page_size} OFFSET (${page}) * ${page_size};
         `);
