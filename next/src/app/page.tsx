@@ -4,16 +4,13 @@ import { Footer } from "@/features/footer";
 import { Button } from "@/features/button";
 import { getStatisticInfoAsync } from "@/api/get-statistic-info";
 import { YouTubeEmbed } from "@/features/youtube-embeded";
-import { LanguageSwitcher } from '@/LanguageSwithcer';
 
 
 export default async function Home() {
-  const {channelsCount, commentsCount} = await getStatisticInfoAsync();
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-4 md:p-8 pb-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center">
-        <LanguageSwitcher />
-        <Statistic channelsCount={channelsCount} commentsCount={commentsCount} />
+        <Statistic channelsCount={6262313} commentsCount={62153809} />
         <YouTubeEmbed videoId="Uhkx-RlRkMU" />
           <Button />
       </main>

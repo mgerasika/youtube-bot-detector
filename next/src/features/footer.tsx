@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 'use client'
 
+import React from 'react'
 import { SocialIcon } from 'react-social-icons'
 
 export function Footer() {

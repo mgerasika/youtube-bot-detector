@@ -1,0 +1,246 @@
+[debug] [2024-11-29T16:01:35.989Z] ----------------------------------------------------------------------
+[debug] [2024-11-29T16:01:35.991Z] Command:       /home/mgerasika/.nvm/versions/node/v18.19.1/bin/node /home/mgerasika/.nvm/versions/node/v18.19.1/bin/firebase deploy
+[debug] [2024-11-29T16:01:35.991Z] CLI Version:   13.22.1
+[debug] [2024-11-29T16:01:35.991Z] Platform:      linux
+[debug] [2024-11-29T16:01:35.991Z] Node Version:  v18.19.1
+[debug] [2024-11-29T16:01:35.992Z] Time:          Fri Nov 29 2024 18:01:35 GMT+0200 (Eastern European Standard Time)
+[debug] [2024-11-29T16:01:35.992Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-11-29T16:01:36.060Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-11-29T16:01:36.061Z] > authorizing via signed-in user (mgerasika@gmail.com)
+[debug] [2024-11-29T16:01:36.061Z] [iam] checking project youtube-bot-landing for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2024-11-29T16:01:36.062Z] Checked if tokens are valid: false, expires at: 1732882166481
+[debug] [2024-11-29T16:01:36.062Z] Checked if tokens are valid: false, expires at: 1732882166481
+[debug] [2024-11-29T16:01:36.062Z] > refreshing access token with scopes: []
+[debug] [2024-11-29T16:01:36.065Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2024-11-29T16:01:36.065Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2024-11-29T16:01:36.254Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2024-11-29T16:01:36.254Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2024-11-29T16:01:36.261Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions [none]
+[debug] [2024-11-29T16:01:36.261Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions x-goog-quota-user=projects/youtube-bot-landing
+[debug] [2024-11-29T16:01:36.261Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-11-29T16:01:37.149Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions 200
+[debug] [2024-11-29T16:01:37.149Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-11-29T16:01:37.150Z] Checked if tokens are valid: true, expires at: 1732899695254
+[debug] [2024-11-29T16:01:37.150Z] Checked if tokens are valid: true, expires at: 1732899695254
+[debug] [2024-11-29T16:01:37.150Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing [none]
+[debug] [2024-11-29T16:01:37.522Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing 200
+[debug] [2024-11-29T16:01:37.523Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing {"projectId":"youtube-bot-landing","projectNumber":"913230354604","displayName":"youtube-bot-landing","name":"projects/youtube-bot-landing","resources":{"hostingSite":"bot-landing-6a052"},"state":"ACTIVE","etag":"1_85323392-a224-4905-8741-d1d0e356816f"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+   The integration is known to work with Next.js version 12 - 14.0. You may encounter errors.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2024-11-29T16:01:48.459Z] Checked if tokens are valid: true, expires at: 1732899695254
+[debug] [2024-11-29T16:01:48.459Z] Checked if tokens are valid: true, expires at: 1732899695254
+[debug] [2024-11-29T16:01:48.459Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 [none]
+[debug] [2024-11-29T16:01:49.486Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 200
+[debug] [2024-11-29T16:01:49.486Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 {"name":"projects/youtube-bot-landing/sites/bot-landing-6a052","defaultUrl":"https://bot-landing-6a052.web.app","type":"DEFAULT_SITE"}
+[info]    ▲ Next.js 15.0.2
+
+[info] 
+
+[info]    Creating an optimized production build ...
+
+[info]  ✓ Compiled successfully
+
+[info]    Linting and checking validity of types ...
+
+[info] 
+
+[info]  ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/basic-features/eslint#migrating-existing-config
+
+[info] 
+Failed to compile.
+
+[info] 
+./src/features/button.tsx
+7:12  Error: 'React' must be in scope when using JSX  react/react-in-jsx-scope
+14:9  Error: 'React' must be in scope when using JSX  react/react-in-jsx-scope
+
+./src/features/footer.tsx
+8:10  Error: 'React' must be in scope when using JSX  react/react-in-jsx-scope
+9:5  Error: 'React' must be in scope when using JSX  react/react-in-jsx-scope
+10:5  Error: 'React' must be in scope when using JSX  react/react-in-jsx-scope
+11:5  Error: 'React' must be in scope when using JSX  react/react-in-jsx-scope
+12:5  Error: 'React' must be in scope when using JSX  react/react-in-jsx-scope
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
+
+[debug] [2024-11-29T16:02:13.641Z] Error: ENOENT: no such file or directory, open '/home/mgerasika/Documents/git/home/youtube-bot-filter/next/.next/export-marker.json'
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2024-11-29T16:05:18.835Z] ----------------------------------------------------------------------
+[debug] [2024-11-29T16:05:18.836Z] Command:       /home/mgerasika/.nvm/versions/node/v18.19.1/bin/node /home/mgerasika/.nvm/versions/node/v18.19.1/bin/firebase deploy
+[debug] [2024-11-29T16:05:18.837Z] CLI Version:   13.22.1
+[debug] [2024-11-29T16:05:18.837Z] Platform:      linux
+[debug] [2024-11-29T16:05:18.837Z] Node Version:  v18.19.1
+[debug] [2024-11-29T16:05:18.837Z] Time:          Fri Nov 29 2024 18:05:18 GMT+0200 (Eastern European Standard Time)
+[debug] [2024-11-29T16:05:18.838Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-11-29T16:05:18.900Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-11-29T16:05:18.900Z] > authorizing via signed-in user (mgerasika@gmail.com)
+[debug] [2024-11-29T16:05:18.900Z] [iam] checking project youtube-bot-landing for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2024-11-29T16:05:18.901Z] Checked if tokens are valid: true, expires at: 1732899695254
+[debug] [2024-11-29T16:05:18.901Z] Checked if tokens are valid: true, expires at: 1732899695254
+[debug] [2024-11-29T16:05:18.902Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions [none]
+[debug] [2024-11-29T16:05:18.902Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions x-goog-quota-user=projects/youtube-bot-landing
+[debug] [2024-11-29T16:05:18.903Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-11-29T16:05:19.742Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions 200
+[debug] [2024-11-29T16:05:19.742Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-11-29T16:05:19.745Z] Checked if tokens are valid: true, expires at: 1732899695254
+[debug] [2024-11-29T16:05:19.745Z] Checked if tokens are valid: true, expires at: 1732899695254
+[debug] [2024-11-29T16:05:19.748Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing [none]
+[debug] [2024-11-29T16:05:20.107Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing 200
+[debug] [2024-11-29T16:05:20.107Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing {"projectId":"youtube-bot-landing","projectNumber":"913230354604","displayName":"youtube-bot-landing","name":"projects/youtube-bot-landing","resources":{"hostingSite":"bot-landing-6a052"},"state":"ACTIVE","etag":"1_85323392-a224-4905-8741-d1d0e356816f"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+   The integration is known to work with Next.js version 12 - 14.0. You may encounter errors.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2024-11-29T16:05:29.912Z] Checked if tokens are valid: true, expires at: 1732899695254
+[debug] [2024-11-29T16:05:29.912Z] Checked if tokens are valid: true, expires at: 1732899695254
+[debug] [2024-11-29T16:05:29.913Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 [none]
+[debug] [2024-11-29T16:05:30.924Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 200
+[debug] [2024-11-29T16:05:30.925Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 {"name":"projects/youtube-bot-landing/sites/bot-landing-6a052","defaultUrl":"https://bot-landing-6a052.web.app","type":"DEFAULT_SITE"}
+[info]    ▲ Next.js 15.0.2
+
+[info] 
+
+[info]    Creating an optimized production build ...
+
+[info]  ✓ Compiled successfully
+
+[info]    Linting and checking validity of types ...
+
+[info] 
+
+[info]  ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/basic-features/eslint#migrating-existing-config
+
+[info] 
+Failed to compile.
+
+[info] 
+./src/features/button.tsx
+7:12  Error: 'React' must be in scope when using JSX  react/react-in-jsx-scope
+14:9  Error: 'React' must be in scope when using JSX  react/react-in-jsx-scope
+
+./src/features/footer.tsx
+8:10  Error: 'React' must be in scope when using JSX  react/react-in-jsx-scope
+9:5  Error: 'React' must be in scope when using JSX  react/react-in-jsx-scope
+10:5  Error: 'React' must be in scope when using JSX  react/react-in-jsx-scope
+11:5  Error: 'React' must be in scope when using JSX  react/react-in-jsx-scope
+12:5  Error: 'React' must be in scope when using JSX  react/react-in-jsx-scope
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
+
+[debug] [2024-11-29T16:05:36.147Z] Error: ENOENT: no such file or directory, open '/home/mgerasika/Documents/git/home/youtube-bot-filter/next/.next/export-marker.json'
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2024-11-29T16:06:45.944Z] ----------------------------------------------------------------------
+[debug] [2024-11-29T16:06:45.946Z] Command:       /home/mgerasika/.nvm/versions/node/v18.19.1/bin/node /home/mgerasika/.nvm/versions/node/v18.19.1/bin/firebase deploy
+[debug] [2024-11-29T16:06:45.946Z] CLI Version:   13.22.1
+[debug] [2024-11-29T16:06:45.947Z] Platform:      linux
+[debug] [2024-11-29T16:06:45.947Z] Node Version:  v18.19.1
+[debug] [2024-11-29T16:06:45.947Z] Time:          Fri Nov 29 2024 18:06:45 GMT+0200 (Eastern European Standard Time)
+[debug] [2024-11-29T16:06:45.947Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-11-29T16:06:46.008Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-11-29T16:06:46.008Z] > authorizing via signed-in user (mgerasika@gmail.com)
+[debug] [2024-11-29T16:06:46.008Z] [iam] checking project youtube-bot-landing for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2024-11-29T16:06:46.009Z] Checked if tokens are valid: true, expires at: 1732899695254
+[debug] [2024-11-29T16:06:46.009Z] Checked if tokens are valid: true, expires at: 1732899695254
+[debug] [2024-11-29T16:06:46.010Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions [none]
+[debug] [2024-11-29T16:06:46.010Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions x-goog-quota-user=projects/youtube-bot-landing
+[debug] [2024-11-29T16:06:46.010Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-11-29T16:06:46.958Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions 200
+[debug] [2024-11-29T16:06:46.959Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/youtube-bot-landing:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-11-29T16:06:46.961Z] Checked if tokens are valid: true, expires at: 1732899695254
+[debug] [2024-11-29T16:06:46.962Z] Checked if tokens are valid: true, expires at: 1732899695254
+[debug] [2024-11-29T16:06:46.964Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing [none]
+[debug] [2024-11-29T16:06:47.404Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing 200
+[debug] [2024-11-29T16:06:47.404Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/youtube-bot-landing {"projectId":"youtube-bot-landing","projectNumber":"913230354604","displayName":"youtube-bot-landing","name":"projects/youtube-bot-landing","resources":{"hostingSite":"bot-landing-6a052"},"state":"ACTIVE","etag":"1_85323392-a224-4905-8741-d1d0e356816f"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+   The integration is known to work with Next.js version 12 - 14.0. You may encounter errors.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2024-11-29T16:06:56.856Z] Checked if tokens are valid: true, expires at: 1732899695254
+[debug] [2024-11-29T16:06:56.857Z] Checked if tokens are valid: true, expires at: 1732899695254
+[debug] [2024-11-29T16:06:56.857Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 [none]
+[debug] [2024-11-29T16:06:57.862Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 200
+[debug] [2024-11-29T16:06:57.862Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 {"name":"projects/youtube-bot-landing/sites/bot-landing-6a052","defaultUrl":"https://bot-landing-6a052.web.app","type":"DEFAULT_SITE"}
+[info]    ▲ Next.js 15.0.2
+
+[info] 
+
+[info]    Creating an optimized production build ...
+
+[info]  ✓ Compiled successfully
+
+[info]    Linting and checking validity of types ...
+
+[info] 
+ ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/basic-features/eslint#migrating-existing-config
+
+[info]    Collecting page data ...
+
+[info]    Generating static pages (0/7) ...
+
+[info]    Generating static pages (1/7) 
+
+[info]    Generating static pages (3/7) 
+   Generating static pages (5/7) 
+ ✓ Generating static pages (7/7)
+
+[info] react-i18next:: You will need to pass in an i18next instance by using initReactI18next
+
+[info]    Finalizing page optimization ...
+
+[info]    Collecting build traces ...
+
+[info] 
+
+[info] Route (app)                              Size     First Load JS
+┌ ○ /                                    31.8 kB         138 kB
+├ ○ /_not-found                          897 B           100 kB
+├ ƒ /api/scan/full-by-video              139 B          99.7 kB
+└ ƒ /api/statistic/info                  139 B          99.7 kB
++ First Load JS shared by all            99.5 kB
+  ├ chunks/215-fe81613dd35fe2a4.js       45.1 kB
+  ├ chunks/4bd1b696-62d35ffb5495865e.js  52.6 kB
+  └ other shared chunks (total)          1.85 kB
+
+
+[info] 
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+[info] Building a Cloud Function to run this application. This is needed due to:
+[info]  • non-static component /api/scan/full-by-video/route
+[info]  • non-static component /api/statistic/info/route
+[info] 
+[debug] [2024-11-29T16:07:16.002Z] Checked if tokens are valid: true, expires at: 1732899695254
+[debug] [2024-11-29T16:07:16.002Z] Checked if tokens are valid: true, expires at: 1732899695254
+[debug] [2024-11-29T16:07:16.002Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 [none]
+[debug] [2024-11-29T16:07:17.194Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 200
+[debug] [2024-11-29T16:07:17.194Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/youtube-bot-landing/sites/bot-landing-6a052 {"name":"projects/youtube-bot-landing/sites/bot-landing-6a052","defaultUrl":"https://bot-landing-6a052.web.app","type":"DEFAULT_SITE"}

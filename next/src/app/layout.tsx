@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import GlobalStyles from "@/styles/GlobalStyles";
-import { I18N } from "@/i18n";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -31,7 +30,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <I18N />
          <GlobalStyles />
         {children}
       </body>
