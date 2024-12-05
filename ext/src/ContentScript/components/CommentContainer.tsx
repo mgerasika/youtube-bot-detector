@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 
 import React, { useMemo } from 'react';
@@ -16,13 +17,11 @@ export const CommentContainer: React.FC<IProps> = ({ parentEl, onReplyClick }: I
   const { authorId, statistic } = useStatistic({ channelUrl: authorUrl });
 
   const isBot = useMemo(() => {
-    if (statistic) {
-      if ((statistic.frequency >= 2 || statistic.frequency_tick >= 5) && statistic.comment_count >= 50 && statistic.days_tick >= 10) {
-        return true;
-      }
+    if (statistic && (window as any).whoIsWho) {
+      return (window as any).whoIsWho(authorId, statistic)
     }
     return false;
-  }, [statistic])
+  }, [statistic, authorId])
 
   if (!authorId) {
     return null;
