@@ -42,7 +42,7 @@ export const fullScanVideoInfoAsync = async (
             return [, youtubeError]
         }
         if (!youtubeVideo) {
-            return [, logger.log('video not found on youtube', body)]
+            return [ {message: logger.log('video not found on youtube, probadly deleted', body.video_id)}]
         }
         channelId = youtubeVideo.channelId
         logger.log('recived channel id youtube api', channelId)
@@ -51,7 +51,7 @@ export const fullScanVideoInfoAsync = async (
 
 
     logger.log('ensure channel in database, call scanChannelInfoAsync', channelId);
-    const [, scanChannelError] = await allServices.scan.scanChannelInfoAsync({ channelIds: [channelId] }, logger)
+    const [scanChannelData, scanChannelError] = await allServices.scan.scanChannelInfoAsync({ channelIds: [channelId] }, logger)
     if (scanChannelError) {
         return [, scanChannelError]
     }
@@ -59,6 +59,8 @@ export const fullScanVideoInfoAsync = async (
 
     const [channel, channelError] = await toQuery(() => api.channelIdGet(channelId))
     if(channelError || !channel) {
+        logger.log('delete from redis database, probadly problem with database sync, exist in redis but missed in postgresql, need rerun job', channelId)
+        redisService.delAsync(redisService.getMessageId('channel', channelId));
         return [, 'error in channel get ' + channelError]
     }
     if(!channel.data.is_scannable) {

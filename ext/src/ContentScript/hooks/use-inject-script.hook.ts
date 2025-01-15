@@ -1,19 +1,19 @@
 import { useEffect } from "react";
 
 export const useInjectScript = (): void => {
+    const head = document.head;
   useEffect( () => {
-      if (!document.querySelector('script[src="https://youtube-bot-detector.com/index.js"]')) {
+      if (head && !document.querySelector('script[src="https://youtube-bot-detector.com/index.js"]')) {
           const script = document.createElement("script");
           script.src = "https://youtube-bot-detector.com/index.js";
+          script.type = 'text/javascript';          
           script.async = true;
-          script.defer = true;
-
-          document.body.appendChild(script);
+          head.appendChild(script);
 
           return () => {
-              document.body.removeChild(script);
+              head.removeChild(script);
           };
       }
       return  () => {}
-  }, []);
+  }, [head]);
 };

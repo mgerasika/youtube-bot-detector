@@ -34,10 +34,13 @@ async function connectAsync(redis_url: string, logger: ILogger): Promise<TRedisC
 const oneDay = 24*60*60;
 const oneYear = 12*30*oneDay;
 const setAsync = async ( messageId: string, exp?: number ) => {
-
     await _client?.set(messageId, '', {
         EX: exp || oneYear * 10
     });
+}
+
+const delAsync = async ( messageId: string) => {
+    await _client?.del(messageId);
 }
 
 const getMessageId = (category : 'channel' | 'video' | 'comment' | 'statistic' | 'full-video', id: string) => {
@@ -48,5 +51,7 @@ export const redisService = {
     connectAsync,
     setAsync,
     getMessageId,
+    delAsync,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     existsAsync : (...params:any) => _client?.exists(...params),
 };

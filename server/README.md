@@ -1,10 +1,10 @@
 # postgress backup - restore example
 ## backup database
-sudo PGPASSWORD=test pg_dump -U test -h 192.168.0.106 -p 5433 -F c -b -v -f /mnt/hdd1/backup/youtube-bot-filter-backup-$(date +\%Y-\%m-\%d).dump youtube-bot-filter
+sudo PGPASSWORD=test pg_dump -U test -h 192.168.0.16 -p 5433 -F c -b -v -f /mnt/hdd1/backup/youtube-bot-filter-backup-$(date +\%Y-\%m-\%d).dump youtube-bot-filter
 
 
 docker run --rm -v /mnt/hdd1/backup:/backup -e PGPASSWORD=test postgres:17 pg_dump \
-  -U test -h 192.168.0.106 -p 5433 -F c -b -v -f /backup/youtube-bot-filter-backup-$(date +%Y-%m-%d).dump youtube-bot-filter
+  -U test -h 192.168.0.16 -p 5433 -F c -b -v -f /backup/youtube-bot-filter-backup-$(date +%Y-%m-%d).dump youtube-bot-filter
 
 
 ## restore database
@@ -85,7 +85,12 @@ docker run -p 5435:5432 \
   --restart always \
   -d postgres  
 
-
+docker run -p 5433:5432 \
+  --name postgres \
+  -e POSTGRES_PASSWORD=homeassistant \
+  -v /mnt/hdd1/postgres_data:/var/lib/postgresql/data \
+  --restart always \
+  -d postgres
 
 ## pgadmin4
 docker run --restart always --name pgadmin4 -p 5050:80 \
@@ -133,28 +138,4 @@ sudo mount -a
 sudo /usr/lib/postgresql/17/bin/pg_resetwal -f /media/mgerasika/ssd13/postgres_data_master/
 sudo /usr/lib/postgresql/17/bin/pg_resetwal -f  /media/mgerasika/baracuda/postgres_data/
 
-CREATE ROLE replication_user WITH LOGIN REPLICATION PASSWORD 'homeassistant';
-ALTER ROLE replication_user WITH SUPERUSER;
-
-docker-compose up -d master
-docker exec -it postgres-master psql -U postgres -c "CREATE ROLE replication_user REPLICATION LOGIN ENCRYPTED PASSWORD 'homeassistant';"
-
-sudo rsync -av --progress /media/mgerasika/ssd13/postgres_data/ /media/mgerasika/ssd13/postgres_data_master/
-sudo rsync -av --progress /media/mgerasika/ssd13/postgres_data/ /media/mgerasika/baracuda/postgres_data/
-sudo rsync -av --progress /media/mgerasika/ssd13/postgres_data_master/ /media/mgerasika/baracuda/postgres_data/
-
-docker-compose up -d
-docker exec -it postgres-slave pg_basebackup -h postgres-master -p 5432 -D /var/lib/postgresql/data -U replication_user -Fp -Xs -P
-
-docker-compose down
-docker-compose up --build
-
-
-docker exec -it postgres-master psql -U postgres
-docker exec -it postgres-slave psql -U postgres
-
-CREATE ROLE replication_user WITH REPLICATION LOGIN PASSWORD 'homeassistant';
-
-docker exec -it postgres-slave bash
-PGPASSWORD="homeassistant" psql -h postgres-master -U replication_user -c "SELECT 1;"
 

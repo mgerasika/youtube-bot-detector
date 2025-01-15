@@ -56,8 +56,8 @@ export const uploadStatisticAsync = async (
     // if((body.frequency >= 2 || body.frequency_tick > 3) && body.comment_count >= 100) {
     //     cacheFileTimeoutInSecconds = cacheFileTimeoutInSecconds * 30;
     // }
-    const [uploadResult, uploadError] = await toQuery( () => firebase.uploadJsonAndMakePublic(firebaseFileContent,
-         `${body.channel_id}.json`, cacheFileTimeoutInSecconds, logger))
+    const [uploadResult, uploadError] = await  firebase.uploadJsonAndMakePublic(firebaseFileContent,
+         `${body.channel_id}.json`, cacheFileTimeoutInSecconds, logger)
     if (uploadError) {
         return [, logger.log(uploadError)]
     }
