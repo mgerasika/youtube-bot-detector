@@ -38,8 +38,6 @@ export const uploadStatisticAsync = async (
             return [{}]
         }
     }
-
-
     
     const firebaseFileContent: IFirebaseFile = {
         v:'v1',

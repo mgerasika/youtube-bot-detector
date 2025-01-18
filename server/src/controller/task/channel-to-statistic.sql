@@ -3,6 +3,7 @@ INSERT INTO statistic (
     channel_url,
     published_at,
     comment_count,
+    duplicated_comment_count,
     min_published_at,
     max_published_at,
     days_tick,
@@ -15,6 +16,7 @@ SELECT
     channel_url,
     published_at,
     comment_count,
+    duplicated_comment_count,
     min_published_at,
     max_published_at,
     days_tick,
@@ -38,6 +40,18 @@ FROM (
                 INNER JOIN video AS v1 ON v1.id = c1.video_id         
                 WHERE c1.author_id = t0.id AND v1.channel_id != c1.author_id
             )::int AS comment_count,
+
+                    -- Duplicated comments by this author
+            (SELECT COUNT(*)
+            FROM (
+                SELECT c1.text
+                FROM comment AS c1
+                INNER JOIN video AS v1 ON v1.id = c1.video_id
+                WHERE c1.author_id = t0.id AND v1.channel_id != c1.author_id
+                GROUP BY c1.text
+                HAVING COUNT(*) > 1
+            ) AS duplicated_comments
+            )::int AS duplicated_comment_count,
             
             -- Earliest comment published date
             (

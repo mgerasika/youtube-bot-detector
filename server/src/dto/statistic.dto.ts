@@ -13,6 +13,7 @@ export interface IStatisticDto {
     uploaded_at_time?: Date;
     frequency: number;
     frequency_tick: number;
+    duplicated_comment_count?: number;
     hash?:string;
 }
 
@@ -57,6 +58,9 @@ export class StatisticDto implements IStatisticDto {
 
     @Column({ type: 'float' })
     frequency_tick!: number;
+
+    @Column({ type: 'float', nullable: true })
+    duplicated_comment_count!: number;
 
     constructor(id: string) {
         this.channel_id = id;

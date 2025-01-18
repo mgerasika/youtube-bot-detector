@@ -85,10 +85,10 @@ export const statistic = {
     getStatisticInternalInfoAsync,
     getStatisticDetailsAsync,
     postStatisticAsync,
-    getStatisticByChannelAsync: getStatisticByChannelDetailedAsync,
+    getStatisticByChannelDetailedAsync,
     getStatisticByVideoAsync,
     getStatisticInfoAsync,
     getStatisticListAsync,
     getStatisticWithoutHashListAsync,
-    getStatisticByChannelForOneAsync: getStatisticByChannelAsync
+    getStatisticByChannelAsync
 }

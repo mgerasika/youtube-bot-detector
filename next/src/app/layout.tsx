@@ -24,25 +24,22 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  params
+  users
 }: Readonly<{
   children: React.ReactNode;
-  params: { locale: string };
+  users: React.ReactNode;
 }>) {
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        params={JSON.stringify(params)}
          <GlobalStyles />
         {children}
+        {users}
       </body>
     </html>
   );
 }
 
-export async function generateStaticParams() {
-  return i18n.locales.map((locale) => ({ locale }));
-}
 

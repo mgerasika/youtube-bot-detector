@@ -34,7 +34,7 @@ interface IStatisticByChannelDetailedRequest extends IExpressRequest {
 interface IStatisticByChannelDetailedResponse extends IExpressResponse<IStatisticByChannelDetailed, void> {}
 app.get(API_URL.api.statistic.byChannelDetailed.toString(),memoryCache(1), async (req: IStatisticByChannelDetailedRequest, res: IStatisticByChannelDetailedResponse) => {
     const logger = createLogger();
-    const [data, error] = await allServices.statistic.getStatisticByChannelAsync(req.query.channel_id || '', logger);
+    const [data, error] = await allServices.statistic.getStatisticByChannelDetailedAsync(req.query.channel_id || '', logger);
     if (error) {
         return res.status(400).send( error);
     }
@@ -53,7 +53,7 @@ interface IStatisticByChannelRequest extends IExpressRequest {
 interface IStatisticByChannelResponse extends IExpressResponse<IStatisticByChannel, void> {}
 app.get(API_URL.api.statistic.byChannel.toString(),memoryCache(1), async (req: IStatisticByChannelRequest, res: IStatisticByChannelResponse) => {
     const logger = createLogger();
-    const [data, error] = await allServices.statistic.getStatisticByChannelForOneAsync(req.query.channel_id || '', logger);
+    const [data, error] = await allServices.statistic.getStatisticByChannelAsync(req.query.channel_id || '', logger);
     if (error) {
         return res.status(400).send( error);
     }

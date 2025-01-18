@@ -61,6 +61,20 @@ FROM (SELECT
     video.channel_id AS channel_id,
     channel_main.author_url AS channel_url,
 	channel_main.published_at as published_at,
+
+  -- Duplicated comments by this author
+    (SELECT COUNT(*)
+    FROM (
+        SELECT c1.text
+        FROM comment AS c1
+        INNER JOIN video AS v1 ON v1.id = c1.video_id
+       WHERE 
+       c1.author_id = comment.author_id and v1.channel_id = video.channel_id and v1.channel_id <> c1.author_id
+   GROUP BY c1.text
+        HAVING COUNT(*) > 1
+    ) AS duplicated_comments
+    )::int AS duplicated_comment_count,
+
 	
     (SELECT MIN(c1.published_at) 
     FROM 
