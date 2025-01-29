@@ -18,6 +18,7 @@ export interface IServerInfoDto {
 	'name': string;
 	'ip': string;
 	'memory_info': IMemoryInfo;
+	'updated_at_time'?: Date;
 }
 export interface IMemoryInfo {
 	'RSS': number;
@@ -30,6 +31,7 @@ export interface IAddServerInfoBody {
 	'name': string;
 	'ip': string;
 	'memory_info': IMemoryInfo;
+	'updated_at_time'?: Date;
 }
 export interface IApiKeyDto {
 	'email': string;
@@ -110,16 +112,9 @@ export interface IRabbitMqConnectionInfo {
 	'messageCount': number;
 	'consumerCount': number;
 }
-export interface IStatisticByChannel {
-	'items': IStatisticByChannelInvividualWithCalc[];
-	'forOne': {
-		'db': IStatisticByChannelForOne;
-		'calc': ICalc;
-	};
-}
-export interface IStatisticByChannelInvividualWithCalc {
-	'db': IStatisticByChannelInvdividual;
-	'calc': ICalc;
+export interface IStatisticByChannelDetailed {
+	'items': IStatisticByChannelInvdividual[];
+	'general': IStatisticByChannel;
 }
 export interface IStatisticByChannelInvdividual {
 	'comment_count': number;
@@ -131,11 +126,7 @@ export interface IStatisticByChannelInvdividual {
 	'days_tick': number;
 	'published_at_diff': number;
 }
-export interface ICalc {
-	'frequency': number;
-	'frequency_tick': number;
-}
-export interface IStatisticByChannelForOne {
+export interface IStatisticByChannel {
 	'published_at': Date;
 	'channel_url': string;
 	'channel_id': string;
@@ -171,6 +162,7 @@ export interface IStatisticDto {
 	'uploaded_at_time'?: Date;
 	'frequency': number;
 	'frequency_tick': number;
+	'duplicated_comment_count'?: number;
 	'hash'?: string;
 }
 export interface IStatisticPostBody {
@@ -190,11 +182,13 @@ export type TAllServerInfoGetError = ''
 	 |'undefined';
 export type TAllServerInfoPostError = ''
 	 |'undefined';
+export type TKeyGetError = ''
+	 |'undefined';
+export type TKeyPostError = ''
+	 |'undefined';
 export type TKeyActiveGetError = ''
 	 |'undefined';
 export type TKeyInfoGetError = ''
-	 |'undefined';
-export type TKeyPostError = ''
 	 |'undefined';
 export type TKeyAddYoutubeKeyPostError = ''
 	 |'undefined';
@@ -224,9 +218,9 @@ export type TServerInfoGetError = ''
 	 |'undefined';
 export type TStatisticInfoGetError = ''
 	 |'undefined';
-export type TStatisticByChannelGetError = ''
+export type TStatisticByChannelDetailedGetError = ''
 	 |'undefined';
-export type TStatisticByChannelForOneGetError = ''
+export type TStatisticByChannelGetError = ''
 	 |'undefined';
 export type TStatisticByVideoGetError = ''
 	 |'undefined';
@@ -235,12 +229,6 @@ export type TStatisticGetError = ''
 export type TStatisticPostError = ''
 	 |'undefined';
 export type TStatisticIdGetError = ''
-	 |'undefined';
-export type TTaskChannelToStatisticGetError = ''
-	 |'undefined';
-export type TTaskStatisticToFirebaseGetError = ''
-	 |'undefined';
-export type TTaskRescanChannelsGetError = ''
 	 |'undefined';
 export type TTestGetError = ''
 	 |'undefined';
@@ -252,13 +240,20 @@ export type TVideoPostError = ''
 	 |'undefined';
 export type TVideoIdGetError = ''
 	 |'undefined';
+export type TTaskChannelToStatisticGetError = ''
+	 |'undefined';
+export type TTaskStatisticToFirebaseGetError = ''
+	 |'undefined';
+export type TTaskRescanChannelsGetError = ''
+	 |'undefined';
 export type TPartialErrorCodes =
 
 	 | TAllServerInfoGetError
 	 | TAllServerInfoPostError
+	 | TKeyGetError
+	 | TKeyPostError
 	 | TKeyActiveGetError
 	 | TKeyInfoGetError
-	 | TKeyPostError
 	 | TKeyAddYoutubeKeyPostError
 	 | TChannelExistPostError
 	 | TChannelGetError
@@ -273,20 +268,20 @@ export type TPartialErrorCodes =
 	 | TScanFullByChannelGetError
 	 | TServerInfoGetError
 	 | TStatisticInfoGetError
+	 | TStatisticByChannelDetailedGetError
 	 | TStatisticByChannelGetError
-	 | TStatisticByChannelForOneGetError
 	 | TStatisticByVideoGetError
 	 | TStatisticGetError
 	 | TStatisticPostError
 	 | TStatisticIdGetError
-	 | TTaskChannelToStatisticGetError
-	 | TTaskStatisticToFirebaseGetError
-	 | TTaskRescanChannelsGetError
 	 | TTestGetError
 	 | TVideoLastDateGetError
 	 | TVideoGetError
 	 | TVideoPostError
-	 | TVideoIdGetError	 | '';
+	 | TVideoIdGetError
+	 | TTaskChannelToStatisticGetError
+	 | TTaskStatisticToFirebaseGetError
+	 | TTaskRescanChannelsGetError	 | '';
 
 export const createApiRequest = (rs: IRequestService) => ({
 	// get all-server-info all-server-info.controller.ts
@@ -297,6 +292,14 @@ export const createApiRequest = (rs: IRequestService) => ({
 	allServerInfoPost : (body: IAddServerInfoBody): CustomPromise<CustomAxiosResponse<void,TAllServerInfoPostError>,IBEError<TAllServerInfoPostError>> =>
 		rs.post(formatUrl(API_SERVER_URL + `/api/all-server-info`) , body),
 
+	// get api-key api-key.controller.ts
+	keyGet : (query: {status?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<IApiKeyDto>,TKeyGetError>,IBEError<TKeyGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `/api/api-key`, query) ),
+
+	// post api-key api-key.controller.ts
+	keyPost : (body: IApiKeyPostBody): CustomPromise<CustomAxiosResponse<void,TKeyPostError>,IBEError<TKeyPostError>> =>
+		rs.post(formatUrl(API_SERVER_URL + `/api/api-key`) , body),
+
 	// get active api-key.controller.ts
 	keyActiveGet : (query: {old_key?:string,old_status?:string} | undefined): CustomPromise<CustomAxiosResponse<IApiKeyDto,TKeyActiveGetError>,IBEError<TKeyActiveGetError>> =>
 		rs.get(formatUrl(API_SERVER_URL + `/api/api-key/active`, query) ),
@@ -304,10 +307,6 @@ export const createApiRequest = (rs: IRequestService) => ({
 	// get info api-key.controller.ts
 	keyInfoGet : (): CustomPromise<CustomAxiosResponse<IApiKeyDto,TKeyInfoGetError>,IBEError<TKeyInfoGetError>> =>
 		rs.get(formatUrl(API_SERVER_URL + `/api/api-key/info`) ),
-
-	// post api-key api-key.controller.ts
-	keyPost : (body: IApiKeyPostBody): CustomPromise<CustomAxiosResponse<void,TKeyPostError>,IBEError<TKeyPostError>> =>
-		rs.post(formatUrl(API_SERVER_URL + `/api/api-key`) , body),
 
 	// post add-youtube-key api-key.controller.ts
 	keyAddYoutubeKeyPost : (): CustomPromise<CustomAxiosResponse<void,TKeyAddYoutubeKeyPostError>,IBEError<TKeyAddYoutubeKeyPostError>> =>
@@ -365,13 +364,13 @@ export const createApiRequest = (rs: IRequestService) => ({
 	statisticInfoGet : (): CustomPromise<CustomAxiosResponse<IStatisticInfo,TStatisticInfoGetError>,IBEError<TStatisticInfoGetError>> =>
 		rs.get(formatUrl(API_SERVER_URL + `/api/statistic/info`) ),
 
+	// get by-channel-detailed statistic.controller.ts
+	statisticByChannelDetailedGet : (query: {channel_id?:string} | undefined): CustomPromise<CustomAxiosResponse<IStatisticByChannelDetailed,TStatisticByChannelDetailedGetError>,IBEError<TStatisticByChannelDetailedGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `/api/statistic/by-channel-detailed`, query) ),
+
 	// get by-channel statistic.controller.ts
 	statisticByChannelGet : (query: {channel_id?:string} | undefined): CustomPromise<CustomAxiosResponse<IStatisticByChannel,TStatisticByChannelGetError>,IBEError<TStatisticByChannelGetError>> =>
 		rs.get(formatUrl(API_SERVER_URL + `/api/statistic/by-channel`, query) ),
-
-	// get by-channel-for-one statistic.controller.ts
-	statisticByChannelForOneGet : (query: {channel_id?:string} | undefined): CustomPromise<CustomAxiosResponse<IStatisticByChannelForOne,TStatisticByChannelForOneGetError>,IBEError<TStatisticByChannelForOneGetError>> =>
-		rs.get(formatUrl(API_SERVER_URL + `/api/statistic/by-channel-for-one`, query) ),
 
 	// get by-video statistic.controller.ts
 	statisticByVideoGet : (query: {video_id?:string} | undefined): CustomPromise<CustomAxiosResponse<Array<IStatisticByVideo>,TStatisticByVideoGetError>,IBEError<TStatisticByVideoGetError>> =>
@@ -388,18 +387,6 @@ export const createApiRequest = (rs: IRequestService) => ({
 	// get {id} statistic.controller.ts
 	statisticIdGet : (id:string): CustomPromise<CustomAxiosResponse<IStatisticDto,TStatisticIdGetError>,IBEError<TStatisticIdGetError>> =>
 		rs.get(formatUrl(API_SERVER_URL + `/api/statistic/${id}`) ),
-
-	// get channel-to-statistic task.controller.ts
-	taskChannelToStatisticGet : (): CustomPromise<CustomAxiosResponse<string,TTaskChannelToStatisticGetError>,IBEError<TTaskChannelToStatisticGetError>> =>
-		rs.get(formatUrl(API_SERVER_URL + `/api/task/channel-to-statistic`) ),
-
-	// get statistic-to-firebase task.controller.ts
-	taskStatisticToFirebaseGet : (): CustomPromise<CustomAxiosResponse<string,TTaskStatisticToFirebaseGetError>,IBEError<TTaskStatisticToFirebaseGetError>> =>
-		rs.get(formatUrl(API_SERVER_URL + `/api/task/statistic-to-firebase`) ),
-
-	// get rescan-channels task.controller.ts
-	taskRescanChannelsGet : (): CustomPromise<CustomAxiosResponse<string,TTaskRescanChannelsGetError>,IBEError<TTaskRescanChannelsGetError>> =>
-		rs.get(formatUrl(API_SERVER_URL + `/api/task/rescan-channels`) ),
 
 	// get test test.controller.ts
 	testGet : (): CustomPromise<CustomAxiosResponse<string,TTestGetError>,IBEError<TTestGetError>> =>
@@ -421,14 +408,27 @@ export const createApiRequest = (rs: IRequestService) => ({
 	videoIdGet : (id:string): CustomPromise<CustomAxiosResponse<IVideoDto,TVideoIdGetError>,IBEError<TVideoIdGetError>> =>
 		rs.get(formatUrl(API_SERVER_URL + `/api/video/${id}`) ),
 
+	// get channel-to-statistic task.controller.ts
+	taskChannelToStatisticGet : (): CustomPromise<CustomAxiosResponse<string,TTaskChannelToStatisticGetError>,IBEError<TTaskChannelToStatisticGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `/api/task/channel-to-statistic`) ),
+
+	// get statistic-to-firebase task.controller.ts
+	taskStatisticToFirebaseGet : (): CustomPromise<CustomAxiosResponse<string,TTaskStatisticToFirebaseGetError>,IBEError<TTaskStatisticToFirebaseGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `/api/task/statistic-to-firebase`) ),
+
+	// get rescan-channels task.controller.ts
+	taskRescanChannelsGet : (): CustomPromise<CustomAxiosResponse<string,TTaskRescanChannelsGetError>,IBEError<TTaskRescanChannelsGetError>> =>
+		rs.get(formatUrl(API_SERVER_URL + `/api/task/rescan-channels`) ),
+
 });
 
 const URL = {
 	allServerInfoGet:  (): string => `/api/all-server-info`,
 	allServerInfoPost:  (): string => `/api/all-server-info`,
+	keyGet:  (): string => `/api/api-key`,
+	keyPost:  (): string => `/api/api-key`,
 	keyActiveGet:  (): string => `/api/api-key/active`,
 	keyInfoGet:  (): string => `/api/api-key/info`,
-	keyPost:  (): string => `/api/api-key`,
 	keyAddYoutubeKeyPost:  (): string => `/api/api-key/add-youtube-key`,
 	channelExistPost:  (): string => `/api/channel/exist`,
 	channelGet:  (): string => `/api/channel`,
@@ -443,20 +443,20 @@ const URL = {
 	scanFullByChannelGet:  (): string => `/api/scan/full-by-channel`,
 	serverInfoGet:  (): string => `/api/server-info`,
 	statisticInfoGet:  (): string => `/api/statistic/info`,
+	statisticByChannelDetailedGet:  (): string => `/api/statistic/by-channel-detailed`,
 	statisticByChannelGet:  (): string => `/api/statistic/by-channel`,
-	statisticByChannelForOneGet:  (): string => `/api/statistic/by-channel-for-one`,
 	statisticByVideoGet:  (): string => `/api/statistic/by-video`,
 	statisticGet:  (): string => `/api/statistic`,
 	statisticPost:  (): string => `/api/statistic`,
 	statisticIdGet:  (id:string): string => `/api/statistic/${id}`,
-	taskChannelToStatisticGet:  (): string => `/api/task/channel-to-statistic`,
-	taskStatisticToFirebaseGet:  (): string => `/api/task/statistic-to-firebase`,
-	taskRescanChannelsGet:  (): string => `/api/task/rescan-channels`,
 	testGet:  (): string => `/api/test`,
 	videoLastDateGet:  (): string => `/api/video/last-date`,
 	videoGet:  (): string => `/api/video`,
 	videoPost:  (): string => `/api/video`,
 	videoIdGet:  (id:string): string => `/api/video/${id}`,
+	taskChannelToStatisticGet:  (): string => `/api/task/channel-to-statistic`,
+	taskStatisticToFirebaseGet:  (): string => `/api/task/statistic-to-firebase`,
+	taskRescanChannelsGet:  (): string => `/api/task/rescan-channels`,
 };
 // INSERT END
 // DON'T REMOVE THIS COMMENTS!!!
@@ -465,6 +465,7 @@ export const API_URL = URL;
 export const api = {
   ...createApiRequest(requestService),
 };
+
 
 
 

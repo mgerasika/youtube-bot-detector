@@ -59,7 +59,7 @@ export interface IChannelDto {
     title: string;
     author_url: string;
     is_scannable?: boolean;
-    is_deleted: boolean;
+    is_deleted?: boolean;
 }
 export interface IChannelPostBody {
     channels: IChannelDto[];

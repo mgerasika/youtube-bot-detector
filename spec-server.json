@@ -31,12 +31,12 @@
       "description": "statistic"
     },
     {
-      "name": "task",
-      "description": "task"
-    },
-    {
       "name": "video",
       "description": "video"
+    },
+    {
+      "name": "task",
+      "description": "task"
     }
   ],
   "paths": {
@@ -84,6 +84,79 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/IAddServerInfoBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/api-key": {
+      "get": {
+        "tags": [
+          "api"
+        ],
+        "summary": "get api-key api-key.controller.ts",
+        "description": "get api-key api-key.controller.ts",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IApiKeyDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "api"
+        ],
+        "summary": "post api-key api-key.controller.ts",
+        "description": "post api-key api-key.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IApiKeyPostBody"
               }
             }
           }
@@ -168,38 +241,6 @@
               }
             }
           },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/api-key": {
-      "post": {
-        "tags": [
-          "api"
-        ],
-        "summary": "post api-key api-key.controller.ts",
-        "description": "post api-key api-key.controller.ts",
-        "operationId": "",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IApiKeyPostBody"
-              }
-            }
-          }
-        },
-        "responses": {
           "400": {
             "content": {
               "application/json": {
@@ -732,6 +773,46 @@
         }
       }
     },
+    "/api/statistic/by-channel-detailed": {
+      "get": {
+        "tags": [
+          "statistic"
+        ],
+        "summary": "get by-channel-detailed statistic.controller.ts",
+        "description": "get by-channel-detailed statistic.controller.ts",
+        "operationId": "",
+        "parameters": [
+          {
+            "name": "channel_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IStatisticByChannelDetailed"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/statistic/by-channel": {
       "get": {
         "tags": [
@@ -756,46 +837,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/IStatisticByChannel"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/statistic/by-channel-for-one": {
-      "get": {
-        "tags": [
-          "statistic"
-        ],
-        "summary": "get by-channel-for-one statistic.controller.ts",
-        "description": "get by-channel-for-one statistic.controller.ts",
-        "operationId": "",
-        "parameters": [
-          {
-            "name": "channel_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IStatisticByChannelForOne"
                 }
               }
             }
@@ -943,99 +984,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/IStatisticDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/task/channel-to-statistic": {
-      "get": {
-        "tags": [
-          "task"
-        ],
-        "summary": "get channel-to-statistic task.controller.ts",
-        "description": "get channel-to-statistic task.controller.ts",
-        "operationId": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/task/statistic-to-firebase": {
-      "get": {
-        "tags": [
-          "task"
-        ],
-        "summary": "get statistic-to-firebase task.controller.ts",
-        "description": "get statistic-to-firebase task.controller.ts",
-        "operationId": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ void"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/task/rescan-channels": {
-      "get": {
-        "tags": [
-          "task"
-        ],
-        "summary": "get rescan-channels task.controller.ts",
-        "description": "get rescan-channels task.controller.ts",
-        "operationId": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -1235,6 +1183,99 @@
           }
         }
       }
+    },
+    "/api/task/channel-to-statistic": {
+      "get": {
+        "tags": [
+          "task"
+        ],
+        "summary": "get channel-to-statistic task.controller.ts",
+        "description": "get channel-to-statistic task.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/task/statistic-to-firebase": {
+      "get": {
+        "tags": [
+          "task"
+        ],
+        "summary": "get statistic-to-firebase task.controller.ts",
+        "description": "get statistic-to-firebase task.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/task/rescan-channels": {
+      "get": {
+        "tags": [
+          "task"
+        ],
+        "summary": "get rescan-channels task.controller.ts",
+        "description": "get rescan-channels task.controller.ts",
+        "operationId": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ void"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1259,6 +1300,9 @@
           },
           "memory_info": {
             "type": "IMemoryInfo"
+          },
+          "updated_at_time": {
+            "type": "Date"
           }
         }
       },
@@ -1305,6 +1349,9 @@
           },
           "memory_info": {
             "type": "IMemoryInfo"
+          },
+          "updated_at_time": {
+            "type": "Date"
           }
         }
       },
@@ -1603,45 +1650,18 @@
           }
         }
       },
-      "IStatisticByChannel": {
+      "IStatisticByChannelDetailed": {
         "type": "object",
         "required": [
           "items",
-          "forOne"
+          "general"
         ],
         "properties": {
           "items": {
-            "type": "IStatisticByChannelInvividualWithCalc[]"
+            "type": "IStatisticByChannelInvdividual[]"
           },
-          "forOne": {
-            "type": "object",
-            "required": [
-              "db",
-              "calc"
-            ],
-            "properties": {
-              "db": {
-                "type": "IStatisticByChannelForOne"
-              },
-              "calc": {
-                "type": "ICalc"
-              }
-            }
-          }
-        }
-      },
-      "IStatisticByChannelInvividualWithCalc": {
-        "type": "object",
-        "required": [
-          "db",
-          "calc"
-        ],
-        "properties": {
-          "db": {
-            "type": "IStatisticByChannelInvdividual"
-          },
-          "calc": {
-            "type": "ICalc"
+          "general": {
+            "type": "IStatisticByChannel"
           }
         }
       },
@@ -1684,22 +1704,7 @@
           }
         }
       },
-      "ICalc": {
-        "type": "object",
-        "required": [
-          "frequency",
-          "frequency_tick"
-        ],
-        "properties": {
-          "frequency": {
-            "type": "integer"
-          },
-          "frequency_tick": {
-            "type": "integer"
-          }
-        }
-      },
-      "IStatisticByChannelForOne": {
+      "IStatisticByChannel": {
         "type": "object",
         "required": [
           "published_at",
@@ -1836,6 +1841,9 @@
             "type": "integer"
           },
           "frequency_tick": {
+            "type": "integer"
+          },
+          "duplicated_comment_count": {
             "type": "integer"
           },
           "hash": {

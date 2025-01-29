@@ -14,6 +14,7 @@ export interface IUploadStatisticBody {
     published_at_diff: number;
     frequency: number;
     frequency_tick: number;
+    duplicated_comment_count:number;
 }
 
 export interface IStatisticServerTestBody {
@@ -24,18 +25,19 @@ export interface IFirebaseBody {
     published_at_diff: number, 
     days_tick: number, 
     frequency:number, 
-    frequency_tick:number
+    frequency_tick:number,
+    duplicated_comment_count:number;
 }
 
 export const deserealizeFirebaseBody = (numbers: number[]) : IFirebaseBody => {
-    const [comment_count, published_at_diff, days_tick, frequency, frequency_tick] = numbers;
+    const [comment_count, published_at_diff, days_tick, frequency, frequency_tick, duplicated_comment_count] = numbers;
     return {
-        comment_count, published_at_diff, days_tick, frequency, frequency_tick
+        comment_count, published_at_diff, days_tick, frequency, frequency_tick, duplicated_comment_count
     }
 
 }
-export const serializeFirebaseBody = ({comment_count, published_at_diff, days_tick, frequency, frequency_tick}: IFirebaseBody): number[] => {
-    return [comment_count, published_at_diff, days_tick, frequency, frequency_tick]
+export const serializeFirebaseBody = ({comment_count, published_at_diff, days_tick, frequency, frequency_tick,duplicated_comment_count}: IFirebaseBody): number[] => {
+    return [comment_count, published_at_diff, days_tick, frequency, frequency_tick,duplicated_comment_count]
 }
 
 export interface IFirebaseFile {
