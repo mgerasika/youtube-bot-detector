@@ -15,4 +15,4 @@ fi
 
 cd ..
 docker build -t $image -f server/Dockerfile . --build-arg PORT=$port
-docker run --security-opt=no-new-privileges:false --network=host --restart=always --env PORT=$port --env  PORTS=$ports -v /home:/home -d -p $port:$port --env-file=server/.env --name $container $image
+docker run --security-opt=no-new-privileges:false --restart=always --env PORT=$port --env  PORTS=$ports -v /home:/home -d -p $port:$port --env-file=server/.env --name $container $image

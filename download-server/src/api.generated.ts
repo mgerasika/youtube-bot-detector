@@ -162,6 +162,7 @@ export interface IStatisticByVideo {
     published_at_diff: number;
     frequency: number;
     frequency_tick: number;
+    duplicated_comment_count:number;
 }
 export interface IStatisticDto {
     channel_id: string;
