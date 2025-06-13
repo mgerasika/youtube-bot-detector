@@ -6,7 +6,7 @@
     "scripts": {
         "i": "yarn",
         "build": "npx tsc && node scripts/copy-sql.js",
-        "start": "node  --max-old-space-size=4096  dist/server/src/index.js",
+        "start": "node  --max-old-space-size=16096  dist/server/src/index.js",
         "dev": "nodemon",
         "codegen": "npx ts-node scripts/codegen-spec.ts",
         "validate": "tsc && yarn lint:fix",

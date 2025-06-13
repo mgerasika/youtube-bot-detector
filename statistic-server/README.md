@@ -6,7 +6,7 @@ https://cloud.google.com/sdk/docs/install-sdk#deb
 4 sudo apt-get update && sudo apt-get install google-cloud-cli
 5 gsutil cors set cors.json gs://ybot-detector.firebasestorage.app
 
-
+Download service account key here https://console.firebase.google.com/u/0/project/youtube-bot-landing/settings/serviceaccounts/adminsdk
 
 
 For deploy new image:

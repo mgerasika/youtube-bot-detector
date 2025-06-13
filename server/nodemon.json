@@ -5,5 +5,5 @@
   "watch": ["src"],
   "ext": "ts,js,json,sql",
   "ignore": ["src/**/*.spec.ts"],
-  "exec": "tsc && node scripts/copy-sql.js && node dist/server/src/index.js"
+  "exec": "tsc && node   --max-old-space-size=16096 scripts/copy-sql.js && node dist/server/src/index.js"
 }

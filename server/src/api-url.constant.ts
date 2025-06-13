@@ -28,7 +28,6 @@ interface IApiUrl {
                 info: IUrlItem,
                 byChannelDetailed: IUrlItem,
                 byChannel: IUrlItem,
-                byVideo: IUrlItem,
                 id: (id?: string) => IUrlItem;
             };
             test: IUrlItem;

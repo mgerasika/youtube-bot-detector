@@ -6,7 +6,7 @@
     "scripts": {
         "i": "yarn",
         "build": "npx tsc",
-        "start": "node  --max-old-space-size=4096  dist/download-server/src/index.js",
+        "start": "node  --max-old-space-size=16096  dist/download-server/src/index.js",
         "dev": "nodemon",
         "validate": "tsc && yarn lint:fix",
         "lint": "npx eslint -c ../.eslintrc.json 'src/**/*.{ts,tsx}'",

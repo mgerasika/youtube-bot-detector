@@ -1,6 +1,5 @@
 import { typeOrmMutationAsync, typeOrmQueryAsync, } from "@server/sql/type-orm-async.util";
 import { getStatisticByChannelDetailedAsync, } from "./statistic-by-channel-detailed";
-import { getStatisticByVideoAsync, } from "./statistic-by-video";
 import { getStatisticInfoAsync, } from "./statistic-info";
 import { IStatisticDto, StatisticDto, } from "@server/dto/statistic.dto";
 import { IAsyncPromiseResult, } from "@common/interfaces/async-promise-result.interface";
@@ -86,7 +85,6 @@ export const statistic = {
     getStatisticDetailsAsync,
     postStatisticAsync,
     getStatisticByChannelDetailedAsync,
-    getStatisticByVideoAsync,
     getStatisticInfoAsync,
     getStatisticListAsync,
     getStatisticWithoutHashListAsync,
