@@ -1,7 +1,7 @@
 #for local testing/or local docker container
-image=youtube-bot-downloader-1
-container=youtube-bot-downloader-1
-port=8091
+image=youtube-bot-downloader-2
+container=youtube-bot-downloader-2
+port=8092
 
 if [ "$(docker ps -aq -f name=$container)" ]; then
   docker stop $container

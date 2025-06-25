@@ -70,7 +70,6 @@ export const API_URL = createUrls<IApiUrl>({
                 info: EMPTY_URL_ITEM,
                 byChannelDetailed: EMPTY_URL_ITEM,
                 byChannel: EMPTY_URL_ITEM,
-                byVideo: EMPTY_URL_ITEM,
                 id: (id?: string) => EMPTY_URL_ITEM,
             },
             test: EMPTY_URL_ITEM,

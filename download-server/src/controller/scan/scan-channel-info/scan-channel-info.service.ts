@@ -87,12 +87,12 @@ export async function filterAuthorIdsAsync(ids:string[], skipRedisValidation: bo
         missedInRedis = ids;
     }
 
-    logger.log('before exist request')
+    logger.log('before exist request in sql database')
     const [availableInDbIds, availableError] = await toQuery(() => api.channelExistPost({ids: missedInRedis}))
     if(availableError) {
         return [, logger.log('important!!! available error in db - optimize sql', availableError)]
     }
-    logger.log('after exist request found ', availableInDbIds?.data.length)
+    logger.log('after exist request found in sql database ', availableInDbIds?.data.length)
     const missedInDb: string[] = [];
    await oneByOneAsync(missedInRedis, async (id) => {
 

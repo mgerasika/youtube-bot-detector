@@ -86,9 +86,9 @@ export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger
         if (postError) {
             // probadly probmen in sync betwen redis and psql database, so need add all channels without redis filtering
             const groups = groupArray(uniqueAuthorIds, 50);
-            logger.log('start download channels by groups, allChannels withoud redis filtering ', groups.length)
+            logger.log('start download channels by groups, allChannels withoud redis filtering skipRedisValidation = true ', groups.length)
             await oneByOneAsync(groups, async (group) => {
-                await allServices.scan.scanChannelInfoAsync({ channelIds: group }, logger);
+                await allServices.scan.scanChannelInfoAsync({ channelIds: group, skipRedisValidation: true }, logger);
             });
             logger.log('end download channels, without redis filtering')
 
