@@ -35,7 +35,7 @@ export const uploadStatisticAsync = async (
         // skip update if in cache with some delay
         if (diffInSecconds < CACHE_TIME_IN_SECCONDS) {
             logger.log(`Different from prefious statistic lest than ${CACHE_TIME_IN_SECCONDS} secconds, skip `, diffInSecconds)
-            return [{}]
+            return [{}];
         }
     }
     
@@ -51,9 +51,7 @@ export const uploadStatisticAsync = async (
 
     logger.log('before upload to firebase')
     const cacheFileTimeoutInSecconds = 3600*24;
-    // if((body.frequency >= 2 || body.frequency_tick > 3) && body.comment_count >= 100) {
-    //     cacheFileTimeoutInSecconds = cacheFileTimeoutInSecconds * 30;
-    // }
+   
     const [uploadResult, uploadError] = await  firebase.uploadJsonAndMakePublic(firebaseFileContent,
          `${body.channel_id}.json`, cacheFileTimeoutInSecconds, logger)
     if (uploadError) {

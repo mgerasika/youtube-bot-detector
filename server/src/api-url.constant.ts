@@ -39,6 +39,7 @@ interface IApiUrl {
                 channelToStatistic: IUrlItem;
                 statisticToFirebase: IUrlItem;
                 rescanChannels: IUrlItem;
+                channelIdsToFirebase: IUrlItem;
             }
     };
 }
@@ -82,6 +83,7 @@ export const API_URL = createUrls<IApiUrl>({
                 channelToStatistic: EMPTY_URL_ITEM,
                 statisticToFirebase: EMPTY_URL_ITEM,
                 rescanChannels: EMPTY_URL_ITEM,
+                channelIdsToFirebase: EMPTY_URL_ITEM
             }
     },
 });

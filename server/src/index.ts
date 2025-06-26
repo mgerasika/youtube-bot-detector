@@ -45,6 +45,7 @@ startCronJob('rescanChannelsAsync & channelToStatisticAsync & statisticToFirebas
     await allServices.task.rescanChannelsAsync(mainLogger);
     await allServices.task.channelToStatisticAsync(mainLogger);
     await allServices.task.statisticToFirebaseAsync(mainLogger);
+    await allServices.task.channelIdsToFirebaseAsync(mainLogger);
 }, mainLogger)
 
 

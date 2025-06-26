@@ -11,7 +11,7 @@ export const useGetFirebaseStatistic = (authorId:string,enabled:boolean) => {
         refetchOnMount: false,
         refetchOnWindowFocus: false,
         queryFn: () => axios.get(`https://storage.googleapis.com/youtube-bot-landing.firebasestorage.app/${authorId}.json?1`).then(response => {
-            return deserealizeFirebaseBody(response.data.b);
+            return deserializeFirebaseFile(response.data);
         }).catch(() => Promise.resolve(undefined))
         
     })
@@ -26,11 +26,24 @@ export interface IFirebaseBody {
   duplicated_comment_count:number;
 }
 
+export interface IFirebaseFile {
+  v: 'v1';
+  b: number[];
+}
+
+export const deserializeFirebaseFile = (file: IFirebaseFile): IFirebaseBody => {
+  if(file.v === 'v1') {
+    return deserealizeFirebaseBody(file.b);
+  }
+  return deserealizeFirebaseBody(file.b);
+}
+
 export const deserealizeFirebaseBody = (numbers: number[]) : IFirebaseBody => {
   const [comment_count, published_at_diff, days_tick, frequency, frequency_tick, duplicated_comment_count] = numbers;
   return {
       comment_count, published_at_diff, days_tick, frequency, frequency_tick, duplicated_comment_count
   }
-
 }
+
+
 

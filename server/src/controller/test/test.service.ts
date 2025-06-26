@@ -63,6 +63,15 @@ const youtubeChannels = [
 export const testAsync = async (logger: ILogger): IAsyncPromiseResult<unknown> => {
     logger.log('testAsync start');
 
+   allServices.task.channelIdsToFirebaseAsync(logger);
+
+    logger.log('testAsync end');
+    return [{}];
+};
+
+export const fullScannChannels = async (logger: ILogger): IAsyncPromiseResult<unknown> => {
+    logger.log('testAsync start');
+
     await oneByOneAsync(youtubeChannels, async (channel) => {
         logger.log('start getFullScanByChannelAsync ', channel.username)
         await rabbitMqService.sendDataAsync<IFullScanChannelInfoBody>(

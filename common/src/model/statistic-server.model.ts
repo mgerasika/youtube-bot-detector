@@ -17,6 +17,10 @@ export interface IUploadStatisticBody {
     duplicated_comment_count:number;
 }
 
+export interface IChannelIdsToFirebaseBody {
+    channel_ids: string[];
+}
+
 export interface IStatisticServerTestBody {
 }
 

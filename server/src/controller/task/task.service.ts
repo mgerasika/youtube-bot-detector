@@ -2,7 +2,7 @@ import { IAsyncPromiseResult, } from '@common/interfaces/async-promise-result.in
 import { rabbitMqService, } from '@common/services/rabbit-mq'
 import { RABBIT_MQ_DOWNLOAD_ENV, RABBIT_MQ_STATISTIC_ENV, } from '@server/env';
 import { ILogger, } from '@common/utils/create-logger.utils';
-import { IUploadStatisticBody } from '@common/model/statistic-server.model';
+import { IChannelIdsToFirebaseBody, IUploadStatisticBody } from '@common/model/statistic-server.model';
 import { allServices } from '../all-services';
 import { sqlMutationAsync, sqlQueryAsync } from '@server/sql/sql-async.util';
 import fs from 'fs';
@@ -95,11 +95,37 @@ const rescanChannelsAsync = async (logger: ILogger): IAsyncPromiseResult<string>
     return await [''];
 };
 
+const channelIdsToFirebaseAsync = async (logger: ILogger): IAsyncPromiseResult<string> => {
+    logger.log('channelIdsToFirebaseAsync start')
+
+    const [channelList, channelError] = await allServices.channel.getChannelListAllAsync({ is_scannable: true }, logger)
+    if (channelError) {
+        return [, logger.log(channelError)]
+    }
+    if (!channelList) {
+        return [, 'channelList is empty']
+    }
+    logger.log('recieved channels to update ids in firebase', channelList.length, channelList.map(c=>c.author_url))
+
+    await rabbitMqService.sendDataAsync<IChannelIdsToFirebaseBody>(
+        RABBIT_MQ_STATISTIC_ENV,
+        'channelIdsToFirebaseAsync',
+        {
+            channel_ids: channelList.map(c => c.id),
+        },
+        logger
+    );
+
+    logger.log('channelIdsToFirebaseAsync end')
+    return await [''];
+};
+
 
 export const task = {
     channelToStatisticAsync,
     statisticToFirebaseAsync,
     rescanChannelsAsync,
+    channelIdsToFirebaseAsync
 };
 
 
