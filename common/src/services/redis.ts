@@ -16,15 +16,16 @@ async function connectAsync(redis_url: string, logger: ILogger): Promise<TRedisC
         try {
             await _client.connect();
             // Handle errors
+            logger.log('Connected to Redis', redis_url);
             _client.on('error', (err) => {
                 logger.log('Error connecting to Redis:', err);
+
+                reconnectToRedisWithDelay(redis_url, logger);
             });
         } catch (err) {
-            logger.log('Error connecting to Redis:', err);
+            logger.log('Error connecting to Redis catch:', err);
 
-            setTimeout(() => {
-                connectAsync(redis_url, logger)
-            }, 30*1000);
+            reconnectToRedisWithDelay(redis_url, logger);
         }
         return _client;
     }
@@ -55,3 +56,10 @@ export const redisService = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     existsAsync : (...params:any) => _client?.exists(...params),
 };
+
+function reconnectToRedisWithDelay(redis_url: string, logger: ILogger) {
+    setTimeout(() => {
+        _client = undefined; // Reset client
+        connectAsync(redis_url, logger);
+    }, 30 * 1000);
+}

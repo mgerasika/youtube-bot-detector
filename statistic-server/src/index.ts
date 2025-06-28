@@ -39,7 +39,6 @@ if (ENV.rabbit_mq_url) {
 
 if(ENV.redis_url) {
     redisService.connectAsync(ENV.redis_url, mainLogger).then(async redis => {
-        mainLogger.log('Connected to Redis');
     });
 }
 

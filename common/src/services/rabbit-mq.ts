@@ -35,23 +35,41 @@ async function createConnectionAsync({ channelName, rabbit_mq_url }: { channelNa
             const conn = _connections[channelName] = await amqp.connect(rabbit_mq_url || '');
             if (conn) {
                 logger.log('Connected to Rabbit MQ', channelName);
-                _channels[channelName] = await conn.createChannel();
+                const channel = _channels[channelName] = await conn.createChannel();
+
+                conn.on('error', (err) => {
+                    logger.log('RabbitMQ connection error:', err);
+                    reconnectToRabbitMqWithDelay(channelName, rabbit_mq_url, logger);
+                });
+              
+                channel.on('error', (err) => {
+                    logger.log('RabbitMQ channel error:', err);
+                    reconnectToRabbitMqWithDelay(channelName, rabbit_mq_url, logger);
+                });
             }
         } catch (error) {
             logger.log('createConnection rabbitMQ error', error);
-            _connections[channelName] = undefined;
-            setTimeout(() => createConnectionAsync({ channelName, rabbit_mq_url }, logger), 30 * 1000);
+          
+            reconnectToRabbitMqWithDelay(channelName, rabbit_mq_url, logger);
         }
     }
     const connection = _connections[channelName];
     const channel = _channels[channelName];
     if (connection && channel) {
         await channel.assertQueue(channelName, { durable: true });
-
         // important don't remove this 1 - infinite loop
         channel.prefetch(1);
     }
     return connection;
+}
+
+function reconnectToRabbitMqWithDelay(channelName: string, rabbit_mq_url: string, logger: ILogger) {
+    setTimeout(() => {
+        _connections[channelName] = undefined;
+        _channels[channelName] = undefined;
+
+        createConnectionAsync({ channelName, rabbit_mq_url }, logger);
+    }, 30 * 1000);
 }
 
 async function subscribeAsync({ channelName, rabbit_mq_url }: { channelName: string, rabbit_mq_url: string }, callback: (data: IRabbitMqMessage, logger: ILogger) => Promise<any>, logger: ILogger) {

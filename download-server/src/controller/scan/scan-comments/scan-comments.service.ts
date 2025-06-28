@@ -49,18 +49,18 @@ export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger
     const uniqueAuthorIds = getUniqueKeys(comments, 'authorChannelId');
     logger.log('uniqueAuthorIds = ', uniqueAuthorIds.length)
 
-    const [missedIds, missedIdsError] = await filterAuthorIdsAsync(uniqueAuthorIds, false, logger);
-    logger.log('missedAuthorsIds = ', missedIds?.length)
-    if (missedIdsError) {
-        return [, missedIdsError]
+    const [missedAuthorIds, missedAuthorIdsError] = await filterAuthorIdsAsync(uniqueAuthorIds, false, logger);
+    logger.log('missedAuthorsIds = ', missedAuthorIds?.length)
+    if (missedAuthorIdsError) {
+        return [, missedAuthorIdsError]
     }
-    if (!missedIds) {
+    if (!missedAuthorIds) {
         return [, 'missedIds empty']
     }
 
     //!!!Warning This method sync call scan chanels (no rabbit mq here) because need corectly post into database (foreing key problem)
-    if (missedIds?.length) {
-        const groups = groupArray(missedIds, 50);
+    if (missedAuthorIds?.length) {
+        const groups = groupArray(missedAuthorIds, 50);
         logger.log('start download channels by groups ', groups.length)
         await oneByOneAsync(groups, async (group) => {
             await allServices.scan.scanChannelInfoAsync({ channelIds: group }, logger);
@@ -100,7 +100,7 @@ export const scanCommentsAsync = async (body: IScanCommentsBody, logger: ILogger
 
 
     logger.log('scanCommentsAsync end')
-    return [{ hasChanges: comments.length > 0 || missedIds.length > 0, missedChannelIds: missedIds || [], uniqueChannelIds: uniqueAuthorIds || [] }];
+    return [{ hasChanges: comments.length > 0 || missedAuthorIds.length > 0, missedChannelIds: missedAuthorIds || [], uniqueChannelIds: uniqueAuthorIds || [] }];
 };
 
 

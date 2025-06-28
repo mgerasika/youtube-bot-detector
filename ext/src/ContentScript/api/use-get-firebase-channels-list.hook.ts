@@ -9,7 +9,7 @@ export const useGetFirebaseChannelsList = () => {
         retryOnMount:false,
         refetchOnMount: false,
         refetchOnWindowFocus: false,
-        queryFn: () => axios.get(`https://storage.googleapis.com/youtube-bot-landing.firebasestorage.app/channel-ids.json?time=` + new Date().toLocaleDateString()).then(response => {
+        queryFn: () => axios.get(`https://storage.googleapis.com/youtube-bot-landing.firebasestorage.app/channel-ids.json?time=` + new Date().getTime()).then(response => {
             return response.data;
         }).catch(() => Promise.resolve(undefined))
         

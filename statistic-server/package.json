@@ -17,7 +17,7 @@
     "license": "ISC",
     "type": "commonjs",
     "engines": {
-        "node": "18.19.1"
+        "node": "20.18.1"
     },
     "dependencies": {
         "@google-cloud/storage": "^7.14.0",
