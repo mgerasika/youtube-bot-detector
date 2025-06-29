@@ -7,4 +7,5 @@ export interface IStatisticServerRabbitMq {
     testAsync: (body: IStatisticServerTestBody, logger: ILogger) => IAsyncPromiseResult<IScanReturn>;
     uploadStatisticAsync: (body: IUploadStatisticBody, logger: ILogger) => IAsyncPromiseResult<IScanReturn>;
     uploadToFirebaseAsync: (body: IUploadToFirebaseBody, logger: ILogger) => IAsyncPromiseResult<IScanReturn>;
-};
+    channelIdsToFirebaseAsync: (body: undefined, logger: ILogger)=> IAsyncPromiseResult<IScanReturn>;
+};   

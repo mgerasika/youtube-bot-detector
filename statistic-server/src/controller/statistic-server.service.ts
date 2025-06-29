@@ -11,6 +11,9 @@ export const statisticServerService: IStatisticServerRabbitMq = {
               return allServices.statistic.uploadStatisticAsync(body, logger)
        },
        uploadToFirebaseAsync: (body: IUploadToFirebaseBody, logger: ILogger) => {
-              return allServices.statistic.uploadToFirebaseAsync(body, logger)
+              return allServices.uploadToFirebaseAsync(body, logger)
+       },
+       channelIdsToFirebaseAsync: (body: undefined, logger: ILogger) => {
+              return allServices.channelIdsToFirebaseAsync(body, logger)
        },
 };

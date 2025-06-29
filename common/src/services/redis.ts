@@ -44,7 +44,7 @@ const delAsync = async ( messageId: string) => {
     await _client?.del(messageId);
 }
 
-const getMessageId = (category : 'channel' | 'video' | 'comment' | 'statistic' | 'full-video', id: string) => {
+const getMessageId = (category : 'channel' | 'video' | 'comment' | 'statistic' | 'full-video' | 'channel-ids', id: string) => {
     return `${category}/${id}`;
 }
 

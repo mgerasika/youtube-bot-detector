@@ -300,7 +300,7 @@ export const createApiRequest = (rs: IRequestService) => ({
 
     // get channel channel.controller.ts
     channelGet: (
-        query: { channel_id?: string } | undefined,
+        query: { channel_id?: string, is_scannable?: boolean } | undefined,
     ): CustomPromise<CustomAxiosResponse<Array<IChannelDto>, TChannelGetError>, IBEError<TChannelGetError>> =>
         rs.get(formatUrl(API_SERVER_URL + `/api/channel`, query)),
 

@@ -98,24 +98,10 @@ const rescanChannelsAsync = async (logger: ILogger): IAsyncPromiseResult<string>
 const channelIdsToFirebaseAsync = async (logger: ILogger): IAsyncPromiseResult<string> => {
     logger.log('channelIdsToFirebaseAsync start')
 
-    const [channelList, channelError] = await allServices.channel.getChannelListAllAsync({ is_scannable: true }, logger)
-    if (channelError) {
-        return [, logger.log(channelError)]
-    }
-    if (!channelList) {
-        return [, 'channelList is empty']
-    }
-    logger.log('recieved channels to update ids in firebase', channelList.length, channelList.map(c=>c.author_url))
-
-    await rabbitMqService.sendDataAsync<IUploadToFirebaseBody>(
+    await rabbitMqService.sendDataAsync<undefined>(
         RABBIT_MQ_STATISTIC_ENV,
-        'uploadToFirebaseAsync',
-        {
-            file_name: 'channel-ids.json',
-            bodyStr: JSON.stringify({
-                channel_ids: channelList.map(c => c.id),
-            })
-        },
+        'channelIdsToFirebaseAsync',
+        undefined,
         logger
     );
 

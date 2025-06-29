@@ -12,9 +12,9 @@ interface IRequest extends IExpressRequest {
 
 interface IResponse extends IExpressResponse<void, void> {}
 
-app.get(API_URL.api.uploadToFirebase.toString(), async (req: IRequest, res: IResponse) => {
+app.get(API_URL.api.channelIdsToFirebase.toString(), async (req: IRequest, res: IResponse) => {
     const logger = createLogger();
-    const [data, error] = await allServices.uploadToFirebaseAsync(req.body, logger);
+    const [data, error] = await allServices.channelIdsToFirebaseAsync(undefined, logger);
     if (error) {
         return res.status(400).send(error);
     }

@@ -12,7 +12,7 @@ export const testAsync = async (
 
     logger.log('test async');
 
-    allServices.channelIdsToFirebaseAsync({bodyStr:JSON.stringify({channel_ids:['hello1','world1']}), file_name: 'channel_ids.json'}, logger)
+    allServices.channelIdsToFirebaseAsync(undefined, logger)
 
     return [{}];
 };

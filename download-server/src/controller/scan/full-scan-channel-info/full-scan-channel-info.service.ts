@@ -1,4 +1,4 @@
-import { ENV, RABBIT_MQ_DOWNLOAD_ENV, } from '@server/env';
+import { ENV, RABBIT_MQ_DOWNLOAD_ENV, RABBIT_MQ_STATISTIC_ENV, } from '@server/env';
 import { IAsyncPromiseResult, } from '@common/interfaces/async-promise-result.interface';
 import { api, IChannelDto, } from '@server/api.generated';
 import { toQuery, } from '@common/utils/to-query.util';
@@ -41,6 +41,8 @@ export const fullScanChannelInfoAsync = async (
         return [, apiError];
     }
     if (success) {
+        logger.log('start async task channelIdsToFirebaseAsync on statistic-server for update json file', success);
+        rabbitMqService.sendDataAsync(RABBIT_MQ_STATISTIC_ENV,'channelIdsToFirebaseAsync', undefined, logger);
         rabbitMqService.sendDataAsync<IScanVideosBody>(
             RABBIT_MQ_DOWNLOAD_ENV,
             'scanVideosAsync',
