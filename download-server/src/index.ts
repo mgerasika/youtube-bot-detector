@@ -35,6 +35,16 @@ if (ENV.rabbit_mq_url) {
         }
         return Promise.resolve();
     }, mainLogger);
+
+    rabbitMqService.subscribeAsync({channelName: ENV.rabbit_mq_download_channel_name_for_scan_channels, rabbit_mq_url: ENV.rabbit_mq_url},async (data, logger) => {
+        if (data.msg) {
+            const method = (downloadServerService as unknown as Record<string,Function>)[data.msg.methodName] as Function;
+            if(method) {
+                return await method.call(downloadServerService, data.msg.methodArgumentsJson, logger);
+            }
+        }
+        return Promise.resolve();
+    }, mainLogger);
 }
 
 if(ENV.redis_url) {

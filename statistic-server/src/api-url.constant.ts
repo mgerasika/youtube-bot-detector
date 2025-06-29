@@ -8,7 +8,7 @@ interface IApiUrl {
         statistic: {
             uploadStatistic: IUrlItem;
         };
-        channelIdsToFirebase: IUrlItem;
+        uploadToFirebase: IUrlItem;
     };
 }
 
@@ -20,6 +20,6 @@ export const API_URL = createUrls<IApiUrl>({
         statistic: {
             uploadStatistic: EMPTY_URL_ITEM,
         },
-       channelIdsToFirebase: EMPTY_URL_ITEM
+       uploadToFirebase: EMPTY_URL_ITEM
     },
 });

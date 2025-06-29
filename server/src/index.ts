@@ -2,7 +2,7 @@ import 'module-alias/register';
 import dotenv from 'dotenv';
 dotenv.config(); // Load environment variables from .env
 
-import { ENV, RABBIT_MQ_DOWNLOAD_ENV, RABBIT_MQ_STATISTIC_ENV, } from '@server/env';
+import { ENV, RABBIT_MQ_DOWNLOAD_ENV, RABBIT_MQ_DOWNLOAD_ENV_FOR_SCAN, RABBIT_MQ_STATISTIC_ENV, } from '@server/env';
 
 import { allServices, } from './controller/all-services';
 import { typeOrmQueryAsync, typeOrmQueryInternalAsync, } from './sql/type-orm-async.util';
@@ -13,7 +13,6 @@ import { app } from './express-app';
 import { httpOptions } from '@common/create-express-app';
 import { IExpressRequest } from '@common/interfaces/express.interface';
 import {startCronJob} from '@common/services/cron.service'
-import { toQuery } from '@common/utils/to-query.util';
 import { telegramBot } from './telegram.service';
 import { EDbType } from './enum/db-type.enum';
 export * from './controller/all-controllers';
@@ -38,6 +37,7 @@ const port = process.env.PORT || 8007;
 const ports = process.env.PORTS || 8008;
 if (ENV.rabbit_mq_url) {
     rabbitMqService.createConnectionAsync(RABBIT_MQ_DOWNLOAD_ENV, mainLogger); 
+    rabbitMqService.createConnectionAsync(RABBIT_MQ_DOWNLOAD_ENV_FOR_SCAN, mainLogger); 
     rabbitMqService.createConnectionAsync(RABBIT_MQ_STATISTIC_ENV, mainLogger); 
 }
 

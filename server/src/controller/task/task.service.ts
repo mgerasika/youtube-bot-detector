@@ -2,7 +2,7 @@ import { IAsyncPromiseResult, } from '@common/interfaces/async-promise-result.in
 import { rabbitMqService, } from '@common/services/rabbit-mq'
 import { RABBIT_MQ_DOWNLOAD_ENV, RABBIT_MQ_STATISTIC_ENV, } from '@server/env';
 import { ILogger, } from '@common/utils/create-logger.utils';
-import { IChannelIdsToFirebaseBody, IUploadStatisticBody } from '@common/model/statistic-server.model';
+import { IUploadToFirebaseBody, IUploadStatisticBody } from '@common/model/statistic-server.model';
 import { allServices } from '../all-services';
 import { sqlMutationAsync, sqlQueryAsync } from '@server/sql/sql-async.util';
 import fs from 'fs';
@@ -107,11 +107,14 @@ const channelIdsToFirebaseAsync = async (logger: ILogger): IAsyncPromiseResult<s
     }
     logger.log('recieved channels to update ids in firebase', channelList.length, channelList.map(c=>c.author_url))
 
-    await rabbitMqService.sendDataAsync<IChannelIdsToFirebaseBody>(
+    await rabbitMqService.sendDataAsync<IUploadToFirebaseBody>(
         RABBIT_MQ_STATISTIC_ENV,
-        'channelIdsToFirebaseAsync',
+        'uploadToFirebaseAsync',
         {
-            channel_ids: channelList.map(c => c.id),
+            file_name: 'channel-ids.json',
+            bodyStr: JSON.stringify({
+                channel_ids: channelList.map(c => c.id),
+            })
         },
         logger
     );

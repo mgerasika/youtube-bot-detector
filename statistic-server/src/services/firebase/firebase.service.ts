@@ -15,9 +15,10 @@ admin.initializeApp({
 
 const bucket = admin.storage().bucket();
 
- async function uploadJsonAndMakePublic(jsonData: object, customFileName: string, timeoutInSecconds :number, logger: ILogger): IAsyncPromiseResult<string> {
+ async function uploadFileAndMakePublic({jsonString, contentType , timeoutInSecconds, customFileName, logger}:
+  {jsonString: string, contentType?:string ,customFileName: string, timeoutInSecconds :number, logger: ILogger}): IAsyncPromiseResult<string> {
   // Convert JSON object to a Buffer
-  const buffer = Buffer.from(JSON.stringify(jsonData), 'utf-8');
+  const buffer = Buffer.from(jsonString, 'utf-8');
 
   try {
     // Create a new file in the bucket with the specified custom name
@@ -26,7 +27,7 @@ const bucket = admin.storage().bucket();
     // Upload the buffer to the file
     await file.save(buffer, {
       metadata: {
-        contentType: 'application/json', // Set MIME type
+        contentType: contentType || 'application/json',
         cacheControl: `public, max-age=${timeoutInSecconds}`, // Cache settings
       },
     });
@@ -41,7 +42,7 @@ const bucket = admin.storage().bucket();
 }
 
 export const firebase = {
-  uploadJsonAndMakePublic,
+  uploadFileAndMakePublic,
 }
 
 

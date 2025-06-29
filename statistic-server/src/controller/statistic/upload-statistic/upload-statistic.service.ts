@@ -52,8 +52,8 @@ export const uploadStatisticAsync = async (
     logger.log('before upload to firebase')
     const cacheFileTimeoutInSecconds = 3600*24;
    
-    const [uploadResult, uploadError] = await  firebase.uploadJsonAndMakePublic(firebaseFileContent,
-         `${body.channel_id}.json`, cacheFileTimeoutInSecconds, logger)
+    const [uploadResult, uploadError] = await  firebase.uploadFileAndMakePublic({jsonString: JSON.stringify(firebaseFileContent),
+         customFileName:`${body.channel_id}.json`, timeoutInSecconds: cacheFileTimeoutInSecconds, logger});
     if (uploadError) {
         return [, logger.log(uploadError)]
     }
